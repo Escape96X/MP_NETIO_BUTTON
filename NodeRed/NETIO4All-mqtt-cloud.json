@@ -1,0 +1,102 @@
+[
+    {
+        "id": "f78786bc.b85168",
+        "type": "tab",
+        "label": "NETIO4All-mqtt-cloud",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a9fddcf.da7612",
+        "type": "inject",
+        "z": "f78786bc.b85168",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "str",
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "de5a8d43.7d2ce"
+            ]
+        ]
+    },
+    {
+        "id": "987dce31.d01f1",
+        "type": "inject",
+        "z": "f78786bc.b85168",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "str",
+        "x": 100,
+        "y": 140,
+        "wires": [
+            [
+                "de5a8d43.7d2ce"
+            ]
+        ]
+    },
+    {
+        "id": "de5a8d43.7d2ce",
+        "type": "mqtt out",
+        "z": "f78786bc.b85168",
+        "name": "",
+        "topic": "NETIO4All24a42c3329c6/output/1/action",
+        "qos": "0",
+        "retain": "",
+        "broker": "83b88a71.b244d8",
+        "x": 400,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "83b88a71.b244d8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "NetioHexio",
+        "broker": "mqtts://connect.hexio.cloud:8883",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": false,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]
