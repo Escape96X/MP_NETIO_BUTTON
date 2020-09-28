@@ -1,3 +1,8 @@
+# Průběh
+- ESP8266 WPS connection - funguje
+- ESP8266 MQTT connection with cloud - in progress
+
+# Zadání
 ## Popis finálního výrobku:
  - napajeni z baterie
  - vstup na 2 tlacitka (pro standardni dvojity prepinac/spinac do zabudovane instalace)
