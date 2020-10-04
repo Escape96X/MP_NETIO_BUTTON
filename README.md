@@ -1,5 +1,6 @@
 # Průběh
 - ESP8266 WPS connection - funguje
+- ESP8266 HTTP kontrola zásuvky - funguje
 - ESP8266 MQTT connection with cloud - in progress
 
 # Zadání
@@ -33,3 +34,12 @@
  - výstup bude majetkem firmy NETIO
  - veci okolo HW a optimalizace spotreby, hlavne oponentura - Martin Sejnoha
  - veci okolo SW a funcionality - Bretislav Bakala
+
+# Seznam zapůjčených věcí
+- NETIO COBRA
+- ESP32 Modul
+- ESP8266
+- slot na baterie
+- NFC
+- Akumulátor
+- stabilizator napětí
