@@ -1,0 +1,95 @@
+\documentclass[a4paper, 12pt]{report}
+\usepackage{monapack}
+
+\student{Milan Jiříček}
+\trida{B4.I}
+\obor{18-20-M/01 Informační technologie}
+\bydliste{Čenkov u Bechyně 3, 391 65 Bechyně}
+\datumNarozeni{10. 11. 2001}
+\vedouci{Ing. Břetislav Bakala}
+\nazevPrace{Dálkové ovládání zásuvek NETIO}
+\cisloPrace{1}
+\skolniRok{2020/2021}
+\reditel{Ing. Jiří Uhlík}
+
+
+\zacatek
+	
+	\titulniStrana
+
+	\zadani{1. 11. 2020}
+	{
+		\item V dokumentaci popište technologie NETIO, ESP8266 a ESP32 s ohledem na požadované funkce ovladače
+		\item Navrhněte vhodné uživatelsky přívětivé rozhraní pro konfiguraci ovladače a jeho připojení do WiFi sítě.
+		\item Realizujte požadované funkce na ovladač:
+		\begin{itemize}
+			\item vstup na 2 nezávislá tlačítka pro standardní dvojitý přepínač/spínač dvou samostatných zásuvek jednoho zařízení NETIO, eliminace rychlých mačkání (nervózní uživatel)
+			\item nepodařený příkaz/přepnutí vypínače (nepodaří se odeslat příkaz http) je indikován bliknutím LED a pípnutím buzzeru. Kontroluje se odpověď http serveru (např. 200, 404 návratové hodnoty)
+			\item Zvolte vhodnou technologii výroby funkčních vzorků (nepájivé pole, DPS) a vyrobte jeden funkční vzorek na bázi ESP8266 a druhý na bázi ESP32 s možností měření odebíraného proudu
+			\item Určete vhodnou metodu měření dynamické spotřeby energie v čase (reakční doby) pro různé režimy připojení, způsobu komunikace a platformy procesoru:
+			\begin{itemize}
+				\item ESP je vypnuto a vzbudí se nějakým externím obvodem přes enable/reset vstup po stisku tlačítka
+				\item ESP je v deep sleep módu - low power režimu a vzbudí se tlačítkem
+				\item ESP je kontinuálně zapnuto
+				\item Kolik energie spotřebují uvedené režimy při napájení z baterie.
+				Výsledky měření názorně porovnejte
+			\end{itemize}		
+		\end{itemize}
+		\item Celou dokumentaci včetně výpisů zdrojového programu s komentářem veďte ve verzovacím systému Git a elektronicky doložte k tištěné podobě dokumentace.
+	}
+	{
+		\item srovnání platforem ESP32 a ESP8266 s ohledem na požadované funkce
+		\item návrh požadovaných funkcí ovladače
+		\item návrh variant ovladače s platformou ESP32 a ESP8266 ve formě ověření konceptu
+		\item zdrojové kódy v repozitáři GIT (GitHub nebo GitLab)
+		\item schéma zapojeni všech zkoušených variant v řešení
+		\item srovnání spotřeby a reakční doby funkčních vzorků
+	}
+	{
+		\item vyrobené vzorky ovladače (ESP8266 a ESP32) jsou funkční
+		\item je vytvořeno uživatelské rozhraní pro konfiguraci ovladače
+		\item bylo provedeno měření spotřeby a doby odezvy pro oba typy ovladačů
+	}
+	{firma}
+	{firmy}
+	{}
+	
+	\anotace 
+	Text
+
+	\annotation
+	Text
+	
+	\podekovani
+	Text
+	
+	\licencniSmlouva{Netio}{Netio}{Netio}{31. 3. 2021}
+	
+	\obsah
+	
+	\kapitola{Úvod}
+	\kapitola{Vlastní text práce}
+		rozvedený do jednotlivých kapitol a subkapitol
+		\podkapitola{Subkapitola}
+			\podpodkapitola{Subsubkapitola}
+	\kapitola{Závěr}
+
+	\seznamTabulek
+	
+	\seznamObrazku
+	
+	\prilohy{
+		\kapitola{Příloha}
+	}
+	
+	\literatura{
+		
+		\kniha{nazevCitace}{Příjmení autora}{Jméno autora}{Název knihy}{Místo vydání}{Nakladatelství}{Rok}{ISBN}
+		
+		\kvalifikacniprace{nazevCitace}{Příjmení autora}{Jméno autora}{Název práce}{Místo}{Rok}{Druh práce}{Univerzita, Fakulta, Katedra}{Vedoucí diplomové práce jméno}
+		
+		\url{nazevCitace}{Název stránek}{Titulek}{Stránky}{rok}{datum}{URL odkaz}
+		
+	}
+	
+\konec
