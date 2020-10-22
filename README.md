@@ -1,45 +1,28 @@
-# Průběh
-- ESP8266 WPS connection - funguje
-- ESP8266 HTTP kontrola zásuvky - funguje
-- ESP8266 MQTT connection with cloud - in progress
+# Maturitní práce
+## Zadání
+- V dokumentaci popište technologie NETIO, ESP8266 a ESP32 s ohledem na požadované funkce ovladače
+- Navrhněte vhodné uživatelsky přívětivé rozhraní pro konfiguraci ovladače a jeho
+připojení do WiFi sítě
+- Realizujte požadované funkce na ovladač:
+	- vstup na 2 nezávislá tlačítka pro standardní dvojitý přepínač/spínač dvou samostatných zásuvek jednoho zařízení NETIO, eliminace rychlých mačkání (nervózní uživatel)
+	- nepodařený příkaz/přepnutí vypínače (nepodaří se odeslat příkaz http) je indikován bliknutím LED a pípnutím buzzeru. Kontroluje se odpověď http serveru
+(např. 200, 404 návratové hodnoty)
+	- Zvolte vhodnou technologii výroby funkčních vzorků (nepájivé pole, DPS) a vyrobte jeden funkční vzorek na bázi ESP8266 a druhý na bázi ESP32 s možností měření odebíraného proudu
+	- Určete vhodnou metodu měření dynamické spotřeby energie v čase (reakční doby) pro různé režimy připojení, způsobu komunikace a platformy procesoru:
+		- ESP je vypnuto a vzbudí se nějakým externím obvodem přes enable/reset vstup po stisku tlačítka
+		- ESP je v deep sleep módu - low power režimu a vzbudí se tlačítkem
+ 		- ESP je kontinuálně zapnuto
+		- Kolik energie spotřebují uvedené režimy při napájení z baterie. Výsledky měření názorně porovnejte
+	- Celou dokumentaci včetně výpisů zdrojového programu s komentářem veďte ve verzovacím systému Git a elektronicky doložte k tištěné podobě dokumentace
+## Kritéria funkčnosti
+- vyrobené vzorky ovladače (ESP8266 a ESP32) jsou funkční
+- je vytvořeno uživatelské rozhraní pro konfiguraci ovladač
+- bylo provedeno měření spotřeby a doby odezvy pro oba typy ovladače
 
-# Zadání
-## Popis finálního výrobku:
- - napajeni z baterie
- - vstup na 2 tlacitka (pro standardni dvojity prepinac/spinac do zabudovane instalace)
- - piezo buzzer (logicky rizeny, ne PWM), ktery pipne v pripade nepodareneho prikazu/prepnuté vypínace
- - vymenitelne baterie (asi AAA)
- - prevence zbesileho mačkani nejakeho tlacitka (usecase: netrpelivy uzivatel)
- - LED, ktera indikuje, ze bylo stiknuto nejake tlacitko a ze se podarilo odeslat prikaz pres HTTP (hlavne kvuli vyvoji, nemusi byt ve finalnim produktu pouzita)
- - pripojeni pres wifi
- - zarizeni je mozne jednoduse konfigurovat a pripojit do WIFI pres AP mod a jendoduchy web nebo URL API
- - zarizeni umi ovladat zasuvky NETIO pres HTTP JSON API
- - v zasade temer totozny produkt jako je WiFi Button od firmy MyStrom (https://mystrom.com/wifi-button/) - firma je ze svycarska
-
- ## Cíl maturitní práce:
- - zjistit možnosti a vlastnosti pro bateriovy provoz (odezva od sepnuti tlacitka, low power rezimy, rezim probuzeni/zapnuti ESP po stiku tlacitka)
- - porovnat platformy ESP8266 a ESP32 z hlediska: 
-    - reakce systemu (probuzeni+pripojeni k wifi+odeslani prikazu pres HTTP)
-    - spotreby a doby vydrze na baterii
- - na zaklade predchozi reserse vybrat po konzultaci s NETIO jedno reseni a realizovat proof of concept tlacitka na vývojové desce/nepájivém poli
-
- ## Výstupem práce:
- - rešerže a srovnání platforem ESP32 a ESP8266 z hlediska spotreby a reakcni doby
- - funkcni vzorek tlacitka ve forme proof of concept
- - zdrojove kody v repositari GIT (GitHub nebo GitLab)
- - schema zapojeni vsech zkousenych variant v resersi
-
-## Konzultace a podpora ze strany NETIO:
- - nakup potrebneho HW
- - výstup bude majetkem firmy NETIO
- - veci okolo HW a optimalizace spotreby, hlavne oponentura - Martin Sejnoha
- - veci okolo SW a funcionality - Bretislav Bakala
-
-# Seznam zapůjčených věcí
-- NETIO COBRA
-- ESP32 Modul
-- ESP8266
-- slot na baterie
-- NFC
-- Akumulátor
-- stabilizator napětí
+## Výstupy
+- srovnání platforem ESP32 a ESP8266 s ohledem na požadované funkce
+- návrh požadovaných funkcí ovladače
+- návrh variant ovladače s platformou ESP32 a ESP8266 ve formě ověření konceptu
+- zdrojové kódy v repozitáři GIT (GitHub nebo GitLab)
+- schéma zapojeni všech zkoušených variant v řešení
+- srovnání spotřeby a reakční doby funkčních vzorků
