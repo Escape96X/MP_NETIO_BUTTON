@@ -3,10 +3,13 @@
 
 
 // konstanty pripojeni a json zpravy
-const char* HTTP_CONNECTION = "http://192.168.0.111/netio.json";
+const char* HTTP_CONNECTION = "http://192.168.0.106/netio.json";
 const char* HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
-const int button = 0;
-const int buzzer = 4;
+
+//const int buttton = 16;
+const int buzzer = 13;
+const int LED = 12;
+const int wakePin = 5;
 // promenne
 int buttonState = 0;
 bool check = true;
@@ -14,7 +17,7 @@ bool check = true;
 HTTPClient http;
 
 
-void buzzerTimer(int duration){
+void buzzerTimer(int duration){ 
   // Bzucak na oznameni stavu
   digitalWrite(buzzer, HIGH);
   delay(duration);
@@ -24,8 +27,8 @@ void buzzerTimer(int duration){
 
 void wifiNormal(){
   // funkce pro pouziti klasicke wifi na testovani
-  const char* ssid = "#####";
-  const char* password = "#####";
+  const char* ssid = "Jiříčkovi_secured";
+  const char* password = "19192020";
   WiFi.begin(ssid, password);
 }
 
@@ -78,12 +81,16 @@ void wifiCheck(){
   // kontrola zda v dobe requestu jsme pripojeni
   if(WiFi.status() == WL_CONNECTED){
    httpPost(); 
+  } else {
+    for(int i - 0; i < 3; i++){
+      buzzerTimer(300);
+    }
   }
 }
 
 void buttonCheck(){
   // aby pri delsim podrzenim stav nepreskakoval
-  buttonState = digitalRead(button);
+  //buttonState = digitalRead();
   if(buttonState == HIGH){
     check = true;
   }
@@ -92,16 +99,19 @@ void buttonCheck(){
 void setup() {
   Serial.begin(115200);
   pinMode(buzzer, OUTPUT); // nastaveni bzucaku na out
-  pinMode(button, INPUT); // nastaveni flash tlacitka na in
-  wifiWPS(); // zapnuti wifi
-  //wifiNormal();
+  pinMode(wakePin, OUTPUT);
+  digitalWrite(wakePin, HIGH);
+  //wifiWPS(); // zapnuti wifi
+  wifiNormal();
+  wifiCheck();
+  digitalWrite(wakePin, LOW);
 }
 
 void loop() {
-  buttonState = digitalRead(button); // cteni stavu tlacitka
-  if(buttonState == LOW && check){
-    wifiCheck(); // kontrola wifi zda jsme stale pripojeni
-    check = false; // promenna pro kontrolu dlouheho mackani tlacitka
-  }
-  buttonCheck(); // zmeneni stavu promenne check
+  // buttonState = digitalRead(button); // cteni stavu tlacitka
+  // if(buttonState == LOW && check){
+  //  wifiCheck(); // kontrola wifi zda jsme stale pripojeni
+  //  check = false; // promenna pro kontrolu dlouheho mackani tlacitka
+  //}
+  //buttonCheck(); // zmeneni stavu promenne check
 }
