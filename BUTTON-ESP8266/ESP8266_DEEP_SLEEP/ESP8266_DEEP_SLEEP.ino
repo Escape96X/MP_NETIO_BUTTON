@@ -6,7 +6,6 @@ const char* HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
 
 const int buzzer = 13;
 const int LED = 12;
-const int wakePin = 5;
 
 IPAddress local_IP(192, 168, 0, 107);
 IPAddress gateway(192, 168, 0, 1);
@@ -58,8 +57,6 @@ void httpPost(){
 
 void setup() {
   Serial.begin(115200);
-  pinMode(wakePin, OUTPUT);
-  digitalWrite(wakePin, HIGH);
   pinMode(buzzer, OUTPUT);
   wifiNormal();
   while (WiFi.status() != WL_CONNECTED) {
@@ -68,7 +65,7 @@ void setup() {
   }
   httpPost();
   Serial.println("TEST");
-  digitalWrite(5, LOW);
+  ESP.deepSleep(0); // deep slee probiha dokud neklikneme tlacitko
 }
 
 void loop() {
