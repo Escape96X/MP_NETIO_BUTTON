@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <script>
+            var getJSON = function(url, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'json';
+                xhr.onload = function() {
+                    var status = xhr.status;
+                    if (status === 200) {
+                     callback(null, xhr.response);
+                    } else {
+                        callback(status, xhr.response);
+                    }
+                };
+                xhr.send();
+            };
+            getJSON('scannedWiFi.json',
+            function(err, data) {
+            if (err !== null) {
+                alert('Something went wrong: ' + err);
+            } else {
+                for(i=0; i < data.numOfNetworks; i++){
+                    buttons(i, data.networks);
+                }
+            }
+            });
+
+            function buttons(i, networks){
+                var button = document.createElement('input');
+                button.innerHTML = networks[i];
+                button.type = 'submit'
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/wifi';
+                var inputs = document.createElement('input');
+                inputs.type = 'hidden';
+                inputs.name = 'wifi';
+                inputs.value = networks[i];
+            document.body.appendChild(form);
+            form.appendChild(inputs);
+            form.appendChild(button);
+            }
+
+        </script>
+    </body>
+</html>
