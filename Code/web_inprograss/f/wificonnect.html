@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <form method ="POST" action ="/wifi/aprove">
+            <label for = "password">WiFi password</label>
+            <input type="password" name="password" id="password">
+            <button type="submit">submit</button>
+        </form>
+    </head>
+    <body>
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            var form = document.getElementsByTagName('form')[0];
+            var wifiname = document.createElement('input');
+            wifiname.type = "hidden";
+            wifiname.name = "ssid";
+            wifiname.value = urlParams.get('wifi');
+            form.appendChild(wifiname);
+            form.appendChild(document.createTextNode(urlParams.get('wifi')));
+
+
+        </script>
+    </body>
+</html>

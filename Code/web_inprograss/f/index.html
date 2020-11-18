@@ -20,29 +20,41 @@
             };
             getJSON('scannedWiFi.json',
             function(err, data) {
-            if (err !== null) {
-                alert('Something went wrong: ' + err);
-            } else {
-                for(i=0; i < data.numOfNetworks; i++){
-                    buttons(i, data.networks);
+                if (err !== null) {
+                    alert('Something went wrong: ' + err);
+                } else {
+                    for(i=0; i < data.numOfNetworks; i++){
+                        buttons(i, data.networks, data.strengh, data.protection);
+                    }
                 }
-            }
             });
 
-            function buttons(i, networks){
+            function buttons(i, networks, rssi, protection){
+
                 var button = document.createElement('input');
                 button.innerHTML = networks[i];
                 button.type = 'submit'
+
                 var form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/wifi';
+
                 var inputs = document.createElement('input');
                 inputs.type = 'hidden';
                 inputs.name = 'wifi';
                 inputs.value = networks[i];
-            document.body.appendChild(form);
-            form.appendChild(inputs);
-            form.appendChild(button);
+                var rssi1 = document.createTextNode(rssi[i]);
+                var encrypt = document.createTextNode(protection[i])
+
+                document.body.appendChild(form);
+                form.appendChild(inputs);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(button);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(rssi1);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(encrypt);
+            
             }
 
         </script>

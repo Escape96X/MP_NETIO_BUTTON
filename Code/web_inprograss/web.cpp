@@ -29,29 +29,40 @@ const char indexHTML[] PROGMEM = R"rawliteral(
             };
             getJSON('scannedWiFi.json',
             function(err, data) {
-            if (err !== null) {
-                alert('Something went wrong: ' + err);
-            } else {
-                for(i=0; i < data.numOfNetworks; i++){
-                    buttons(i, data.networks);
+                if (err !== null) {
+                    alert('Something went wrong: ' + err);
+                } else {
+                    for(i=0; i < data.numOfNetworks; i++){
+                        buttons(i, data.networks, data.strengh, data.protection);
+                    }
                 }
-            }
             });
 
-            function buttons(i, networks){
+            function buttons(i, networks, rssi, protection){
+
                 var button = document.createElement('input');
                 button.innerHTML = networks[i];
                 button.type = 'submit'
+
                 var form = document.createElement('form');
-                form.method = 'POST';
+                form.method = 'GET';
                 form.action = '/wifi';
+
                 var inputs = document.createElement('input');
                 inputs.type = 'hidden';
                 inputs.name = 'wifi';
                 inputs.value = networks[i];
-            document.body.appendChild(form);
-            form.appendChild(inputs);
-            form.appendChild(button);
+                var rssi1 = document.createTextNode(rssi[i]);
+                var encrypt = document.createTextNode(protection[i])
+                document.body.appendChild(form);
+                form.appendChild(inputs);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(button);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(rssi1);
+                form.appendChild(document.createElement('br'));
+                form.appendChild(encrypt);
+            
             }
 
         </script>
@@ -59,7 +70,39 @@ const char indexHTML[] PROGMEM = R"rawliteral(
 </html>
 )rawliteral";
 
+const char paswordHTML[] PROGMEM = R"rawliteral(
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <form method ="POST" action ="/wifi/aprove">
+            <label for = "password">WiFi password</label>
+            <input type="password" name="password" id="password">
+            <button type="submit">submit</button>
+        </form>
+    </head>
+    <body>
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            var form = document.getElementsByTagName('form')[0];
+            var wifiname = document.createElement('input');
+            wifiname.type = "hidden";
+            wifiname.name = "ssid";
+            wifiname.value = urlParams.get('wifi');
+            form.appendChild(wifiname);
+            form.appendChild(document.createTextNode(urlParams.get('wifi')));
+
+
+        </script>
+    </body>
+</html>
+)rawliteral";
+
+
+
 String ssid = "";
+String password = "";
 
 ESP8266WebServer server(80);
 IPAddress OWN_IP(192, 168, 4, 1);
@@ -84,9 +127,24 @@ String scanNetwork(){
     networks +="\" ";
     networks += (i+1 == numberOfNetworks) ? " ":", ";
   }
+  networks += "], \"protection\": [";
+  for(int i = 0; i < numberOfNetworks; i++){
+    networks += "\"";
+    networks += (WiFi.encryptionType(i) == ENC_TYPE_NONE)? "None": "Encrypted";
+    networks +="\" ";
+    networks += (i+1 == numberOfNetworks) ? " ":", ";
+  }
   networks += "]}";
   return networks;
 }
+
+
+void connectToWiFi(){
+    WiFi.begin(ssid, password);
+    delay(1000);
+    Serial.println(WiFi.status());   
+}
+
 
 void APSet(){
     WiFi.mode(WIFI_AP_STA);
@@ -99,14 +157,22 @@ void test(){
 }
 
 void handleWiFiConnect(){
-    if(server.hasArg("wifi")){
-        ssid = server.arg(0);
-        server.send(200, "text/plain", "ahoj");
-    }
+    server.send(200, "text/html", paswordHTML);
 }
 
 void handleScanWiFi(){
     server.send(200, "application/json", scanNetwork());
+}
+
+void handleSetPasword(){
+    Serial.println("jsem v handle");
+    if(server.hasArg("ssid")){
+        ssid = server.arg(0);
+        Serial.println("mam heslo");
+        password = server.arg(1);
+        connectToWiFi();
+    }
+    server.send(200);
 }
 
 void setWiFiServer(){
@@ -114,9 +180,11 @@ void setWiFiServer(){
   delay(500);
   server.on("/scannedWiFi.json", handleScanWiFi);
   server.on("/", test);
-  server.on("/wifi",HTTP_POST, handleWiFiConnect);
+  server.on("/wifi", handleWiFiConnect);
+  server.on("/wifi/aprove", HTTP_POST, handleSetPasword);
   server.begin();
 }
+
 
 void handleServer(){
     server.handleClient();
