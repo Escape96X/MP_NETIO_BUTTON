@@ -2,7 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFiScan.h>
-#include "web.h"
+#include <web.h>
 
 
 extern String ssid;
@@ -101,7 +101,7 @@ void buttonCheck(){
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  //for(int i =0; i < 100000; i++)
+  for(int i =0; i < 100000; i++)
   Serial.print("test");
   Serial.println(ssid);
   Serial.println(NetioIP);
@@ -114,7 +114,7 @@ void setup() {
 }
 
 void loop() {
-   handleServer();
+   //handleServer();
    buttonState = digitalRead(button); // cteni stavu tlacitka
    if(buttonState == LOW && check){
     wifiCheck(); // kontrola wifi zda jsme stale pripojeni

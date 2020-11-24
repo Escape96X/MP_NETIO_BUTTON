@@ -3,6 +3,8 @@
         <meta charset="UTF-8">
     </head>
     <body>
+        <h1>WIFI</h1>
+        
         <script>
             var getJSON = function(url, callback) {
                 var xhr = new XMLHttpRequest();
@@ -32,16 +34,22 @@
             function buttons(i, networks, rssi, protection){
 
                 var button = document.createElement('input');
-                button.innerHTML = networks[i];
                 button.type = 'submit'
+                button.value = networks[i];
 
                 var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/wifi';
+                if(protection[i] == "None"){
+                    form.method = 'POST';
+                    form.action = '/wifi/check'
+                } else{
+                    form.method = 'GET'
+                    form.action = '/wifi';
+                }
+                
 
                 var inputs = document.createElement('input');
                 inputs.type = 'hidden';
-                inputs.name = 'wifi';
+                inputs.name = 'ssid';
                 inputs.value = networks[i];
                 var rssi1 = document.createTextNode(rssi[i]);
                 var encrypt = document.createTextNode(protection[i])
@@ -56,7 +64,8 @@
                 form.appendChild(encrypt);
             
             }
-
         </script>
+        <button onclick="window.location.href=window.location.href"0>Scan</button>
+        <p>Scan take a while</p>
     </body>
 </html>

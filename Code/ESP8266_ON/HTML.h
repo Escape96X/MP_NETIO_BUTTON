@@ -1,17 +1,15 @@
+#ifndef _HTML_h
+#define _HTML_h_
 #include <Arduino.h>
-#include <ESP8266WebServer.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <ESP8266WiFiScan.h>
-#include <web.h>
 
-const char *OWN_SSID = "NETIO_BUTTON";
 const char indexHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
         <meta charset="UTF-8">
     </head>
     <body>
+        <h1>WIFI</h1>
+        
         <script>
             var getJSON = function(url, callback) {
                 var xhr = new XMLHttpRequest();
@@ -41,19 +39,26 @@ const char indexHTML[] PROGMEM = R"rawliteral(
             function buttons(i, networks, rssi, protection){
 
                 var button = document.createElement('input');
-                button.innerHTML = networks[i];
                 button.type = 'submit'
+                button.value = networks[i];
 
                 var form = document.createElement('form');
-                form.method = 'GET';
-                form.action = '/wifi';
+                if(protection[i] == "None"){
+                    form.method = 'POST';
+                    form.action = '/wifi/check'
+                } else{
+                    form.method = 'GET'
+                    form.action = '/wifi';
+                }
+                
 
                 var inputs = document.createElement('input');
                 inputs.type = 'hidden';
-                inputs.name = 'wifi';
+                inputs.name = 'ssid';
                 inputs.value = networks[i];
                 var rssi1 = document.createTextNode(rssi[i]);
                 var encrypt = document.createTextNode(protection[i])
+
                 document.body.appendChild(form);
                 form.appendChild(inputs);
                 form.appendChild(document.createElement('br'));
@@ -64,17 +69,18 @@ const char indexHTML[] PROGMEM = R"rawliteral(
                 form.appendChild(encrypt);
             
             }
-
         </script>
+        <button onclick="window.location.href=window.location.href"0>Scan</button>
+        <p>Scan take a while</p>
     </body>
 </html>
 )rawliteral";
 
-const char paswordHTML[] PROGMEM = R"rawliteral(
+const char passwordHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
         <meta charset="UTF-8">
-        <form method ="POST" action ="/wifi/aprove">
+        <form method ="POST" action ="/wifi/check">
             <label for = "password">WiFi password</label>
             <input type="password" name="password" id="password">
             <button type="submit">submit</button>
@@ -89,103 +95,31 @@ const char paswordHTML[] PROGMEM = R"rawliteral(
             var wifiname = document.createElement('input');
             wifiname.type = "hidden";
             wifiname.name = "ssid";
-            wifiname.value = urlParams.get('wifi');
+            wifiname.value = urlParams.get('ssid');
             form.appendChild(wifiname);
-            form.appendChild(document.createTextNode(urlParams.get('wifi')));
+            form.appendChild(document.createTextNode(urlParams.get('ssid')));
 
 
         </script>
+        <button onClick="location.href = '/';">Return</button>
     </body>
 </html>
 )rawliteral";
 
+const char NetioHTML[] PROGMEM = R"rawliteral(
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <form method ="POST" action ="/netioIP">
+            <label for = "ip">IP OF NETIO PRODUCT</label>
+            <input type="input" name="ip" id="ip">
+            <button type="submit">submit</button>
+        </form>
+    </head>
+    <body>
+        <button onClick="location.href = '/';">Return</button>
+    </body>
+</html>
+)rawliteral";
 
-
-String ssid = "";
-String password = "";
-
-ESP8266WebServer server(80);
-IPAddress OWN_IP(192, 168, 4, 1);
-
-
-
-String scanNetwork(){
-  int numberOfNetworks = WiFi.scanNetworks();
-  String networks = "{\"numOfNetworks\": \"";
-  networks += numberOfNetworks;
-  networks += "\", \"networks\": [";
-  for(int i = 0; i < numberOfNetworks; i++){
-    networks += "\"";
-    networks += WiFi.SSID(i);
-    networks +="\"";
-    networks += (i+1 == numberOfNetworks) ? " ":", ";
-  }
-  networks +="], \"strengh\": [";
-  for(int i = 0; i < numberOfNetworks; i++){
-    networks += "\"";
-    networks += WiFi.RSSI(i);
-    networks +="\" ";
-    networks += (i+1 == numberOfNetworks) ? " ":", ";
-  }
-  networks += "], \"protection\": [";
-  for(int i = 0; i < numberOfNetworks; i++){
-    networks += "\"";
-    networks += (WiFi.encryptionType(i) == ENC_TYPE_NONE)? "None": "Encrypted";
-    networks +="\" ";
-    networks += (i+1 == numberOfNetworks) ? " ":", ";
-  }
-  networks += "]}";
-  return networks;
-}
-
-
-void connectToWiFi(){
-    WiFi.begin(ssid, password);
-    delay(1000);
-    Serial.println(WiFi.status());   
-}
-
-
-void APSet(){
-    WiFi.mode(WIFI_AP_STA);
-    WiFi.softAPConfig(OWN_IP, OWN_IP, IPAddress(255, 255, 255, 0));
-    WiFi.softAP(OWN_SSID);
-}
-
-void test(){
-  server.send(200, "text/html", indexHTML);
-}
-
-void handleWiFiConnect(){
-    server.send(200, "text/html", paswordHTML);
-}
-
-void handleScanWiFi(){
-    server.send(200, "application/json", scanNetwork());
-}
-
-void handleSetPasword(){
-    Serial.println("jsem v handle");
-    if(server.hasArg("ssid")){
-        ssid = server.arg(0);
-        Serial.println("mam heslo");
-        password = server.arg(1);
-        connectToWiFi();
-    }
-    server.send(200);
-}
-
-void setWiFiServer(){
-  APSet();
-  delay(500);
-  server.on("/scannedWiFi.json", handleScanWiFi);
-  server.on("/", test);
-  server.on("/wifi", handleWiFiConnect);
-  server.on("/wifi/aprove", HTTP_POST, handleSetPasword);
-  server.begin();
-}
-
-
-void handleServer(){
-    server.handleClient();
-}
+#endif
