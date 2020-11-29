@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFiScan.h>
@@ -8,25 +9,10 @@
 extern String ssid;
 extern String password;
 extern String NetioIP;
-
-
-// void setup(){
-//   Serial.begin(9600);
-//   setWiFiServer();
-// }
-
-// void loop() {
-//     handleServer();
-// }
-
-
-//#include <ESP8266WiFi.h>
-//#include <ESP8266HTTPClient.h>
-//#include <web.h>
+char Netio[15];
 
 
 // konstanty pripojeni a json zpravy
-//const char* HTTP_CONNECTION = "http://192.168.0.106/netio.json";
 const char* HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
 
 //const int buttton = 16;
@@ -35,14 +21,16 @@ const int LED = 12;
 const int button = 5;
 // promenne
 int buttonState = 0;
-bool check = true;
+int buttonState2 = 0;
+bool checkButtonState1 = true;
+bool checkButtonSteate2 = true;
 
 HTTPClient http;
 
 
 void WiFiConnect(){
+    //if(WiFi.status() != WL_CONNECTED)
     Serial.println("WIfiIII");
-    if(WiFi.status() != WL_CONNECTED)
     setWiFiServer();
 }
 
@@ -55,6 +43,12 @@ void buzzerTimer(int duration){
   delay(100);
 }
 
+void LEDTimer(int duration){
+  digitalWrite(LED,LOW);
+  delay(duration);
+  digitalWrite(LED, HIGH);
+}
+
 void httpPost(){
   // odesilani requestu
   String HTTP_CONNECTION = "http://";
@@ -65,13 +59,14 @@ void httpPost(){
       int httpCode = http.POST(HTTP_REQUEST); // odeslani json requestu
       String payload = http.getString(); // zjisteni zpetne vazby
       
-      if(payload =="\"errors\":[{\"code\":400,\"message\":\"Bad request\"}"){
+      if(payload.indexOf("Errors")>0){
         for(int i=0; i<2;i++){
           buzzerTimer(200); // json byl odeslan ve spatnem formatu, 2 kratke zabzuceni
         }
       }
       Serial.println(payload);
-      http.end(); 
+      http.end();
+      LEDTimer(200)
   } else{
      for(int i=0; i<2;i++){
           buzzerTimer(200); // ESP se nepripojilo k zasuvce
@@ -86,39 +81,42 @@ void wifiCheck(){
   } else {
     for(int i = 0; i < 3; i++){
       buzzerTimer(300);
+      Serial.println("nepripojeni");
     }
   }
 }
 
 void buttonCheck(){
   // aby pri delsim podrzenim stav nepreskakoval
-  //buttonState = digitalRead();
+  buttonState = digitalRead(button);
   if(buttonState == HIGH){
-    check = true;
+    checkButtonState1 = true;
   }
 }
 
 void setup() {
   Serial.begin(115200);
   delay(2000);
-  //for(int i =0; i < 100000; i++)
-  Serial.print("test");
-  Serial.println(ssid);
-  Serial.println(NetioIP);
-  WiFi.disconnect();
   pinMode(buzzer, OUTPUT); // nastaveni bzucaku na out
   pinMode(button, INPUT);
-  //wifiWPS(); // zapnuti wifi
+  pinMode(LED, OUTPUT);
   WiFiConnect();
   wifiCheck();
+  EEPROM.begin(512);
+  NetioIP = writeSAVED();
+  
 }
 
 void loop() {
-   handleServer();
-   buttonState = digitalRead(button); // cteni stavu tlacitka
-   if(buttonState == LOW && check){
+  handleServer();
+  //Serial.  println(NetioIP);
+  buttonState = digitalRead(button); // cteni stavu tlacitka
+
+  if(buttonState == LOW && checkButtonState1){
+    Serial.println(NetioIP);
+    //writeSAVED();
     wifiCheck(); // kontrola wifi zda jsme stale pripojeni
-    check = false; // promenna pro kontrolu dlouheho mackani tlacitka
+    checkButtonState1 = false; // promenna pro kontrolu dlouheho mackani tlacitka
   }
   buttonCheck(); // zmeneni stavu promenne check
 }

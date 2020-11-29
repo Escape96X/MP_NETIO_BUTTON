@@ -70,7 +70,8 @@ const char indexHTML[] PROGMEM = R"rawliteral(
             
             }
         </script>
-        <button onclick="window.location.href=window.location.href"0>Scan</button>
+        <button onclick="window.location.href=window.location.href">Scan</button>
+        <button onclick="location.href = '/netioProduct';">NETIOIP</button>
         <p>Scan take a while</p>
     </body>
 </html>
@@ -110,7 +111,7 @@ const char NetioHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
         <meta charset="UTF-8">
-        <form method ="POST" action ="/netioIP">
+        <form method ="POST" action ="/netioProduct/check">
             <label for = "ip">IP OF NETIO PRODUCT</label>
             <input type="input" name="ip" id="ip">
             <button type="submit">submit</button>

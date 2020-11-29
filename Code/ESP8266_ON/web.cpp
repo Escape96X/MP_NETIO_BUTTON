@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFiScan.h>
+#include <EEPROM.h>
 
 // Vytvorene headery
 #include "web.h"
@@ -11,7 +12,7 @@
 
 String ssid = "";
 String password = "";
-String NetioIP = "192.168.0.196";
+String NetioIP = "0";
 
 const char *OWN_SSID = "NETIO_BUTTON";
 const int RSSI_MAX = -40;
@@ -23,6 +24,32 @@ IPAddress OWN_IP(192, 168, 4, 1);
 
 
 // Fuknce pro výpočet
+
+void saveIPtoEEPROM(){
+  char arr[NetioIP.length() +1];
+  strcpy(arr, NetioIP.c_str());
+  Serial.print("v charu ");
+  Serial.println(arr);
+  for(int i = 0; i < NetioIP.length(); i++){
+    EEPROM.write(0 + i, arr[i]);
+  }
+  EEPROM.commit();
+}
+
+String writeSAVED(){
+  String tempNetio ="";
+  int len = 15;
+  for(int i = 0; i <len; i++){
+    char netio = EEPROM.read(i);
+    if(netio == ';')
+      break;
+    tempNetio += netio;
+    Serial.print(netio);
+      
+  }
+  Serial.println(" ");
+  return tempNetio;
+}
 int dBmtoPercentage(int dBm) {
     int quality;
     if (dBm <= RSSI_MIN) {
@@ -114,10 +141,9 @@ void handleNetioProduct() {
 void handleNetioDevice() {
     if (server.hasArg("ip")) {
         NetioIP = server.arg("ip");
-        String espIP = "ESP IP: ";
-        espIP += ipToString(WiFi.localIP());
-        espIP += " shutting down AP, connect on WiFi";
-        server.send(200, "plain/text", espIP);
+        NetioIP += ";";
+        saveIPtoEEPROM();
+        writeSAVED();
         disconnectAP();
     } else {
         server.send(403);
@@ -136,9 +162,10 @@ void handleCheckWiFiPassword() {
         if (WiFi.status() == WL_CONNECTED) {
             String currentIP = "ESP IP: ";
             currentIP += ipToString(WiFi.localIP());
-            server.send(200, "text/plain", currentIP);
+            currentIP += "<button onClick=\"location.href = '/'\"></button>";
+            server.send(200, "text/html", currentIP);
         } else {
-            String badPassword = "Nespavne heslo <br><button onClick=\"location.href = '/wifi?wifi=";
+            String badPassword = "Nesprávné heslo nebo chyba připojení <br><button onClick=\"location.href = '/wifi?wifi=";
             badPassword += ssid;
             badPassword += "';\">Return</button>";
             server.send(200, "text/html", badPassword);
@@ -155,17 +182,18 @@ void serversOn(){
     server.on("/netioProduct", handleNetioProduct);
     server.on("/wifi/check", HTTP_POST, handleCheckWiFiPassword);
     server.on("/netioProduct/check", HTTP_POST, handleNetioDevice);
+    server.begin();
+    Serial.println("AP SERVER");
 }
 
 void setWiFiServer() {
-    WiFi.disconnect();
+    //WiFi.disconnect();
     APSet();
     delay(500);
     serversOn();
-    server.begin();
 }
 
 void handleServer() {
-    if(APWork)
+    //if(APWork)
       server.handleClient();
 }

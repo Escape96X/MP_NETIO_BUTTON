@@ -9,10 +9,12 @@
 //bool APWork;
 
 void setWiFiServer();
+String writeSAVED();
 
 extern String ssid;
 extern String password;
 extern String NetioIP;
 
 void handleServer();
+void serversOn();
 #endif
