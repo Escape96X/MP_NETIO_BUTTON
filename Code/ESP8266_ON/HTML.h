@@ -6,9 +6,49 @@ const char indexHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
         <meta charset="UTF-8">
+        <style>
+          input[type="submit"] {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            width: 200px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+          }
+          button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            width: 150px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+          }
+          .rssi{
+            color: green;
+           text-align: center;
+          }
+          .encrypt1{
+            color: green;            
+            text-align: center;
+          }
+        </style>
     </head>
     <body>
-        <h1>WIFI</h1>
+    <center>
+        <h1>NETIO BUTTON</h1>
+        <button onclick="window.location.href=window.location.href">Scan</button>
+        <button onclick="location.href = '/netioProduct';">NETIOIP</button>
+        <button onclick="location.href = '/buttonConfigure';">Configure</button>
+        <p>Scan can takes a while</p>
+        <h1>WIFIs</h1>
         
         <script>
             var getJSON = function(url, callback) {
@@ -35,11 +75,11 @@ const char indexHTML[] PROGMEM = R"rawliteral(
                     }
                 }
             });
-
             function buttons(i, networks, rssi, protection){
 
                 var button = document.createElement('input');
-                button.type = 'submit'
+                button.class = 'button';
+                button.type = 'submit';
                 button.value = networks[i];
 
                 var form = document.createElement('form');
@@ -56,23 +96,21 @@ const char indexHTML[] PROGMEM = R"rawliteral(
                 inputs.type = 'hidden';
                 inputs.name = 'ssid';
                 inputs.value = networks[i];
-                var rssi1 = document.createTextNode(rssi[i]);
-                var encrypt = document.createTextNode(protection[i])
+                var rssi1 = document.createElement("p");
+                rssi1.innerHTML = rssi[i];
+                rssi1.className = 'rssi';
+                var encrypt = document.createElement("p");
+                encrypt.innerHTML = protection[i];
+                encrypt.className = 'encrypt1';
 
                 document.body.appendChild(form);
                 form.appendChild(inputs);
-                form.appendChild(document.createElement('br'));
                 form.appendChild(button);
-                form.appendChild(document.createElement('br'));
                 form.appendChild(rssi1);
-                form.appendChild(document.createElement('br'));
                 form.appendChild(encrypt);
             
             }
         </script>
-        <button onclick="window.location.href=window.location.href">Scan</button>
-        <button onclick="location.href = '/netioProduct';">NETIOIP</button>
-        <p>Scan take a while</p>
     </body>
 </html>
 )rawliteral";
@@ -80,13 +118,37 @@ const char indexHTML[] PROGMEM = R"rawliteral(
 const char passwordHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <style>
+          input[type=text], select {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+}
+          button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            width: 150px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+          }
+
+        </style>
+    </head>
+        <center>
         <form method ="POST" action ="/wifi/check">
             <label for = "password">WiFi password</label>
+            <br>
             <input type="password" name="password" id="password">
             <button type="submit">submit</button>
+            <p>WiFi name: </p>
         </form>
-    </head>
     <body>
         <script>
             const queryString = window.location.search;
@@ -118,6 +180,28 @@ const char NetioHTML[] PROGMEM = R"rawliteral(
         </form>
     </head>
     <body>
+        <button onClick="location.href = '/';">Return</button>
+    </body>
+</html>
+)rawliteral";
+
+
+const char configHTML[] PROGMEM = R"rawliteral(
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <form method ="POST" action ="/buttonConfigure/check">
+            <label for = "button1">Config 1st button</label>
+            <input type="input" name="button1" id="button1">
+            <button type="submit">submit button 1</button>
+        </form>
+        <form method ="POST" action ="/buttonConfigure/check">
+            <label for = "button2">Config 2nd button</label>
+            <input type="input" name="button2" id="button2">
+            <button type="submit">submit button 2</button>
+        </form>
         <button onClick="location.href = '/';">Return</button>
     </body>
 </html>

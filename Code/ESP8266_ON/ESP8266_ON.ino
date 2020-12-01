@@ -9,11 +9,12 @@
 extern String ssid;
 extern String password;
 extern String NetioIP;
-char Netio[15];
+extern String HTTPRequest1;
 
 
 // konstanty pripojeni a json zpravy
-const char* HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
+//char* HTTP_REQUEST1 = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
+
 
 //const int buttton = 16;
 const int buzzer = 13;
@@ -56,7 +57,7 @@ void httpPost(){
   HTTP_CONNECTION += "/netio.json";
   if(http.begin(HTTP_CONNECTION)){
       http.addHeader("Content-Type", "text/plain"); // nastaveni headeru na klasicky test
-      int httpCode = http.POST(HTTP_REQUEST); // odeslani json requestu
+      int httpCode = http.POST(HTTPRequest1); // odeslani json requestu
       String payload = http.getString(); // zjisteni zpetne vazby
       
       if(payload.indexOf("Errors")>0){
@@ -66,7 +67,7 @@ void httpPost(){
       }
       Serial.println(payload);
       http.end();
-      LEDTimer(200)
+      LEDTimer(200);
   } else{
      for(int i=0; i<2;i++){
           buzzerTimer(200); // ESP se nepripojilo k zasuvce
@@ -103,20 +104,21 @@ void setup() {
   WiFiConnect();
   wifiCheck();
   EEPROM.begin(512);
-  NetioIP = writeSAVED();
+  NetioIP = readEEPROM(0,15);
+  HTTPRequest1 = readEEPROM(60,50);
   
 }
 
 void loop() {
   handleServer();
-  //Serial.  println(NetioIP);
   buttonState = digitalRead(button); // cteni stavu tlacitka
 
   if(buttonState == LOW && checkButtonState1){
     Serial.println(NetioIP);
-    //writeSAVED();
     wifiCheck(); // kontrola wifi zda jsme stale pripojeni
     checkButtonState1 = false; // promenna pro kontrolu dlouheho mackani tlacitka
   }
   buttonCheck(); // zmeneni stavu promenne check
+  Serial.println(NetioIP);
+  Serial.println(HTTPRequest1);
 }

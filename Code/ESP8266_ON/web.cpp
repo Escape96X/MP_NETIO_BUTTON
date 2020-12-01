@@ -12,7 +12,8 @@
 
 String ssid = "";
 String password = "";
-String NetioIP = "0";
+String NetioIP = "";
+String HTTPRequest1 = "";
 
 const char *OWN_SSID = "NETIO_BUTTON";
 const int RSSI_MAX = -40;
@@ -25,23 +26,20 @@ IPAddress OWN_IP(192, 168, 4, 1);
 
 // Fuknce pro výpočet
 
-void saveIPtoEEPROM(){
-  char arr[NetioIP.length() +1];
-  strcpy(arr, NetioIP.c_str());
-  Serial.print("v charu ");
-  Serial.println(arr);
-  for(int i = 0; i < NetioIP.length(); i++){
-    EEPROM.write(0 + i, arr[i]);
+void saveToEEPROM(String sToSave, int startPosition){
+  char arr[sToSave.length() +1];
+  strcpy(arr, sToSave.c_str());
+  for(int i = 0; i < sToSave.length(); i++){
+    EEPROM.write(startPosition + i, arr[i]);
   }
   EEPROM.commit();
 }
 
-String writeSAVED(){
+String readEEPROM(int numberOfStart, int len){
   String tempNetio ="";
-  int len = 15;
   for(int i = 0; i <len; i++){
-    char netio = EEPROM.read(i);
-    if(netio == ';')
+    char netio = EEPROM.read(numberOfStart+i);
+    if(netio == '$')
       break;
     tempNetio += netio;
     Serial.print(netio);
@@ -50,6 +48,9 @@ String writeSAVED(){
   Serial.println(" ");
   return tempNetio;
 }
+
+
+
 int dBmtoPercentage(int dBm) {
     int quality;
     if (dBm <= RSSI_MIN) {
@@ -102,11 +103,6 @@ String jsonOfNetworks() {
 // Nastavení AP a přípojení k WiFi
 void connectToWiFi() {
     WiFi.begin(ssid, password);
-    for (int i = 0; i < 5; i++) {
-        if (WiFi.status() == WL_CONNECTED)
-            break;
-        delay(1000);
-    }
 }
 
 void APSet() {
@@ -137,20 +133,24 @@ void handleNetioProduct() {
   server.send(200, "text/html", NetioHTML);
 }
 
+void handleConfig() {
+  server.send(200, "text/html", configHTML);
+}
+
 // Server - dynamické stránky
 void handleNetioDevice() {
     if (server.hasArg("ip")) {
         NetioIP = server.arg("ip");
-        NetioIP += ";";
-        saveIPtoEEPROM();
-        writeSAVED();
-        disconnectAP();
+        NetioIP += "$";
+        saveToEEPROM(NetioIP, 0);
+        NetioIP = readEEPROM(0,15);
+        //disconnectAP();
     } else {
         server.send(403);
     }
 }
 
-void handleCheckWiFiPassword() {
+void handleWiFiPasswordRedirect() {
     if (server.hasArg("ssid")) {
         ssid = server.arg("ssid");
         if (server.hasArg("password"))
@@ -159,20 +159,40 @@ void handleCheckWiFiPassword() {
             password = "";
         connectToWiFi();
         Serial.println("wifi");
-        if (WiFi.status() == WL_CONNECTED) {
-            String currentIP = "ESP IP: ";
-            currentIP += ipToString(WiFi.localIP());
-            currentIP += "<button onClick=\"location.href = '/'\"></button>";
-            server.send(200, "text/html", currentIP);
-        } else {
-            String badPassword = "Nesprávné heslo nebo chyba připojení <br><button onClick=\"location.href = '/wifi?wifi=";
-            badPassword += ssid;
-            badPassword += "';\">Return</button>";
-            server.send(200, "text/html", badPassword);
-        }
+        String html = "<meta http-equiv = \"refresh\" content = \"5; url = /wifi/check\" />";
+        String html += "<body><h1>CONNECTING...</h1></body>";
+        server.send(200, "text/html", html);
+//        if (WiFi.status() == WL_CONNECTED) {
+//            String currentIP = "ESP IP: ";
+//            currentIP += ipToString(WiFi.localIP());
+//            currentIP += "<button onClick=\"location.href = '/'\">Return</button>";
+//            server.send(200, "text/html", currentIP);
+//        } else {
+//            String badPassword = "Nesprávné heslo nebo chyba připojení <br><button onClick=\"location.href = '/wifi?wifi=";
+//            badPassword += ssid;
+//            badPassword += "';\">Return</button>";
+//            server.send(200, "text/html", badPassword);
+//        }
     } else {
         server.send(200, "plain/text", "neplatne url");
     }
+}
+
+void handleWiFiApprove(){
+  
+}
+
+void handleConfigCheck(){
+  if(server.hasArg("button1"))
+    HTTPRequest1 = server.arg("button1");
+    HTTPRequest1 += "$";
+    saveToEEPROM(HTTPRequest1, 60);
+    HTTPRequest1 = readEEPROM(60, 50);
+    
+  //else if(server.hasArg("button2")
+    //doplnit;
+  String html = "<meta http-equiv = \"refresh\" content = \"2; url = /buttonConfigure\" />";
+  server.send(200, "text/html", html);
 }
 
 void serversOn(){
@@ -180,14 +200,16 @@ void serversOn(){
     server.on("/", handleRoot);
     server.on("/wifi", handleWiFiConnect);
     server.on("/netioProduct", handleNetioProduct);
-    server.on("/wifi/check", HTTP_POST, handleCheckWiFiPassword);
+    server.on("/wifi/redirect", HTTP_POST, handleWiFiPasswordRedirect);
+    server.on("/wifi/check", handleWiFiApprove);
     server.on("/netioProduct/check", HTTP_POST, handleNetioDevice);
+    server.on("/buttonConfigure", handleConfig);
+    server.on("/buttonConfigure/check", HTTP_POST, handleConfigCheck);
     server.begin();
-    Serial.println("AP SERVER");
+    Serial.println("AP has been turned on");
 }
 
 void setWiFiServer() {
-    //WiFi.disconnect();
     APSet();
     delay(500);
     serversOn();
