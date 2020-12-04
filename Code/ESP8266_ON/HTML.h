@@ -120,7 +120,7 @@ const char passwordHTML[] PROGMEM = R"rawliteral(
     <head>
     <meta charset="UTF-8">
     <style>
-          input[type=text], select {
+          input[type=password], select {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -142,7 +142,7 @@ const char passwordHTML[] PROGMEM = R"rawliteral(
         </style>
     </head>
         <center>
-        <form method ="POST" action ="/wifi/check">
+        <form method ="POST" action ="/wifi/redirect">
             <label for = "password">WiFi password</label>
             <br>
             <input type="password" name="password" id="password">
@@ -172,14 +172,38 @@ const char passwordHTML[] PROGMEM = R"rawliteral(
 const char NetioHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
+    <style>
+    button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            width: 200px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+          }
+    input[type=text] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+}
+        </style>
+    </head>
+    <body>
+      <center>
         <meta charset="UTF-8">
         <form method ="POST" action ="/netioProduct/check">
             <label for = "ip">IP OF NETIO PRODUCT</label>
             <input type="input" name="ip" id="ip">
             <button type="submit">submit</button>
         </form>
-    </head>
-    <body>
         <button onClick="location.href = '/';">Return</button>
     </body>
 </html>
@@ -190,8 +214,32 @@ const char configHTML[] PROGMEM = R"rawliteral(
 <html>
     <head>
         <meta charset="UTF-8">
+        <style>
+        button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            width: 200px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+          }
+          input[type=text]{
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+}
+          </style>
     </head>
     <body>
+    <center>
         <form method ="POST" action ="/buttonConfigure/check">
             <label for = "button1">Config 1st button</label>
             <input type="input" name="button1" id="button1">
