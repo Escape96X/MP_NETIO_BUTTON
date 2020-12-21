@@ -113,7 +113,7 @@ void buttonCheck()
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(2000);
   pinMode(buzzer, OUTPUT); // nastaveni bzucaku na out
   pinMode(button, INPUT);
@@ -136,7 +136,8 @@ void loop()
     wifiCheck();               // kontrola wifi zda jsme stale pripojeni
     checkButtonState1 = false; // promenna pro kontrolu dlouheho mackani tlacitka
   }
+  Serial.println(checkButtonState1);
   buttonCheck(); // zmeneni stavu promenne check
-                 // Serial.println(NetioIP);
-                 // Serial.println(HTTPRequest1);
+  // Serial.println(NetioIP);
+  // Serial.println(HTTPRequest1);
 }

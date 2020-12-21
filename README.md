@@ -45,9 +45,9 @@ připojení do WiFi sítě**
 (např. 200, 404 návratové hodnoty)**
 	- Zvolte vhodnou technologii výroby funkčních vzorků (nepájivé pole, DPS) a vyrobte jeden funkční vzorek na bázi ESP8266 a druhý na bázi ESP32 s možností měření odebíraného proudu
 	- Určete vhodnou metodu měření dynamické spotřeby energie v čase (reakční doby) pro různé režimy připojení, způsobu komunikace a platformy procesoru:
-		- ESP je vypnuto a vzbudí se nějakým externím obvodem přes enable/reset vstup po stisku tlačítka
-		- ESP je v deep sleep módu - low power režimu a vzbudí se tlačítkem
- 		- ESP je kontinuálně zapnuto
+		- **ESP je vypnuto a vzbudí se nějakým externím obvodem přes enable/reset vstup po stisku tlačítka**
+		- **ESP je v deep sleep módu - low power režimu a vzbudí se tlačítkem**
+ 		- **ESP je kontinuálně zapnuto**
 		- Kolik energie spotřebují uvedené režimy při napájení z baterie. Výsledky měření názorně porovnejte
 	- Celou dokumentaci včetně výpisů zdrojového programu s komentářem veďte ve verzovacím systému Git a elektronicky doložte k tištěné podobě dokumentace
 ## Kritéria funkčnosti

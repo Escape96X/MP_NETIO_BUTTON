@@ -1,19 +1,15 @@
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h> 
 #include <ESP8266HTTPClient.h>
-
-const char* HTTP_CONNECTION = "http://192.168.0.106/netio.json";
-const char* HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
-
-const int buzzer = 13;
-const int LED = 12;
-const int wakePin = 5;
-
-IPAddress local_IP(192, 168, 0, 107);
-IPAddress gateway(192, 168, 0, 1);
-
-IPAddress subnet(255, 255, 255, 0);
+String HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
+String HTTP_CONNECTION = "http://192.168.0.196/netio.json";
+const char* ssid = "Jirickovi_secured";
+const char* password = "19192020";
 
 HTTPClient http;
+const int buzzer = 13;
+//const int LED = 12;
+const int wakePin = 5;
+
 
 
 void buzzerTimer(int duration){ 
@@ -24,52 +20,65 @@ void buzzerTimer(int duration){
   delay(100);
 }
 
-void wifiNormal(){
-  // funkce pro pouziti klasicke wifi na testovani
-  const char* ssid = "Jiříčkovi_secured";
-  const char* password = "19192020";
-  WiFi.config(local_IP, subnet, gateway);
+  
+void WiFib(){
+  Serial.println('\n');
   WiFi.begin(ssid, password);
-  Serial.println("POKUS O PRIP");
+  Serial.print("Connecting to ");
+  Serial.print(ssid); Serial.println(" ...");
+
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(++i); Serial.print(' ');
+  }
+  
+  Serial.println('\n');
+  Serial.println("Connection established!");  
+  Serial.print("IP address:\t");
+  Serial.println(WiFi.localIP());  
 }
 
-void httpPost(){
+
+void httpPost()
+{
   // odesilani requestu
-  if(http.begin(HTTP_CONNECTION)){
-      http.addHeader("Content-Type", "text/plain"); // nastaveni headeru na klasicky test
-      int httpCode = http.POST(HTTP_REQUEST); // odeslani json requestu
-      String payload = http.getString(); // zjisteni zpetne vazby
-      
-      if(payload =="\"errors\":[{\"code\":400,\"message\":\"Bad request\"}"){
-        for(int i=0; i<2;i++){
-          buzzerTimer(200); // json byl odeslan ve spatnem formatu, 2 kratke zabzuceni
-        }
-      }
-      Serial.println(payload);
-      http.end(); 
-  } else{
-    Serial.println("nepripojeno");
-     for(int i=0; i<2;i++){
-          buzzerTimer(200); // ESP se nepripojilo k zasuvce
-        }
-    }
-}
+  if (http.begin(HTTP_CONNECTION))
+  {
+    http.addHeader("Content-Type", "text/plain");
+    Serial.println(HTTP_REQUEST);           // nastaveni headeru na klasicky test
+    int httpCode = http.POST(HTTP_REQUEST); // odeslani json requestu
+    String payload = http.getString();      // zjisteni zpetne vazby
 
+    if (payload.indexOf("errors") > 0)
+    {
+      for (int i = 0; i < 2; i++)
+      {
+        buzzerTimer(200); // json byl odeslan ve spatnem formatu, 2 kratke zabzuceni
+        //LEDTimer(1000);
+      }
+    }
+    Serial.println(payload);
+    http.end();
+    //LEDTimer(200);
+  }
+  else
+  {
+    for (int i = 0; i < 2; i++)
+    {
+      buzzerTimer(200); // ESP se nepripojilo k zasuvce
+    }
+  }
+}
 
 void setup() {
-  Serial.begin(115200);
   pinMode(wakePin, OUTPUT);
-  digitalWrite(wakePin, HIGH);
-  pinMode(buzzer, OUTPUT);
-  wifiNormal();
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-    Serial.print(".");
-  }
+  digitalWrite(wakePin, LOW);
+  Serial.begin(115200);
+  delay(10);
+  WiFib();
   httpPost();
-  Serial.println("TEST");
-  digitalWrite(5, LOW);
+  digitalWrite(wakePin, HIGH);
 }
 
-void loop() {
-}
+void loop() { }
