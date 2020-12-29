@@ -9,7 +9,9 @@
  ┃ ┃ ┗ 📜logo.jpg  
  ┃ ┣ 📜document.pdf   
  ┃ ┗ 📜document.tex  
- ┣ 📂Images  
+ ┣ 📂Mereni - **Waveform a screenshoty**
+ ┃	┗ 📂Enable
+ ┣ 📂Images 
  ┣ 📜.gitignore  
  ┗ 📜README.md  
 # Návod pro sestavení verze ESP8266_ON
