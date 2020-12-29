@@ -9,8 +9,8 @@
  ┃ ┃ ┗ 📜logo.jpg  
  ┃ ┣ 📜document.pdf   
  ┃ ┗ 📜document.tex  
- ┣ 📂Mereni - **Waveform a screenshoty**
- ┃	┗ 📂Enable
+ ┣ 📂Mereni - **Waveform a screenshoty**  
+ ┃ ┗ 📂Enable  
  ┣ 📂Images 
  ┣ 📜.gitignore  
  ┗ 📜README.md  
