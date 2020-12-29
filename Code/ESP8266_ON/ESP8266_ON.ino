@@ -121,6 +121,7 @@ void setup()
   WiFiConnect();
   wifiCheck();
   EEPROM.begin(512);
+  delay(200);
   NetioIP = readEEPROM(0, 15);
   HTTPRequest1 = readEEPROM(60, 50);
 }
@@ -136,7 +137,7 @@ void loop()
     wifiCheck();               // kontrola wifi zda jsme stale pripojeni
     checkButtonState1 = false; // promenna pro kontrolu dlouheho mackani tlacitka
   }
-  Serial.println(checkButtonState1);
+  //Serial.println(checkButtonState1);
   buttonCheck(); // zmeneni stavu promenne check
   // Serial.println(NetioIP);
   // Serial.println(HTTPRequest1);

@@ -2,13 +2,21 @@
 #include <ESP8266HTTPClient.h>
 String HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
 String HTTP_CONNECTION = "http://192.168.0.196/netio.json";
-const char* ssid = "Milan - iPhone"
+const char* ssid = "Milan - iPhone";
 const char* password = "coevoe123";
 
 HTTPClient http;
 const int buzzer = 13;
-//const int LED = 12;
+const int LED = 12;
 
+
+void LEDTimer(int duration)
+{
+  digitalWrite(LED, LOW);
+  delay(duration);
+  digitalWrite(LED, HIGH);
+  delay(100);
+}
 
 void buzzerTimer(int duration){ 
   // Bzucak na oznameni stavu
@@ -16,7 +24,7 @@ void buzzerTimer(int duration){
   delay(duration);
   digitalWrite(buzzer, LOW);
   delay(100);
-
+}
   
 void WiFib(){
   Serial.println('\n');
@@ -74,7 +82,7 @@ void setup() {
   delay(10);
   WiFib();
   httpPost();
-  ESP.deepSleep(0);
+  ESP.deepSleep(3e6);
 }
 
 void loop() { }

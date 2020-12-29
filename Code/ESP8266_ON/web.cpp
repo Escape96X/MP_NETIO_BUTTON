@@ -29,10 +29,8 @@ void saveToEEPROM(String sToSave, int startPosition)
     char arr[sToSave.length() + 1];
     strcpy(arr, sToSave.c_str());
     for (int i = 0; i < sToSave.length(); i++)
-    {
         EEPROM.write(startPosition + i, arr[i]);
-    }
-    EEPROM.commit();
+        EEPROM.commit();
 }
 
 String readEEPROM(int numberOfStart, int len)

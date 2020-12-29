@@ -1,6 +1,8 @@
 \documentclass[a4paper, 12pt]{report}
 \usepackage{monapack}
+\usepackage{siunitx}
 
+%Proměnné
 \student{Milan Jiříček}
 \trida{B4.I}
 \obor{18-20-M/01 Informační technologie}
@@ -8,70 +10,110 @@
 \datumNarozeni{10. 11. 2001}
 \vedouci{Ing. Břetislav Bakala}
 \nazevPrace{Dálkové ovládání zásuvek NETIO}
-\cisloPrace{1}
+\cisloPrace{12}
 \skolniRok{2020/2021}
 \reditel{Ing. Jiří Uhlík}
 
-
+%Zadání
 \zacatek
 	
 	\titulniStrana
 
-	\zadani{1. 11. 2020}
-	{
-		\item V dokumentaci popište technologie NETIO, ESP8266 a ESP32 s ohledem na požadované funkce ovladače
-		\item Navrhněte vhodné uživatelsky přívětivé rozhraní pro konfiguraci ovladače a jeho připojení do WiFi sítě.
-		\item Realizujte požadované funkce na ovladač:
-		\begin{itemize}
-			\item vstup na 2 nezávislá tlačítka pro standardní dvojitý přepínač/spínač dvou samostatných zásuvek jednoho zařízení NETIO, eliminace rychlých mačkání (nervózní uživatel)
-			\item nepodařený příkaz/přepnutí vypínače (nepodaří se odeslat příkaz http) je indikován bliknutím LED a pípnutím buzzeru. Kontroluje se odpověď http serveru (např. 200, 404 návratové hodnoty)
-			\item Zvolte vhodnou technologii výroby funkčních vzorků (nepájivé pole, DPS) a vyrobte jeden funkční vzorek na bázi ESP8266 a druhý na bázi ESP32 s možností měření odebíraného proudu
-			\item Určete vhodnou metodu měření dynamické spotřeby energie v čase (reakční doby) pro různé režimy připojení, způsobu komunikace a platformy procesoru:
-			\begin{itemize}
-				\item ESP je vypnuto a vzbudí se nějakým externím obvodem přes enable/reset vstup po stisku tlačítka
-				\item ESP je v deep sleep módu - low power režimu a vzbudí se tlačítkem
-				\item ESP je kontinuálně zapnuto
-				\item Kolik energie spotřebují uvedené režimy při napájení z baterie.
-				Výsledky měření názorně porovnejte
-			\end{itemize}		
-		\end{itemize}
-		\item Celou dokumentaci včetně výpisů zdrojového programu s komentářem veďte ve verzovacím systému Git a elektronicky doložte k tištěné podobě dokumentace.
-	}
-	{
-		\item srovnání platforem ESP32 a ESP8266 s ohledem na požadované funkce
-		\item návrh požadovaných funkcí ovladače
-		\item návrh variant ovladače s platformou ESP32 a ESP8266 ve formě ověření konceptu
-		\item zdrojové kódy v repozitáři GIT (GitHub nebo GitLab)
-		\item schéma zapojeni všech zkoušených variant v řešení
-		\item srovnání spotřeby a reakční doby funkčních vzorků
-	}
-	{
-		\item vyrobené vzorky ovladače (ESP8266 a ESP32) jsou funkční
-		\item je vytvořeno uživatelské rozhraní pro konfiguraci ovladače
-		\item bylo provedeno měření spotřeby a doby odezvy pro oba typy ovladačů
-	}
-	{firma}
-	{firmy}
-	{}
 	
 	\anotace 
-	Text
+	Netio tlacitko a mereni
 
 	\annotation
-	Text
+	netio button and measurement
 	
 	\podekovani
-	Text
+	husty podekovani
 	
 
 	
 	\obsah
-	
-	\kapitola{Úvod}
-	\kapitola{Vlastní text práce}
-		rozvedený do jednotlivých kapitol a subkapitol
-		\podkapitola{Subkapitola}
-			\podpodkapitola{Subsubkapitola}
+% Teorie
+
+
+% MĚŘENÍ
+
+	\kapitola{Měření spotřeby a času ESP8266}
+		
+		\podkapitola{Enable režim}
+		
+			\podpodkapitola{Klidový stav}
+				\tucne{Podmínky}
+				\bodseznam{
+					\bod Napájení z USB
+					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
+					\bod pin enable byl připojen manuálně
+					\bod Napětí bylo měřeno Analog Discovery 2
+				}
+				\tucne{Výsledek} \\
+				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám.
+				\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
+				
+			\podpodkapitola{WiFi připojení}
+				\tucne{Podmínky}
+				\bodseznam{
+					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+					\bod WiFi je nastavena pevně zadaná v programu
+					\bod WiFi nevyužívá žádného zabezpečení
+					\bod IP adresa byla nastavena staticky
+				}
+			
+			\podpodkapitola{HTTP request}
+				\tucne{Podmínky}
+				\bodseznam{
+					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+					\bod WiFi je nastavena zachována v ESP z předchozího měření
+				}
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{Ohodnocení výsledků}
+			Výsledky klidového režimu neodpovídají teoretické hodnotě uvedené v officiálním datasheetu. Důvodem je nízká citlivost zařízení Analog Discovery 2. Pro přesnější měření je žádoucí použít micro ampérmetr. \\
+			Počáteční spuštění ESP8266 trvá déle než v ostatních případech. Hlavní důvod spočívá v rozdílném načítání než v případě deep sleep... Doplním
+			
+			
+		\podkapitola{Deep sleep režim}
+			\podpodkapitola{Klidový stav} 
+				\tucne{Podmínky}
+					\bodseznam{
+						\bod Napájení z USB
+						\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
+						\bod ESP8266 je probuzeno každých \SI{5}{s}
+					}
+				\tucne{Závěr měření}\\
+				
+			\podpodkapitola{WiFi připojení}
+				\tucne{Podmínky}\\
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{Odesílání HTTP requestu}
+				\tucne{Podmínky}\\
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{Ohodnocení výsledků}
+			
+		\podkapitola{Kontinuální režim}
+		
+			\podpodkapitola{Klidový stav}
+				\tucne{Podmínky}\\
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{WiFi připojení}
+				\tucne{Podmínky}\\
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{Odesílání HTTP requestu}
+				\tucne{Podmínky}\\
+				\tucne{Výsledek}\\
+				
+			\podpodkapitola{Ohodnocení výsledků}
+			
+
+
+% KONEC MĚŘENÍ
 	\kapitola{Závěr}
 
 	\seznamTabulek
@@ -88,7 +130,7 @@
 		
 		\kvalifikacniprace{nazevCitace}{Příjmení autora}{Jméno autora}{Název práce}{Místo}{Rok}{Druh práce}{Univerzita, Fakulta, Katedra}{Vedoucí diplomové práce jméno}
 		
-		\url{nazevCitace}{Název stránek}{Titulek}{Stránky}{rok}{datum}{URL odkaz}
+		\url{ESP Zapojení}{Read the Docs}{Boards}{readthedocs.org}{2017}{29.12.2020}{https://arduino-esp8266.readthedocs.io/en/latest/boards.html#generic-esp8266-module}
 		
 	}
 	
