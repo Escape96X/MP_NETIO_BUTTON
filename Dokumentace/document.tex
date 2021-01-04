@@ -16,31 +16,26 @@
 
 %Zadání
 \zacatek
-	
+
 	\titulniStrana
-
-	
-	\anotace 
-	Netio tlacitko a mereni
-
+	\anotace
+	Maturitní práce se zaměřuje na porovnání platforem ESP8266 a ESP32. Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodna pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.
 	\annotation
-	netio button and measurement
-	
+	The graduation thesis focuses on the comparison of the ESP8266 and ESP32 platforms. The goal is to create a driver for controlling NETIO sockets with a web application for configuration and to find out which platform is suitable for the implementation of a~functional sample in terms of energy consumption and response time.
 	\podekovani
-	husty podekovani
-	
-
-	
+	Chtěl bych poděkovat panu učiteli Ing.~Břetislavovi Bakalovi za odborné vedení práce a~cenné rady, které mi pomohly tuto práci zkompletovat. Rád bych také poděkoval Ing.~Břetislavovi Bakalovi za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování bakalářské práce. V~neposlední řadě chci poděkovat Mgr. Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za pomoc při gramatické a~stylistické kontrole.
 	\obsah
 % Teorie
-
-
+	\kapitola{Teorie}
+		\podkapitola{Aplikace pro WiFi Managment}
+		\podkapitola{Netio zásuvka Cobra}
+		\podkapitola{a tak dale}
 % MĚŘENÍ
 
 	\kapitola{Měření spotřeby a času ESP8266}
-		
+
 		\podkapitola{Enable režim}
-		
+
 			\podpodkapitola{Klidový stav}
 				\tucne{Podmínky}
 				\bodseznam{
@@ -50,9 +45,9 @@
 					\bod Napětí bylo měřeno Analog Discovery 2
 				}
 				\tucne{Výsledek} \\
-				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám.
+				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo \SI{3}{\micro A}.
 				\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
-				
+
 			\podpodkapitola{WiFi připojení}
 				\tucne{Podmínky}
 				\bodseznam{
@@ -61,7 +56,7 @@
 					\bod WiFi nevyužívá žádného zabezpečení
 					\bod IP adresa byla nastavena staticky
 				}
-			
+
 			\podpodkapitola{HTTP request}
 				\tucne{Podmínky}
 				\bodseznam{
@@ -69,14 +64,14 @@
 					\bod WiFi je nastavena zachována v ESP z předchozího měření
 				}
 				\tucne{Výsledek}\\
-				
+
 			\podpodkapitola{Ohodnocení výsledků}
 			Výsledky klidového režimu neodpovídají teoretické hodnotě uvedené v officiálním datasheetu. Důvodem je nízká citlivost zařízení Analog Discovery 2. Pro přesnější měření je žádoucí použít micro ampérmetr. \\
 			Počáteční spuštění ESP8266 trvá déle než v ostatních případech. Hlavní důvod spočívá v rozdílném načítání než v případě deep sleep... Doplním
-			
-			
+
+
 		\podkapitola{Deep sleep režim}
-			\podpodkapitola{Klidový stav} 
+			\podpodkapitola{Klidový stav}
 				\tucne{Podmínky}
 					\bodseznam{
 						\bod Napájení z USB
@@ -84,54 +79,51 @@
 						\bod ESP8266 je probuzeno každých \SI{5}{s}
 					}
 				\tucne{Závěr měření}\\
-				
+
 			\podpodkapitola{WiFi připojení}
 				\tucne{Podmínky}\\
 				\tucne{Výsledek}\\
-				
+
 			\podpodkapitola{Odesílání HTTP requestu}
 				\tucne{Podmínky}\\
 				\tucne{Výsledek}\\
-				
+
 			\podpodkapitola{Ohodnocení výsledků}
-			
+
 		\podkapitola{Kontinuální režim}
-		
+
 			\podpodkapitola{Klidový stav}
-				\tucne{Podmínky}\\
-				\tucne{Výsledek}\\
-				
+				\tucne{Podmínky} \\
+				\tucne{Výsledek} \\
+
 			\podpodkapitola{WiFi připojení}
 				\tucne{Podmínky}\\
 				\tucne{Výsledek}\\
-				
+
 			\podpodkapitola{Odesílání HTTP requestu}
 				\tucne{Podmínky}\\
 				\tucne{Výsledek}\\
-				
+
 			\podpodkapitola{Ohodnocení výsledků}
-			
+
 
 
 % KONEC MĚŘENÍ
 	\kapitola{Závěr}
 
 	\seznamTabulek
-	
+
 	\seznamObrazku
-	
+
 	\prilohy{
 		\kapitola{Příloha}
 	}
-	
+
 	\literatura{
-		
+
 		\kniha{nazevCitace}{Příjmení autora}{Jméno autora}{Název knihy}{Místo vydání}{Nakladatelství}{Rok}{ISBN}
-		
+
 		\kvalifikacniprace{nazevCitace}{Příjmení autora}{Jméno autora}{Název práce}{Místo}{Rok}{Druh práce}{Univerzita, Fakulta, Katedra}{Vedoucí diplomové práce jméno}
-		
-		\url{ESP Zapojení}{Read the Docs}{Boards}{readthedocs.org}{2017}{29.12.2020}{https://arduino-esp8266.readthedocs.io/en/latest/boards.html#generic-esp8266-module}
-		
 	}
-	
+
 \konec
