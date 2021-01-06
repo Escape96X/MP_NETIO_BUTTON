@@ -33,13 +33,57 @@
 % MĚŘENÍ
 
 	\kapitola{Měření spotřeby a času ESP8266}
+	\podkapitola{Kontinuální režim}
+
+		\podpodkapitola{Klidový stav}
+			\tucne{Podmínky} \\
+			\tucne{Výsledek} \\
+
+		\podpodkapitola{WiFi připojení}
+
+			Cílem měření je zjistění rychlostí připojení různými způsoby k přístupovému body, spotřeby a následné porovnání případů.
+			\podpodpodkapitola{Dynamické přidělení IP adresy}
+				Měření proběhlo za použití DHCP protokolu, kde by přístupový pod měl zvolit IP adresu pro zařízení. Bylo provedeno za podmínek:
+				\bodseznam{
+					\bod Napájeno z USB
+					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+					\bod Přístupový bod nebyl zabezpečen
+					\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
+				}
+				\obrazek{ESP8266_network_dynamic}{Měření dynamického připojení k AP}{8cm}{ESP8266_network_dynamic.png}
+				\obrazek{ESP8266_network_dynamic_specific.png}{Měření dynamického připojení k AP podrobně}{8cm}{ESP8266_network_dynamic_specific.png}
+				Měření bylo provedeno 5x. Průměrný čas se pohybuje okolo \SI{4,7}{s}. Jak je možno vidět na grafu, tak dvě WiFi připojení trvaly o 2 sekundy kratší dobu. Toto chování přisuzuji rozmanitému provozu na Přístupovém bodu, který zárověň probíhá s měřením.
+
+			\podpodpodkapitola{Statické přidělení IP adresy}
+			Použita byla statická adresa, která byla přidělena ESP8266 před připojením na AP. Bylo provedeno za podmínek:
+			\bodseznam{
+				\bod Napájeno z USB
+				\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+				\bod Přístupový bod nebyl zabezpečen
+				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
+			}
+			\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
+			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}, což je o průměrně o sekundu rychlejší než v případě DHCP. Hodnoty grafu jsou stabilní.
+			\podpodpodkapitola{Zabezpečený AP}
+			Připojení na access point je šifrované. Bylo provedeno za podmínek:
+			\bodseznam{
+				\bod Napájeno z USB
+				\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+				\bod IP adresa je nastavena staticky
+				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
+			}
+
+		\podpodkapitola{Odesílání HTTP requestu}
+		bla bla bla
+
+
 
 		\podkapitola{Enable režim}
 
 			\podpodkapitola{Klidový stav}
 				\tucne{Podmínky}
 				\bodseznam{
-					\bod Napájení z USB
+					\bod Napájeno z USB
 					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
 					\bod pin enable byl připojen manuálně
 					\bod Napětí bylo měřeno Analog Discovery 2
@@ -78,32 +122,6 @@
 						\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
 						\bod ESP8266 je probuzeno každých \SI{5}{s}
 					}
-				\tucne{Závěr měření}\\
-
-			\podpodkapitola{WiFi připojení}
-				\tucne{Podmínky}\\
-				\tucne{Výsledek}\\
-
-			\podpodkapitola{Odesílání HTTP requestu}
-				\tucne{Podmínky}\\
-				\tucne{Výsledek}\\
-
-			\podpodkapitola{Ohodnocení výsledků}
-
-		\podkapitola{Kontinuální režim}
-
-			\podpodkapitola{Klidový stav}
-				\tucne{Podmínky} \\
-				\tucne{Výsledek} \\
-
-			\podpodkapitola{WiFi připojení}
-				\tucne{Podmínky}\\
-				\tucne{Výsledek}\\
-
-			\podpodkapitola{Odesílání HTTP requestu}
-				\tucne{Podmínky}\\
-				\tucne{Výsledek}\\
-
 			\podpodkapitola{Ohodnocení výsledků}
 
 
