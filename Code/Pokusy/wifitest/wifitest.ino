@@ -18,7 +18,7 @@ void setup() {
   Serial.println(WiFi.localIP());
   //WiFi.config(local_IP, gateway, subnet);
   delay(100);
-  WiFi.begin("Jirickovi_secured");
+  WiFi.begin("Jirickovi_secured", "19192020");
   Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -28,7 +28,7 @@ void setup() {
   Serial.println();
 
   Serial.print("Connected, IP address: ");
-  //Serial.println(WiFi.localIP());
+  Serial.println(WiFi.localIP());
 
   ESP.deepSleep(5e6);
 }

@@ -51,8 +51,9 @@
 					\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
 				}
 				\obrazek{ESP8266_network_dynamic}{Měření dynamického připojení k AP}{8cm}{ESP8266_network_dynamic.png}
-				\obrazek{ESP8266_network_dynamic_specific.png}{Měření dynamického připojení k AP podrobně}{8cm}{ESP8266_network_dynamic_specific.png}
+				% \obrazek{ESP8266_network_dynamic_specific.png}{Měření dynamického připojení k AP podrobně}{8cm}{ESP8266_network_dynamic_specific.png}
 				Měření bylo provedeno 5x. Průměrný čas se pohybuje okolo \SI{4,7}{s}. Jak je možno vidět na grafu, tak dvě WiFi připojení trvaly o 2 sekundy kratší dobu. Toto chování přisuzuji rozmanitému provozu na Přístupovém bodu, který zárověň probíhá s měřením.
+				\viz{ESP8266_network_dynamic}
 
 			\podpodpodkapitola{Statické přidělení IP adresy}
 			Použita byla statická adresa, která byla přidělena ESP8266 před připojením na AP. Bylo provedeno za podmínek:
@@ -64,6 +65,8 @@
 			}
 			\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
 			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}, což je o průměrně o sekundu rychlejší než v případě DHCP. Hodnoty grafu jsou stabilní.
+			\viz{ESP8266_network_static}
+
 			\podpodpodkapitola{Zabezpečený AP}
 			Připojení na access point je šifrované. Bylo provedeno za podmínek:
 			\bodseznam{
@@ -71,10 +74,25 @@
 				\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
 				\bod IP adresa je nastavena staticky
 				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
+				\bod Bylo použito zabezpečení WPA2-PSK
 			}
+			\obrazek{ESP8266_network_static_security}{Měření zabezpečeného připojení k AP}{8cm}{ESP8266_network_static_security.png}
+			Průměrný čas byl \SI{4,7}{s}.
+			\viz{ESP8266_network_static_security}
+
+			\podpodpodkapitola{Závěr}
+			Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.
+
+			% \tabulka{WiFi porovnání}{Porovnání hodnot naměřené připojením k WiFi}
+			% 	{Dynamické & Statické & Zabezpečení\\}
+			% 	{5.3385 & 3.589 & 4.733\\
+			% 	5.3445 & 3.583 & 4.733\\
+			% 	3.619 & 3.631 & 4.733\\
+			% 	5.333 & 3.481 & 4.733\\
+			% 	3.627 & 3.613 & 4.733\\}
 
 		\podpodkapitola{Odesílání HTTP requestu}
-		bla bla bla
+		Cílem měření je zjistit čas odesílání HTTP requestu a následné odpovězení zásuvky NETIO
 
 
 
@@ -107,7 +125,6 @@
 					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
 					\bod WiFi je nastavena zachována v ESP z předchozího měření
 				}
-				\tucne{Výsledek}\\
 
 			\podpodkapitola{Ohodnocení výsledků}
 			Výsledky klidového režimu neodpovídají teoretické hodnotě uvedené v officiálním datasheetu. Důvodem je nízká citlivost zařízení Analog Discovery 2. Pro přesnější měření je žádoucí použít micro ampérmetr. \\
