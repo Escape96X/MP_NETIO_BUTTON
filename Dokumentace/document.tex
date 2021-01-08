@@ -64,7 +64,7 @@
 				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
 			}
 			\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
-			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}, což je o průměrně o sekundu rychlejší než v případě DHCP. Hodnoty grafu jsou stabilní.
+			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}, což je o průměrně o sekundu rychlejší než v případě DHCP. Hodnoty grafu jsou stabilní.\\
 			\viz{ESP8266_network_static}
 
 			\podpodpodkapitola{Zabezpečený AP}
@@ -77,22 +77,43 @@
 				\bod Bylo použito zabezpečení WPA2-PSK
 			}
 			\obrazek{ESP8266_network_static_security}{Měření zabezpečeného připojení k AP}{8cm}{ESP8266_network_static_security.png}
-			Průměrný čas byl \SI{4,7}{s}.
+			Průměrný čas byl \SI{4,7}{s}.\\
 			\viz{ESP8266_network_static_security}
 
 			\podpodpodkapitola{Závěr}
-			Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.
+			Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.\\ \viztab{WiFi porovnání v sekundách}
 
-			% \tabulka{WiFi porovnání}{Porovnání hodnot naměřené připojením k WiFi}
-			% 	{Dynamické & Statické & Zabezpečení\\}
-			% 	{5.3385 & 3.589 & 4.733\\
-			% 	5.3445 & 3.583 & 4.733\\
-			% 	3.619 & 3.631 & 4.733\\
-			% 	5.333 & 3.481 & 4.733\\
-			% 	3.627 & 3.613 & 4.733\\}
+			\tabulka{WiFi porovnání v sekundách}{Porovnání hodnot naměřené připojením k WiFi}
+				{Pořadí & Dynamické & Statické & Zabezpečení\\}
+				{1. & \SI{5.3385}{s} & \SI{3.589}{s} & \SI{4.733}{s}\\
+				2. & \SI{5.3445}{s} & \SI{3.583}{s} & \SI{4.733}{s}\\
+				3. & \SI{3.619}{s} & \SI{3.631}{s} & \SI{4.733}{s}\\
+				4. & \SI{5.333}{s} & \SI{3.481}{s} & \SI{4.733}{s}\\
+				5. & \SI{3.627}{s} & \SI{3.613}{s} & \SI{4.733}{s}\\
+				\cara
+				\tucne{Průměr} & \tucne{\SI{3.5794}{s}} & \tucne{\SI{4.6524}{s}} & \tucne{\SI{4.709}{s}}\\}
 
-		\podpodkapitola{Odesílání HTTP requestu}
-		Cílem měření je zjistit čas odesílání HTTP requestu a následné odpovězení zásuvky NETIO
+
+		\podpodkapitola{Odeslání HTTP requestu s připojenou WiFi}
+		Cílem měření je zjistit čas odesílání HTTP requestu a následné odpovězení zásuvky NETIO. Pokus byl proveden za podmínek:
+		\bodseznam{
+			\bod Napájeno z USB
+			\bod Měřeno pomocí úbytku napětí na rezistoru o velitosti \SI{0,7}{\ohm}
+			\bod ESP8266 zkontroluje připojení k WiFi a pokud není navázáno, pokusí se ho navázat
+			\bod Načtení uložené konfigurace WiFi trvá \SI{300}{ms}
+			\bod ESP ukončí reakci, pokud dostane zpětnou vazbu od zásuvky
+		}
+		Jelikož ESP přestane reagovat až po odpovězení zásuvky, dokážeme zjistit celkový čas včetně zapnutí, zkontrolování WiFi připojení, sestavení a odeslání HTTP requestu, reakce zásuvky a zpracování HTTP zprávy. \\
+		\viztab{HTTP odeslání}
+		\tabulka{HTTP odeslání}{Čas odeslání HTTP requestu a reakce zásuvky}
+		{Pořadí & připojené k WiFi\\}
+		{1. & \SI{778,9}{ms}\\
+		2. & \SI{743}{ms}\\
+		3. & \SI{772.9}{ms}\\
+		4. & \SI{744.5}{ms}\\
+		5. & \SI{623.1}{ms}\\
+		\tucne{Průměr} & \tucne{\SI{732.48}{ms}}\\
+		}
 
 
 

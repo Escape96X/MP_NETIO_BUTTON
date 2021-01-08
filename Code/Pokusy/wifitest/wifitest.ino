@@ -13,11 +13,10 @@ void setup() {
   Serial.begin(115200);
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect(true);
-  Serial.println(WiFi.localIP());
   //WiFi.config(local_IP, gateway, subnet);
-  delay(100);
+  delay(500);
+  if(WiFi.status() == WL_CONNECTED)
+    ESP.deepSleep(5e6);
   WiFi.begin("Jirickovi_secured", "19192020");
   Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED)
