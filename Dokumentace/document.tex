@@ -36,8 +36,28 @@
 	\podkapitola{Kontinuální režim}
 
 		\podpodkapitola{Klidový stav}
-			\tucne{Podmínky} \\
-			\tucne{Výsledek} \\
+			Klidový stav byl měřen za podmínek:
+			\bodseznam{
+		 		\bod ESP8266 čeká na zmáčknutí tlačítka na pinu GPIO5
+				\bod ESP je neustále zapnuté, probíhá loop funkce pro kontrolu zmáčknutí
+				\bod Je připojeno k WiFi, je zaplý soft AP, běží webserver
+		 }
+		 Při klidovém stavu byl naměřen eletrický proud průměrně \SI{96.81}{mA} \viz{ESP8266_on_waiting}. Měření probíhalo \SI{50}{s}. Pro teoretické vypočtení výdrže zařízení na dvou AAA bateriích je potřebné vypočítat příkon.
+		 \vzorec{
+			P = \SI{0.09681}{A}*\SI{3.3}{V}
+		 }
+		 Dle rovnice se příkon rovná \tucne{\SI{0.3195}{W}} \\
+		 Pro test byly vybrány baterie \tucne{VARTA POWER AAA} o kapacitě \SI{1100}{mAh} a s napětím \SI{1.5}{V}. Jelikož známe napětí i kapacitu je možné vypočítat enegii,
+		 	\vzorec{
+				E = \SI{2.2}{Ah}*\SI{3}{V}
+		 	}
+			která se rovná {\SI{3.3}{Wh} a dále vydělíme příkonem:
+			\vzorec{
+			t = \zlomek{\SI{6.6}{Wh}}{\SI{0.3195}{W}}
+			}
+			Teoretická výdrž zařízení v kontinuálním režimu je
+			\tucne{\SI{20.66}{hodin}}.
+			\obrazek{ESP8266_on_waiting}{ESP8266 měření klidového stavu kontinualního režimu}{8cm}{ESP8266_on_waiting.png}
 
 		\podpodkapitola{WiFi připojení}
 
@@ -83,7 +103,7 @@
 			\podpodpodkapitola{Závěr}
 			Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.\\ \viztab{WiFi porovnání v sekundách}
 
-			\tabulka{WiFi porovnání v sekundách}{Porovnání hodnot naměřené připojením k WiFi}
+			\tabulka{WiFi porovnání v sekundách}{Porovnání reakční doby naměřené připojením k WiFi}
 				{Pořadí & Dynamické & Statické & Zabezpečení\\}
 				{1. & \SI{5.3385}{s} & \SI{3.589}{s} & \SI{4.733}{s}\\
 				2. & \SI{5.3445}{s} & \SI{3.583}{s} & \SI{4.733}{s}\\
@@ -92,6 +112,11 @@
 				5. & \SI{3.627}{s} & \SI{3.613}{s} & \SI{4.733}{s}\\
 				\cara
 				\tucne{Průměr} & \tucne{\SI{3.5794}{s}} & \tucne{\SI{4.6524}{s}} & \tucne{\SI{4.709}{s}}\\}
+			% \tabulka{WiFi porovnání v sekundách}{Porovnání reakční doby naměřené připojením k WiFi}
+			% 	{veličina & Dynamické & Statické & Zabezpečení\\}
+			% 	{U & \SI{3.3}{V} & \SI{3.3}{V} & \SI{3.3}{V}\\
+			% 	 I & \SI{0.097}{A} & \SI{3.3}{V} & \SI{3.3}{V}\\}
+
 
 
 		\podpodkapitola{Odeslání HTTP requestu s připojenou WiFi}
@@ -105,6 +130,7 @@
 		}
 		Jelikož ESP přestane reagovat až po odpovězení zásuvky, dokážeme zjistit celkový čas včetně zapnutí, zkontrolování WiFi připojení, sestavení a odeslání HTTP requestu, reakce zásuvky a zpracování HTTP zprávy. \\
 		\viztab{HTTP odeslání}
+
 		\tabulka{HTTP odeslání}{Čas odeslání HTTP requestu a reakce zásuvky}
 		{Pořadí & připojené k WiFi\\}
 		{1. & \SI{778,9}{ms}\\

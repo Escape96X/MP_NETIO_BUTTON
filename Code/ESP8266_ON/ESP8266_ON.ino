@@ -11,7 +11,7 @@ extern String NetioIP;
 extern String HTTPRequest1;
 
 // konstanty pripojeni a json zpravy
-//char* HTTP_REQUEST1 = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
+//char* HTTP_REQUEST1 = "{"Outputs": [{"ID": 1,"Action": 4}]}";
 
 //const int buttton = 16;
 const int buzzer = 13;
@@ -114,14 +114,13 @@ void buttonCheck()
 void setup()
 {
   Serial.begin(9600);
+  EEPROM.begin(512);
   delay(2000);
   pinMode(buzzer, OUTPUT); // nastaveni bzucaku na out
   pinMode(button, INPUT);
   pinMode(LED, OUTPUT);
   WiFiConnect();
   wifiCheck();
-  EEPROM.begin(512);
-  delay(200);
   NetioIP = readEEPROM(0, 15);
   HTTPRequest1 = readEEPROM(60, 50);
 }
@@ -130,7 +129,6 @@ void loop()
 {
   handleServer();
   buttonState = digitalRead(button); // cteni stavu tlacitka
-
   if (buttonState == LOW && checkButtonState1)
   {
     Serial.println(NetioIP);
