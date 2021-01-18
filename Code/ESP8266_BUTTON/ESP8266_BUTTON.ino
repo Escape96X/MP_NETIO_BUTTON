@@ -9,6 +9,11 @@ HTTPClient http;
 const int buzzer = 13;
 //const int LED = 12;
 const int wakePin = 5;
+IPAddress local_IP(192, 168, 0, 166);
+// Set your Gateway IP address
+IPAddress gateway(192, 168, 0, 1);
+
+IPAddress subnet(255, 255, 255, 0);
 
 
 
@@ -23,13 +28,21 @@ void buzzerTimer(int duration){
   
 void WiFib(){
   Serial.println('\n');
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(100);
+    Serial.print(++i); Serial.print(' ');
+  }
+  if(WiFi.status() == WL_CONNECTED){
+    Serial.println("Connected");
+  }else{
+  WiFi.config(local_IP, gateway, subnet);
   WiFi.begin(ssid, password);
   Serial.print("Connecting to ");
   Serial.print(ssid); Serial.println(" ...");
-
   int i = 0;
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    delay(100);
     Serial.print(++i); Serial.print(' ');
   }
   
@@ -37,8 +50,7 @@ void WiFib(){
   Serial.println("Connection established!");  
   Serial.print("IP address:\t");
   Serial.println(WiFi.localIP());  
-}
-
+}}
 
 void httpPost()
 {

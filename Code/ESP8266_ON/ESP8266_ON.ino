@@ -131,7 +131,8 @@ void loop()
   buttonState = digitalRead(button); // cteni stavu tlacitka
   if (buttonState == LOW && checkButtonState1)
   {
-    Serial.println(NetioIP);
+    Serial.println(readEEPROM(0, 15));
+    Serial.println(readEEPROM(60, 50));
     wifiCheck();               // kontrola wifi zda jsme stale pripojeni
     checkButtonState1 = false; // promenna pro kontrolu dlouheho mackani tlacitka
   }

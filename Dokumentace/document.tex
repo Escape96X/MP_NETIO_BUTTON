@@ -31,33 +31,68 @@
 		\podkapitola{Netio zásuvka Cobra}
 		\podkapitola{a tak dale}
 % MĚŘENÍ
+	\kapitola{Měření spotřeby a času}
+		\podkapitola{ESP8266}
 
-	\kapitola{Měření spotřeby a času ESP8266}
-	\podkapitola{Kontinuální režim}
+			\podpodkapitola{Klidové stavy}
 
-		\podpodkapitola{Klidový stav}
+			\podpodpodkapitola{ESP běží kontinuálně}
 			Klidový stav byl měřen za podmínek:
 			\bodseznam{
 		 		\bod ESP8266 čeká na zmáčknutí tlačítka na pinu GPIO5
 				\bod ESP je neustále zapnuté, probíhá loop funkce pro kontrolu zmáčknutí
 				\bod Je připojeno k WiFi, je zaplý soft AP, běží webserver
 		 }
-		 Při klidovém stavu byl naměřen eletrický proud průměrně \SI{96.81}{mA} \viz{ESP8266_on_waiting}. Měření probíhalo \SI{50}{s}. Pro teoretické vypočtení výdrže zařízení na dvou AAA bateriích je potřebné vypočítat příkon.
-		 \vzorec{
-			P = \SI{0.09681}{A}*\SI{3.3}{V}
-		 }
+		 Při klidovém stavu byl naměřen eletrický proud průměrně \SI{96.81}{mA} \viz{ESP8266_on_waiting}. Měření probíhalo \SI{50}{s}. Vypočítame příkon:
+			$$P = \SI{0.09681}{A} \times \SI{3.3}{V}$$
 		 Dle rovnice se příkon rovná \tucne{\SI{0.3195}{W}} \\
-		 Pro test byly vybrány baterie \tucne{VARTA POWER AAA} o kapacitě \SI{1100}{mAh} a s napětím \SI{1.5}{V}. Jelikož známe napětí i kapacitu je možné vypočítat enegii,
-		 	\vzorec{
-				E = \SI{2.2}{Ah}*\SI{3}{V}
-		 	}
-			která se rovná {\SI{3.3}{Wh} a dále vydělíme příkonem:
-			\vzorec{
-			t = \zlomek{\SI{6.6}{Wh}}{\SI{0.3195}{W}}
-			}
-			Teoretická výdrž zařízení v kontinuálním režimu je
-			\tucne{\SI{20.66}{hodin}}.
+		 ESP8266 vykoná 160 miliónů cyklů za sekundu. Pro výpočet energie:
+		 	$$E = \SI{0.3195}{W} \times 1.7361 \times 10 ^-^1^2 \SI{}{h}$$
+			Spotřeba energie 1 řídícího cyklu je $ 54.4864 \times 10^{-12}\SI{}{Wh}$.
+		 % Pro test byly vybrány baterie \tucne{VARTA POWER AAA} o kapacitě \SI{1100}{mAh} a s napětím \SI{1.5}{V}. Jelikož známe napětí i kapacitu je možné vypočítat enegii,
+		 % 	\vzorec{
+			% 	E = \SI{2.2}{Ah}*\SI{3}{V}
+		 % 	}
+			% která se rovná {\SI{3.3}{Wh} a dále vydělíme příkonem:
+			% \vzorec{
+			% t = \zlomek{\SI{6.6}{Wh}}{\SI{0.3195}{W}}
+			% }
+			% Teoretická výdrž zařízení v kontinuálním režimu je
+			% \tucne{\SI{20.66}{hodin}}.
 			\obrazek{ESP8266_on_waiting}{ESP8266 měření klidového stavu kontinualního režimu}{8cm}{ESP8266_on_waiting.png}
+
+
+		\podpodpodkapitola{ESP vypnuté přes ENABLE pin}
+				Měření proběhlo za podmínek:
+				\bodseznam{
+					\bod Napájeno z USB
+					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
+					\bod pin enable byl připojen manuálně
+					\bod Napětí bylo měřeno Analog Discovery 2
+				}
+				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo \SI{3}{\micro A}
+				\viz{1_enable}.
+				\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
+				Pro výpočet bude jako průměrný odebraný proud použita hodnota uvedena v datasheetu což je \SI{3}{\micro A}. Víme, že napětí je \SI{3.3}{V} takže jsme schopni spočítat eletrický příkon:
+				 	$$P = 3\times 10^{-6} \SI{}{A}\times \SI{3.3}{V}$$
+
+					což je $9.9 \times 10^{-6} \SI{}{W}$ Dále zjistíme energii za 1 řídící cyklus:
+					 $$E = 9.9 \times 10^{-6} \SI{}{W} \times 1.7361 \times 10 ^{-12} \SI{}{h}$$
+					Spotřeba 1 řídícího cyklu je $17.1874 \times 10^{-18} \SI{}{Wh}$.
+				\podpodpodkapitola{Deep sleep režim}
+					Kvůli citlivosti Analog Discovery 2 nejsme schopni změřit spotřebu deep sleep režimu, je nutné změřit microampérmetrem. Pro výpočet spotřebované energie dosadíme za průměrný elektrický proud hodnotu z datasheetu, která odpovídá \SI{20}{\micro A}. Spočítáme elektrický příkon:
+						$$P = 20\times 10^{-6} \SI{}{A}\times \SI{3.3}{V}$$
+					Ten v této situaci odpovídá hodnotě $66 \times 10^{-6} \SI{}{W}$ a dále vypočítáme spotřebovanou energii za 1 řídící cyklus:
+						$$E = 66\times 10^{-6} \SI{}{W} \times 1.7361 \times 10 ^{-12} \SI{}{h}$$
+						Spotřeba 1 řídícího cyklu je $114.59 \times 10^{-18} \SI{}{Wh}$.
+					\podpodpodkapitola{Shrnutí výsledků}
+					\tabulka{ESP8266 klidové režimy}{Porovnání klidových stavů ESP8266}
+					{ & Kontinuální & Enable & Deep Sleep\\}
+					{Reakční doba   & $\SI{196}{ms}$ & $\SI{3100}{ms}$ & $\SI{967}{ms}$\\
+					 Spotřeba cyklu & $54.4864 \times 10^{-12}\SI{}{Wh}$ & $17.1874 \times 10^{-18} \SI{}{Wh}$ & $114.59 \times 10^{-18} \SI{}{Wh}$\\
+					}
+					Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s 240 snímky za sekundu. Dále jsem zjistil rozdíl mezi rozsvícení LED u tlačítka a LED zabudované v zásuvce, signalizující sepnutí. \\
+					Nejrychlejší reakce byla pokud ESP8266 bylo neustále zapnuto. Nejpomalejší naopak bylo pokud ESP8266 bylo nutné zapnout, je to z důvodu načtení sketche do operační paměti, načtení konfigurace WiFi a následnému připojení.
 
 		\podpodkapitola{WiFi připojení}
 
@@ -84,7 +119,7 @@
 				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
 			}
 			\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
-			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}, což je o průměrně o sekundu rychlejší než v případě DHCP. Hodnoty grafu jsou stabilní.\\
+			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}.\\
 			\viz{ESP8266_network_static}
 
 			\podpodpodkapitola{Zabezpečený AP}
@@ -111,12 +146,7 @@
 				4. & \SI{5.333}{s} & \SI{3.481}{s} & \SI{4.733}{s}\\
 				5. & \SI{3.627}{s} & \SI{3.613}{s} & \SI{4.733}{s}\\
 				\cara
-				\tucne{Průměr} & \tucne{\SI{3.5794}{s}} & \tucne{\SI{4.6524}{s}} & \tucne{\SI{4.709}{s}}\\}
-			% \tabulka{WiFi porovnání v sekundách}{Porovnání reakční doby naměřené připojením k WiFi}
-			% 	{veličina & Dynamické & Statické & Zabezpečení\\}
-			% 	{U & \SI{3.3}{V} & \SI{3.3}{V} & \SI{3.3}{V}\\
-			% 	 I & \SI{0.097}{A} & \SI{3.3}{V} & \SI{3.3}{V}\\}
-
+				\tucne{Průměr} & \tucne{\SI{4.6524}{s}} & \tucne{\SI{3.5794}{s}} & \tucne{\SI{4.709}{s}}\\}
 
 
 		\podpodkapitola{Odeslání HTTP requestu s připojenou WiFi}
@@ -138,56 +168,18 @@
 		3. & \SI{772.9}{ms}\\
 		4. & \SI{744.5}{ms}\\
 		5. & \SI{623.1}{ms}\\
+		\cara
 		\tucne{Průměr} & \tucne{\SI{732.48}{ms}}\\
 		}
+		\tabulka{Spotřeba částí WiFi}{Spotřeba jednotlivých akcí}
+		{Operace & reakční doba & spotřeba\\}
+		{Dynamické připojení & \SI{4.6524}{s} & \SI{385,19}{\micro Wh}\\
+		Statické připojení & \SI{3.5794}{s} & \SI{295,59}{\micro Wh}\\
+		Zabezpečené připojení & \SI{4.709}{s} & \SI{393,15}{\micro Wh}\\
+		HTTP komunikace & \SI{0.73248}{s} & \SI{67,75}{\micro Wh}\\}
 
-
-
-		\podkapitola{Enable režim}
-
-			\podpodkapitola{Klidový stav}
-				\tucne{Podmínky}
-				\bodseznam{
-					\bod Napájeno z USB
-					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
-					\bod pin enable byl připojen manuálně
-					\bod Napětí bylo měřeno Analog Discovery 2
-				}
-				\tucne{Výsledek} \\
-				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo \SI{3}{\micro A}.
-				\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
-
-			\podpodkapitola{WiFi připojení}
-				\tucne{Podmínky}
-				\bodseznam{
-					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
-					\bod WiFi je nastavena pevně zadaná v programu
-					\bod WiFi nevyužívá žádného zabezpečení
-					\bod IP adresa byla nastavena staticky
-				}
-
-			\podpodkapitola{HTTP request}
-				\tucne{Podmínky}
-				\bodseznam{
-					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
-					\bod WiFi je nastavena zachována v ESP z předchozího měření
-				}
-
-			\podpodkapitola{Ohodnocení výsledků}
-			Výsledky klidového režimu neodpovídají teoretické hodnotě uvedené v officiálním datasheetu. Důvodem je nízká citlivost zařízení Analog Discovery 2. Pro přesnější měření je žádoucí použít micro ampérmetr. \\
-			Počáteční spuštění ESP8266 trvá déle než v ostatních případech. Hlavní důvod spočívá v rozdílném načítání než v případě deep sleep... Doplním
-
-
-		\podkapitola{Deep sleep režim}
-			\podpodkapitola{Klidový stav}
-				\tucne{Podmínky}
-					\bodseznam{
-						\bod Napájení z USB
-						\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
-						\bod ESP8266 je probuzeno každých \SI{5}{s}
-					}
-			\podpodkapitola{Ohodnocení výsledků}
-
+		Spotřeba jednotlivých operací ESP8266 byla spočítána:
+				$E = U \times I \times t$
 
 
 % KONEC MĚŘENÍ

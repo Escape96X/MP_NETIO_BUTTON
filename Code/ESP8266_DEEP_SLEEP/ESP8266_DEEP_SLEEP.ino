@@ -6,26 +6,26 @@ const char* ssid = "Jirickovi_secured";
 const char* password = "19192020";
 
 HTTPClient http;
-const int buzzer = 13;
-const int LED = 12;
-
-
-void LEDTimer(int duration)
-{
-  digitalWrite(LED, LOW);
-  delay(duration);
-  digitalWrite(LED, HIGH);
-  delay(100);
-}
-
-void buzzerTimer(int duration){ 
-  // Bzucak na oznameni stavu
-  digitalWrite(buzzer, HIGH);
-  delay(duration);
-  digitalWrite(buzzer, LOW);
-  delay(100);
-}
-  
+//const int buzzer = 13;
+//const int LED = 12;
+//
+//
+//void LEDTimer(int duration)
+//{
+//  digitalWrite(LED, LOW);
+//  delay(duration);
+//  digitalWrite(LED, HIGH);
+//  delay(100);
+//}
+//
+//void buzzerTimer(int duration){ 
+//  // Bzucak na oznameni stavu
+//  digitalWrite(buzzer, HIGH);
+//  delay(duration);
+//  digitalWrite(buzzer, LOW);
+//  delay(100);
+//}
+//  
 void WiFib(){
   Serial.println('\n');
   delay(300);
@@ -74,7 +74,7 @@ void httpPost()
   {
     for (int i = 0; i < 2; i++)
     {
-      buzzerTimer(200); // ESP se nepripojilo k zasuvce
+      //      buzzerTimer(200); // ESP se nepripojilo k zasuvce
     }
   }
 }
@@ -85,7 +85,7 @@ void setup() {
   delay(10);
   WiFib();
   httpPost();
-  ESP.deepSleep(3e6);
+  ESP.deepSleep(0);
 }
 
 void loop() { }
