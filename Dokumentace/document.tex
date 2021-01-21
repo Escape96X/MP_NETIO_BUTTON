@@ -15,41 +15,57 @@
 \reditel{Ing. Jiří Uhlík}
 
 %Zadání
-\zacatek
+\begin{document}
 
 	\titulniStrana
 	\anotace
-	Maturitní práce se zaměřuje na porovnání platforem ESP8266 a ESP32. Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodna pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.
+		Maturitní práce se zaměřuje na porovnání platforem ESP8266 a ESP32. Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodná pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.
 	\annotation
-	The graduation thesis focuses on the comparison of the ESP8266 and ESP32 platforms. The goal is to create a driver for controlling NETIO sockets with a web application for configuration and to find out which platform is suitable for the implementation of a~functional sample in terms of energy consumption and response time.
+		The graduation thesis focuses on the comparison of the ESP8266 and ESP32 platforms. The goal is to create a driver for controlling NETIO sockets with a web application for configuration and to find out which platform is suitable for the implementation of a~functional sample in terms of energy consumption and response time.
 	\podekovani
-	Chtěl bych poděkovat panu učiteli Ing.~Břetislavovi Bakalovi za odborné vedení práce a~cenné rady, které mi pomohly tuto práci zkompletovat. Rád bych také poděkoval Ing.~Břetislavovi Bakalovi za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování bakalářské práce. V~neposlední řadě chci poděkovat Mgr. Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za pomoc při gramatické a~stylistické kontrole.
-	\obsah
-% Teorie
-	\kapitola{Teorie}
-		\podkapitola{Aplikace pro WiFi Managment}
-		\podkapitola{Netio zásuvka Cobra}
-		\podkapitola{a tak dale}
+		Chtěl bych poděkovat panu učiteli Ing.~Břetislavovi Bakalovi za odborné vedení práce a~cenné rady, které mi pomohly tuto práci zkompletovat. Rád bych také poděkoval Ing.~Břetislavovi Bakalovi za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování bakalářské práce. V~neposlední řadě chci poděkovat Mgr. Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za pomoc při gramatické a~stylistické kontrole.
+	\tableofcontents
+
+	\chapter{Úvod}
+	%Teorie
+	\chapter{Základní informace}
+		\section{Zásuvka NETIO}
+		\section{Platforma ESP}
+			ESP jsou rodina mikročipů od společnosti \tucne{Espressif Systems} z Čínské Shangaje.
+			\subsection{ESP8266}
+				\subsubsection{Historie}
+					ESP8266 je levný mikročip, který umí využívat WiFi. První chip, který se dostal na světlo světa byl v modulu \tucne{ESP-01}. Tento modul dokázal připojit se na WiFi síť a provádět jednoduché TCP/IP spojení. Získal si velkou oblibu u skupinek hackerů díky nízké ceně.
+				\subsubsection{Specifikace}
+					ESP8266 nabízí:
+					\begin{itemize}
+						\item 32 bitový mikroprocesor RISC architektury založen na Tensilica Xtensa Diamond L106
+						\item \SI{16}{Mb} flash paměť a \SI{36}{KB} RAM
+						\item IEEE 802.11 b/g/n, integrované zabezpečení WEP a WPA/WPA2
+						\item podporu $I^2C$ a $I^2S$
+						\item 16 GPIO pinů
+
+					\end{itemize}
+			\subsection{ESP32}
 % MĚŘENÍ
-	\kapitola{Měření spotřeby a času}
-		\podkapitola{ESP8266}
+	\chapter{Tvorba webové stránky}
+	\chapter{Měření spotřeby a času}
+		\section{ESP8266}
+			\subsection{Klidové stavy}
+				\subsubsection{ESP běží kontinuálně}
+					Klidový stav byl měřen za podmínek:
+					\begin{itemize}
+						\item ESP8266 čeká na zmáčknutí tlačítka na pinu GPIO5
+						\item ESP je neustále zapnuté, probíhá loop funkce pro kontrolu zmáčknutí
+						\item Je připojeno k WiFi, je zaplý soft AP, běží webserver
+					\end{itemize}
 
-			\podpodkapitola{Klidové stavy}
-
-			\podpodpodkapitola{ESP běží kontinuálně}
-			Klidový stav byl měřen za podmínek:
-			\bodseznam{
-		 		\bod ESP8266 čeká na zmáčknutí tlačítka na pinu GPIO5
-				\bod ESP je neustále zapnuté, probíhá loop funkce pro kontrolu zmáčknutí
-				\bod Je připojeno k WiFi, je zaplý soft AP, běží webserver
-		 }
-		 Při klidovém stavu byl naměřen eletrický proud průměrně \SI{96.81}{mA} \viz{ESP8266_on_waiting}. Měření probíhalo \SI{50}{s}. Vypočítame příkon:
-			$$P = \SI{0.09681}{A} \times \SI{3.3}{V}$$
-		 Dle rovnice se příkon rovná \tucne{\SI{0.3195}{W}} \\
-		 ESP8266 vykoná 160 miliónů cyklů za sekundu. Pro výpočet energie:
-		 	$$E = \SI{0.3195}{W} \times 1.7361 \times 10 ^-^1^2 \SI{}{h}$$
-			Spotřeba energie 1 řídícího cyklu je $ 54.4864 \times 10^{-12}\SI{}{Wh}$.
-		 % Pro test byly vybrány baterie \tucne{VARTA POWER AAA} o kapacitě \SI{1100}{mAh} a s napětím \SI{1.5}{V}. Jelikož známe napětí i kapacitu je možné vypočítat enegii,
+		 			Při klidovém stavu byl naměřen eletrický proud průměrně \SI{96.81}{mA} \viz{ESP8266_on_waiting}. Měření probíhalo \SI{50}{s}. Vypočítame příkon:
+						$$P = \SI{0.09681}{A} \times \SI{3.3}{V}$$
+		 			Dle rovnice se příkon rovná \SI{0.3195}{W} \\
+		 			ESP8266 vykoná 160 miliónů cyklů za sekundu. Pro výpočet energie:
+		 				$$E = \SI{0.3195}{W} \times 1.7361 \times 10 ^-^1^2 \SI{}{h}$$
+					Spotřeba energie 1 řídícího cyklu je $ 54.4864 \times 10^{-12}\SI{}{Wh}$.
+		 % Pro test byly vybrány baterie \bf{VARTA POWER AAA} o kapacitě \SI{1100}{mAh} a s napětím \SI{1.5}{V}. Jelikož známe napětí i kapacitu je možné vypočítat enegii,
 		 % 	\vzorec{
 			% 	E = \SI{2.2}{Ah}*\SI{3}{V}
 		 % 	}
@@ -58,34 +74,35 @@
 			% t = \zlomek{\SI{6.6}{Wh}}{\SI{0.3195}{W}}
 			% }
 			% Teoretická výdrž zařízení v kontinuálním režimu je
-			% \tucne{\SI{20.66}{hodin}}.
-			\obrazek{ESP8266_on_waiting}{ESP8266 měření klidového stavu kontinualního režimu}{8cm}{ESP8266_on_waiting.png}
+			% \bf{\SI{20.66}{hodin}}.
+					\obrazek{ESP8266_on_waiting}{ESP8266 měření klidového stavu kontinualního režimu}{8cm}{ESP8266_on_waiting.png}
 
 
-		\podpodpodkapitola{ESP vypnuté přes ENABLE pin}
-				Měření proběhlo za podmínek:
-				\bodseznam{
-					\bod Napájeno z USB
-					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
-					\bod pin enable byl připojen manuálně
-					\bod Napětí bylo měřeno Analog Discovery 2
-				}
-				Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo \SI{3}{\micro A}
-				\viz{1_enable}.
-				\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
-				Pro výpočet bude jako průměrný odebraný proud použita hodnota uvedena v datasheetu což je \SI{3}{\micro A}. Víme, že napětí je \SI{3.3}{V} takže jsme schopni spočítat eletrický příkon:
-				 	$$P = 3\times 10^{-6} \SI{}{A}\times \SI{3.3}{V}$$
-
+				\subsubsection{ESP vypnuté přes ENABLE pin}
+					Měření proběhlo za podmínek:
+					\begin{itemize}
+						\item Napájeno z USB
+						\item Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{10}{\ohm}
+						\item pin enable byl připojen manuálně
+						\item Napětí bylo měřeno Analog Discovery 2
+					\end{itemize}
+					Po připojení ESP8266 proud nevzrostl a drží se stále na \SI{240}{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo \SI{3}{\micro A}
+					\viz{1_enable}.
+					\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
+					Pro výpočet bude jako průměrný odebraný proud použita hodnota uvedena v datasheetu což je \SI{3}{\micro A}. Víme, že napětí je \SI{3.3}{V} takže jsme schopni spočítat eletrický příkon:
+				 		$$P = 3\times 10^{-6} \SI{}{A}\times \SI{3.3}{V}$$
 					což je $9.9 \times 10^{-6} \SI{}{W}$ Dále zjistíme energii za 1 řídící cyklus:
 					 $$E = 9.9 \times 10^{-6} \SI{}{W} \times 1.7361 \times 10 ^{-12} \SI{}{h}$$
 					Spotřeba 1 řídícího cyklu je $17.1874 \times 10^{-18} \SI{}{Wh}$.
-				\podpodpodkapitola{Deep sleep režim}
+
+				\subsubsection{Deep sleep režim}
 					Kvůli citlivosti Analog Discovery 2 nejsme schopni změřit spotřebu deep sleep režimu, je nutné změřit microampérmetrem. Pro výpočet spotřebované energie dosadíme za průměrný elektrický proud hodnotu z datasheetu, která odpovídá \SI{20}{\micro A}. Spočítáme elektrický příkon:
 						$$P = 20\times 10^{-6} \SI{}{A}\times \SI{3.3}{V}$$
 					Ten v této situaci odpovídá hodnotě $66 \times 10^{-6} \SI{}{W}$ a dále vypočítáme spotřebovanou energii za 1 řídící cyklus:
 						$$E = 66\times 10^{-6} \SI{}{W} \times 1.7361 \times 10 ^{-12} \SI{}{h}$$
 						Spotřeba 1 řídícího cyklu je $114.59 \times 10^{-18} \SI{}{Wh}$.
-					\podpodpodkapitola{Shrnutí výsledků}
+
+				\subsubsection{Shrnutí výsledků}
 					\tabulka{ESP8266 klidové režimy}{Porovnání klidových stavů ESP8266}
 					{ & Kontinuální & Enable & Deep Sleep\\}
 					{Reakční doba   & $\SI{196}{ms}$ & $\SI{3100}{ms}$ & $\SI{967}{ms}$\\
@@ -94,100 +111,98 @@
 					Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s 240 snímky za sekundu. Dále jsem zjistil rozdíl mezi rozsvícení LED u tlačítka a LED zabudované v zásuvce, signalizující sepnutí. \\
 					Nejrychlejší reakce byla pokud ESP8266 bylo neustále zapnuto. Nejpomalejší naopak bylo pokud ESP8266 bylo nutné zapnout, je to z důvodu načtení sketche do operační paměti, načtení konfigurace WiFi a následnému připojení.
 
-		\podpodkapitola{WiFi připojení}
+			\subsection{WiFi připojení}
+				Cílem měření je zjistění rychlostí připojení různými způsoby k přístupovému body, spotřeby a následné porovnání případů.
+				\subsubsection{Dynamické přidělení IP adresy}
+					Měření proběhlo za použití DHCP protokolu, kde by přístupový pod měl zvolit IP adresu pro zařízení. Bylo provedeno za podmínek:
+					\begin{itemize}
+						\item Napájeno z USB
+						\item Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+						\item Přístupový bod nebyl zabezpečen
+						\item Přístupový bod se nachází \SI{3,5}{m} od zařízení
+					\end{itemize}
+					\obrazek{ESP8266_network_dynamic}{Měření dynamického připojení k AP}{8cm}{ESP8266_network_dynamic.png}
+					Měření bylo provedeno 5x. Průměrný čas se pohybuje okolo \SI{4,7}{s}. Jak je možno vidět na grafu, tak dvě WiFi připojení trvaly o 2 sekundy kratší dobu. Toto chování přisuzuji rozmanitému provozu na Přístupovém bodu, který zárověň probíhá s měřením.
+					\viz{ESP8266_network_dynamic}
 
-			Cílem měření je zjistění rychlostí připojení různými způsoby k přístupovému body, spotřeby a následné porovnání případů.
-			\podpodpodkapitola{Dynamické přidělení IP adresy}
-				Měření proběhlo za použití DHCP protokolu, kde by přístupový pod měl zvolit IP adresu pro zařízení. Bylo provedeno za podmínek:
-				\bodseznam{
-					\bod Napájeno z USB
-					\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
-					\bod Přístupový bod nebyl zabezpečen
-					\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
-				}
-				\obrazek{ESP8266_network_dynamic}{Měření dynamického připojení k AP}{8cm}{ESP8266_network_dynamic.png}
-				% \obrazek{ESP8266_network_dynamic_specific.png}{Měření dynamického připojení k AP podrobně}{8cm}{ESP8266_network_dynamic_specific.png}
-				Měření bylo provedeno 5x. Průměrný čas se pohybuje okolo \SI{4,7}{s}. Jak je možno vidět na grafu, tak dvě WiFi připojení trvaly o 2 sekundy kratší dobu. Toto chování přisuzuji rozmanitému provozu na Přístupovém bodu, který zárověň probíhá s měřením.
-				\viz{ESP8266_network_dynamic}
+				\subsubsection{Statické přidělení IP adresy}
+					Použita byla statická adresa, která byla přidělena ESP8266 před připojením na AP. Bylo provedeno za podmínek:
+					\begin{itemize}
+						\item Napájeno z USB
+						\item Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+						\item Přístupový bod nebyl zabezpečen
+						\item Přístupový bod se nachází \SI{3,5}{m} od zařízení
+					\end{itemize}
+					\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
+					Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}.\\
+					\viz{ESP8266_network_static}
 
-			\podpodpodkapitola{Statické přidělení IP adresy}
-			Použita byla statická adresa, která byla přidělena ESP8266 před připojením na AP. Bylo provedeno za podmínek:
-			\bodseznam{
-				\bod Napájeno z USB
-				\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
-				\bod Přístupový bod nebyl zabezpečen
-				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
-			}
-			\obrazek{ESP8266_network_static}{Měření statického připojení k AP}{8cm}{ESP8266_network_static.png}
-			Měření proběhlo 5x. Průměrný čas byl \SI{3,7}{s}.\\
-			\viz{ESP8266_network_static}
+					\subsubsection{Zabezpečený AP}
+						Připojení na access point je šifrované. Bylo provedeno za podmínek:
+						\begin{itemize}
+							\item Napájeno z USB
+							\item Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
+							\item IP adresa je nastavena staticky
+							\item Přístupový bod se nachází \SI{3,5}{m} od zařízení
+							\item Bylo použito zabezpečení WPA2-PSK
+				\end{itemize}
+				\obrazek{ESP8266_network_static_security}{Měření zabezpečeného připojení k AP}{8cm}{ESP8266_network_static_security.png}
+				Průměrný čas byl \SI{4,7}{s}.\\
+				\viz{ESP8266_network_static_security}
 
-			\podpodpodkapitola{Zabezpečený AP}
-			Připojení na access point je šifrované. Bylo provedeno za podmínek:
-			\bodseznam{
-				\bod Napájeno z USB
-				\bod Měřeno pomocí úbytku napětí na rezistoru o velikosti \SI{0,7}{\ohm}
-				\bod IP adresa je nastavena staticky
-				\bod Přístupový bod se nachází \SI{3,5}{m} od zařízení
-				\bod Bylo použito zabezpečení WPA2-PSK
-			}
-			\obrazek{ESP8266_network_static_security}{Měření zabezpečeného připojení k AP}{8cm}{ESP8266_network_static_security.png}
-			Průměrný čas byl \SI{4,7}{s}.\\
-			\viz{ESP8266_network_static_security}
+			\subsubsection{Závěr}
+				Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.\\ \viztab{WiFi porovnání v sekundách}
 
-			\podpodpodkapitola{Závěr}
-			Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o \SI{1}{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.\\ \viztab{WiFi porovnání v sekundách}
-
-			\tabulka{WiFi porovnání v sekundách}{Porovnání reakční doby naměřené připojením k WiFi}
+				\tabulka{WiFi porovnání v sekundách}{Porovnání reakční doby naměřené připojením k WiFi}
 				{Pořadí & Dynamické & Statické & Zabezpečení\\}
 				{1. & \SI{5.3385}{s} & \SI{3.589}{s} & \SI{4.733}{s}\\
 				2. & \SI{5.3445}{s} & \SI{3.583}{s} & \SI{4.733}{s}\\
 				3. & \SI{3.619}{s} & \SI{3.631}{s} & \SI{4.733}{s}\\
 				4. & \SI{5.333}{s} & \SI{3.481}{s} & \SI{4.733}{s}\\
 				5. & \SI{3.627}{s} & \SI{3.613}{s} & \SI{4.733}{s}\\
-				\cara
-				\tucne{Průměr} & \tucne{\SI{4.6524}{s}} & \tucne{\SI{3.5794}{s}} & \tucne{\SI{4.709}{s}}\\}
+				\hline
+				\bf{Průměr} & \bf{\SI{4.6524}{s}} & \bf{\SI{3.5794}{s}} & \bf{\SI{4.709}{s}}\\}
 
 
-		\podpodkapitola{Odeslání HTTP requestu s připojenou WiFi}
-		Cílem měření je zjistit čas odesílání HTTP requestu a následné odpovězení zásuvky NETIO. Pokus byl proveden za podmínek:
-		\bodseznam{
-			\bod Napájeno z USB
-			\bod Měřeno pomocí úbytku napětí na rezistoru o velitosti \SI{0,7}{\ohm}
-			\bod ESP8266 zkontroluje připojení k WiFi a pokud není navázáno, pokusí se ho navázat
-			\bod Načtení uložené konfigurace WiFi trvá \SI{300}{ms}
-			\bod ESP ukončí reakci, pokud dostane zpětnou vazbu od zásuvky
-		}
-		Jelikož ESP přestane reagovat až po odpovězení zásuvky, dokážeme zjistit celkový čas včetně zapnutí, zkontrolování WiFi připojení, sestavení a odeslání HTTP requestu, reakce zásuvky a zpracování HTTP zprávy. \\
-		\viztab{HTTP odeslání}
+			\subsection{Odeslání HTTP requestu s připojenou WiFi}
+				Cílem měření je zjistit čas odesílání HTTP requestu a následné odpovězení zásuvky NETIO. Pokus byl proveden za podmínek:
+				\begin{itemize}
+					\item Napájeno z USB
+					\item Měřeno pomocí úbytku napětí na rezistoru o velitosti \SI{0,7}{\ohm}
+					\item ESP8266 zkontroluje připojení k WiFi a pokud není navázáno, pokusí se ho navázat
+					\item Načtení uložené konfigurace WiFi trvá \SI{300}{ms}
+					\item ESP ukončí reakci, pokud dostane zpětnou vazbu od zásuvky
+				\end{itemize}
+				Jelikož ESP přestane reagovat až po odpovězení zásuvky, dokážeme zjistit celkový čas včetně zapnutí, zkontrolování WiFi připojení, sestavení a odeslání HTTP requestu, reakce zásuvky a zpracování HTTP zprávy. \\
+				\viztab{HTTP odeslání}
 
-		\tabulka{HTTP odeslání}{Čas odeslání HTTP requestu a reakce zásuvky}
-		{Pořadí & připojené k WiFi\\}
-		{1. & \SI{778,9}{ms}\\
-		2. & \SI{743}{ms}\\
-		3. & \SI{772.9}{ms}\\
-		4. & \SI{744.5}{ms}\\
-		5. & \SI{623.1}{ms}\\
-		\cara
-		\tucne{Průměr} & \tucne{\SI{732.48}{ms}}\\
-		}
-		\tabulka{Spotřeba částí WiFi}{Spotřeba jednotlivých akcí}
-		{Operace & reakční doba & spotřeba\\}
-		{Dynamické připojení & \SI{4.6524}{s} & \SI{385,19}{\micro Wh}\\
-		Statické připojení & \SI{3.5794}{s} & \SI{295,59}{\micro Wh}\\
-		Zabezpečené připojení & \SI{4.709}{s} & \SI{393,15}{\micro Wh}\\
-		HTTP komunikace & \SI{0.73248}{s} & \SI{67,75}{\micro Wh}\\}
+				\tabulka{HTTP odeslání}{Čas odeslání HTTP requestu a reakce zásuvky}
+				{Pořadí & připojené k WiFi\\}
+				{1. & \SI{778,9}{ms}\\
+				2. & \SI{743}{ms}\\
+				3. & \SI{772.9}{ms}\\
+				4. & \SI{744.5}{ms}\\
+				5. & \SI{623.1}{ms}\\
+				\hline
+				\bf{Průměr} & \bf{\SI{732.48}{ms}}\\
+				}
+				\tabulka{Spotřeba částí WiFi}{Spotřeba jednotlivých akcí}
+				{Operace & reakční doba & spotřeba\\}
+				{Dynamické připojení & \SI{4.6524}{s} & \SI{385,19}{\micro Wh}\\
+				Statické připojení & \SI{3.5794}{s} & \SI{295,59}{\micro Wh}\\
+				Zabezpečené připojení & \SI{4.709}{s} & \SI{393,15}{\micro Wh}\\
+				HTTP komunikace & \SI{0.73248}{s} & \SI{67,75}{\micro Wh}\\}
 
-		Spotřeba jednotlivých operací ESP8266 byla spočítána:
-				$E = U \times I \times t$
+				Spotřeba jednotlivých operací ESP8266 byla spočítána:
+					$E = U \times I \times t$
 
 
 % KONEC MĚŘENÍ
-	\kapitola{Závěr}
+	\chapter{Závěr}
 
-	\seznamTabulek
+	\listoftables
 
-	\seznamObrazku
+	\listoffigures
 
 	\prilohy{
 		\kapitola{Příloha}
@@ -195,9 +210,10 @@
 
 	\literatura{
 
-		\kniha{nazevCitace}{Příjmení autora}{Jméno autora}{Název knihy}{Místo vydání}{Nakladatelství}{Rok}{ISBN}
+		\kniha{WT8266-S1}{Espressif Systems}{}{WT8266-S1 WiFi Module datasheet}{Shangai, Čína}{Espressif Systems}{2015}{ISBN}
 
-		\kvalifikacniprace{nazevCitace}{Příjmení autora}{Jméno autora}{Název práce}{Místo}{Rok}{Druh práce}{Univerzita, Fakulta, Katedra}{Vedoucí diplomové práce jméno}
+		%\kvalifikacniprace{nazevCitace}{Příjmení autora}{Jméno autora}{Název práce}{Místo}{Rok}{Druh práce}{Univerzita, Fakulta, Katedra}{Vedoucí diplomové práce jméno}
+		\wiki{ESP8266}{ESP8266}{2021}{\dnes}{https://en.wikipedia.org/w/index.php?title=ESP8266}
 	}
 
-\konec
+\end{document}
