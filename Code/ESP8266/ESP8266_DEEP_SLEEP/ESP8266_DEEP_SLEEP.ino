@@ -85,7 +85,7 @@ void setup() {
   delay(10);
   WiFib();
   httpPost();
-  ESP.deepSleep(0);
+  ESP.deepSleep(2e6);
 }
 
 void loop() { }
