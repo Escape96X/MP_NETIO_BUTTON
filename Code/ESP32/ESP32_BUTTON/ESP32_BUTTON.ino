@@ -1,5 +1,5 @@
-#include <ESP8266WiFi.h> 
-#include <ESP8266HTTPClient.h>
+#include <WiFi.h> 
+#include <HTTPClient.h>
 String HTTP_REQUEST = "{\"Outputs\": [{\"ID\": 1,\"Action\": 4}]}";
 String HTTP_CONNECTION = "http://192.168.0.196/netio.json";
 const char* ssid = "Jirickovi_secured";
@@ -28,24 +28,24 @@ void buzzerTimer(int duration){
   
 void WiFib(){
   Serial.println('\n');
-  int i = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-    Serial.print(++i); Serial.print(' ');
-  }
+  WiFi.disconnect();
+  WiFi.mode(WIFI_OFF);
+  WiFi.mode(WIFI_STA);
   if(WiFi.status() == WL_CONNECTED){
-    Serial.println("Connected");
+   Serial.println('connected');
   }else{
-  WiFi.config(local_IP, gateway, subnet);
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting to ");
-  Serial.print(ssid); Serial.println(" ...");
-  int i = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(100);
-    Serial.print(++i); Serial.print(' ');
+  WiFi.begin("Jirickovi_secured", "19192020");
+
+  Serial.println("Connecting to ");
+//  Serial.print(ssid); Serial.println(" ...");
+ for(int i = 0; i < 5; i++){
+    delay(500);
+    Serial.println(WiFi.status());
+    if(WiFi.status() == WL_CONNECT_FAILED){
+     ESP.restart();}
+    if(WiFi.status() == WL_CONNECTED)
+      break;
   }
-  
   Serial.println('\n');
   Serial.println("Connection established!");  
   Serial.print("IP address:\t");

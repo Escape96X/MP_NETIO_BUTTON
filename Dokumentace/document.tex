@@ -2,6 +2,9 @@
 \usepackage{monapack}
 \usepackage{siunitx}
 \usepackage{caption}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[bottom]{footmisc}
 \captionsetup[table]{skip=5pt}
 
 %Proměnné
@@ -42,19 +45,43 @@
 					ESP8266 je levný mikročip, který umí využívat WiFi. První chip, který se dostal na světlo světa byl v modulu \textbf{ESP-01}. Tento modul dokázal připojit se na WiFi síť a provádět jednoduché TCP/IP spojení. Získal si velkou oblibu u skupinek hackerů díky nízké ceně. Jsou vhodné pro IoT jako například automatizace, zabezpečení, chytré domy atd.
 				\subsubsection{Specifikace}
 					Pro tuto maturitní práci bude použit modul \textbf{WT8266-S1}, který je vytvořen společností \textbf{Wireless-Tag}. Je založen na mikročipu ESP8266.\\
-					ESP8266 integruje vylepšenou verzi procesoru \textbf{L106 Diamond series 32-bit} vytvořený firmou \textbf{Tensilica}.
+					ESP8266 integruje vylepšenou verzi procesoru \textbf{L106 Diamond series 32-bit} vytvořený firmou \textbf{Tensilica} s podporou frekvencí 80 \si{MHz} a 160 \si{MHz} a RTOS\footnote{Operační systém v realném čase}.
+					K dispozici je 36 \si{KB} RAM a 16 \si{Mbit} Flash paměti. Intergrovaný v systému je také 10 bitový analog-digitální převodník. Modul podporuje standard {\bf IEEE802.11 b/g/n}	\footnote{Standard pro lokální bezdrátové sítě} a sadu protokolů TCP/IP. WiFi 2,4 \si{GHz} umožňuje WPA/WPA2 \footnote{Chráněný přístup k WiFi} a ke komunikaci využívá anténu PCB. Zařízení má 16 GPIO pinů\footnote{Vstupně výstupní pin} (\viz{ESP8266_piny}). Také obsahuje:
+					\begin{itemize}
+						\item {\bf UART} - univerzální asynchronní přijímač-vysílač pro sériový přenos
+						\item {\bf I$^2$C} - seriová sběrnice o dvou vodičích pro nízkorychlostní zařízení
+						\item {\bf I$^2$S} - seriová sběrnice pro digitální audio
+						\item {\bf SPI} - seriové periferní rozhraní pro komunikaci mezi mikroprocesorem a integrovanými obvody
+						\item {\bf rozhraní HSPI} - externí SPI pro připojení displeje či externí Flash
+						\item {\bf PWM rozhraní} - 4 kanálová pulzně šířková modulace pro přenos analogového signálu pomocí dvouhodnotného signálu
+					\end{itemize}
 
-					% ESP8266 nabízí:
-					% \begin{itemize}
-					% 	\item 32 bitový mikroprocesor RISC architektury založen na Tensilica Xtensa Diamond L106
-					% 	\item defaultně má frekvenci \SI{80}{MHz}, ale je možné nastavit i \SI{160}{MHz}
-					% 	\item \SI{16}{Mb} FLASH paměť a \SI{36}{KB} RAM
-					% 	\item IEEE 802.11 b/g/n, integrované zabezpečení WEP a WPA/WPA2
-					% 	\item podporu $I^2C$ a $I^2S$
-					% 	\item podporu Universal asynchronous reciever-transmitter(UART)
-					% 	\item 16 GPIO pinů
-					%
-					% \end{itemize}
+					\begin{figure}[h]
+						\centering
+						\includegraphics[width=9cm]{ESP8266_piny.png}
+						\caption{ESP8266 pinout}
+						\label{ESP8266_piny}
+					\end{figure}
+
+					\subsubsection{Deep sleep}
+						Platforma ESP lze také uvést do úsporného režimu. Jednoduše to znamená vypnutí nedůležitých částí pro ustálený stav. ESP8266 celkově nabízí 3 druhy úsporných režimů. Modem, light a deep. Pro moji maturitní práci použiji deep sleep, který je nejúspornějších. Kromě {\bf RTC}\footnote{Hodiny realného času} se vše vypne, včetně CPU či WiFi. V tomto režimu je také možné uchovat data v tzv. RTC paměti, která jsou dostupná i po obnovení. Průměrná spotřeba je 20 \si{\micro A} a je vhodný pro jakýkoliv projekt na akumulátor či baterii. \\
+						Probuzení ESP probíhá, buď po nastaveném čase, kde je nutné připojit pin {\bf GPIO 16} tzv. wake-up pin na {\bf RESET} (\viz{ESP8266_timed_pressed_deepsleep}a), nebo můžeme na {\bf RESET} přivést krátce tlačítkem logickou nulu a obnovíme ESP hardwarově (\viz{ESP8266_timed_pressed_deepsleep}b).
+
+						\begin{figure}[h!]
+						  \centering
+						  \begin{subfigure}[b]{0.4\linewidth}
+						    \includegraphics[width=\linewidth]{ESP8266_timed_deepsleep.png}
+						    \caption{Sotwarově po daném čase}
+						  \end{subfigure}
+						  \begin{subfigure}[b]{0.4\linewidth}
+						    \includegraphics[width=\linewidth]{ESP8266_pressed_deepsleep.png}
+						    \caption{Hardwarově}
+						  \end{subfigure}
+						  \caption{ESP8266 probuzení z deep sleep po daném čase}
+						  \label{ESP8266_timed_pressed_deepsleep}
+						\end{figure}
+
+
 			\subsection{ESP32}
 		\section{Komunikace mezi ESP a NETIO zásuvkou}
 
@@ -105,7 +132,9 @@
 					Ten v této situaci odpovídá hodnotě $66 \times 10^{-6}$ \si{\watt}.
 
 				\subsubsection{Shrnutí výsledků měření spotřeby}
-					\begin{table}[]
+					Dle měření (\viztab{ESP8266 klidové režimy}) nejmenší spotřeba je pokud je ESP8266 vypnuté protože nepracuje žádná část ovladače, díky tomu ovladač je schopen vydržet na bateriích dlouhou dobu. Na druhé straně stojí kontinuální stav, kde ESP nevypne žádnou část a neustále běží. Kompromis je deep sleep, kdy ESP určité části aby ušetřil energii.
+
+					\begin{table}[h]
 						\centering
 						\caption{ESP8266 porovnání ustálených stavů}
 						\begin{tabular}{||l|r r||}
@@ -121,7 +150,10 @@
 					\end{table}
 
 			\subsection{Reakční čas jednotlivých situací}
-				Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s 240 snímky za sekundu. Dále jsem zjistil rozdíl mezi rozsvícení LED u tlačítka a LED zabudované v zásuvce, signalizující sepnutí \viz{sonyvegaspostup}.
+				Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s {\bf 240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu {\bf Sony Vegas} (\viz{sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
+				$$ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}$$
+
+
 				\obrazek{sonyvegaspostup}{Ukázka postupu pro měření reakčních časů}{10cm}{sonyvegaspostup.png}
 
 				\begin{table}[]
@@ -132,19 +164,12 @@
 						Ustálený stav & t(ms)\\
 						\hline
 						Kontinuální & {\bf 196}\\
-						Enable & {\bf 3 100}\\
-						Deep sleep & {\bf 967}\\
+						Enable & {\bf 3 208}\\
+						Deep sleep & {\bf 983}\\
 						\hline
 					\end{tabular}
 					\label{ESP8266 klidové režimy čas}
 				\end{table}
-
-
-
-
-				% \tabulka{ESP8266 klidové režimy čas}{Porovnání reakčního času jednotlivých situací ESP8266}
-				% {& Kontinuální & Enable & Deep Sleep\\}
-				% {Reakční doba  & $\SI{196}{ms}$ & $\SI{3100}{ms}$ & $\SI{967}{ms}$\\}
 
 				\subsubsection{Porovnání reakčních časů}
 					Nejrychlejší reakce byla pokud ESP8266 bylo neustále zapnuto. Nejpomalejší naopak bylo pokud ESP8266 bylo nutné zapnout, je to z důvodu načtení sketche do operační paměti, načtení konfigurace WiFi a následnému připojení \viztab{ESP8266 klidové režimy čas}.
@@ -176,7 +201,7 @@
 						\viz{ESP8266_network_static_security}
 
 				\subsubsection{Shrnutí výsledků rychlostí WiFi nastavení}
-					Z výsledků měření je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o 1 \si{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.\\ \viztab{WiFi porovnání v sekundách}
+					Z výsledků měření (\viztab{WiFi porovnání v sekundách}) je nejrychlejší připojení pomocí statické IP adresy, nicméně je velice náročné nastavit IP adresu, masku a bránu pro běžného uživatele. Připojení s DHCP je pomalejší průměrně o 1 \si{s} než případ se statickou IP adresou. DHCP vyniká jednoduchostí použití pro běžného uživatele. K zabezpečené WiFI trvá stejně dlouho jako s DHCP.
 
 					\begin{table}[]
 						\centering
@@ -260,20 +285,61 @@
 				\subsubsection{Shrnutí výsledků spotřeby operací}
 					Z tabulky \ref{Spotreba_operaci} je možné vidět, že {\bf příkon P} je téměř totožný v každé operaci. Největší rozdíl, který ovlivňuje spotřebu, je čas, za který se úkon vykoná. Jelikož {\bf připojení pomocí statické IP adresy} trvalo nejkratší dobu, má také nejmenší spotřebu.\\
 					Samotná {\bf komunikace HTTP} má nejnižší spotřebu ze všech definovaných operací a jeden cyklus operace spotřebuje zanedbatelné množství energie.
+
+
 		\section{ESP32}
 
+			\subsection{Spotřeba ustálených stavů}
+
+				\subsubsection{Kontinuální}
+
+				\subsubsection{Enable}
+
+				\subsubsection{Deep sleep}
+
+			\subsection{Reakční čas jednotlivých situací}
+				Získání reakčních časů jednotlivých možností zapojení ESP32 proběhlo stejným způsobem jako u ESP8266 (\viz{sonyvegaspostup} na straně \pageref{sonyvegaspostup}) tzn. Náhrál jsem reakci na kameru v 240 snímcích za sekundu, vystřihl jsem úsek, kde zásuvka reaguje, a převedl jsem snímky na čas.
+
+				\begin{table}[h]
+					\centering
+					\caption{ESP32 porovnání reakčního času jednotlivých situací}
+					\begin{tabular}{||l|r||}
+						\hline
+						Ustálený stav & t(ms) \\
+						\hline
+						Kontinuální & {\bf 188} \\
+						Enable & {\bf 2 333} \\
+						Deep sleep & {\bf 1 071} \\
+						\hline
+					\end{tabular}
+					\label{ESP32 klidové režimy čas}
+				\end{table}
+
+		\section{Porovnání získaných výsledků}
+			\subsection{Reakční časy stavů}
+			Z tabulky \ref{Porovnání klidové režimy čas} je možné vidět jak si platformy vedly proti sobě. \\
+			Pokud ovladač neustále běží s připojenou WiFi čas reakce je velmi rychlý a v obou případech uživatel nepostřehne prodlevu mezi aktivací ovladače a sepnutí relé v zásuvce. Časy mezi platformami se liší minimálně a rozdíl se pohybuje v rámci milisekund, přesto je ESP32 lehce rychlejší. \\
+			Zapnutí vypnutého ESP, následné načtení a připojení k WiFi je nejdelší ze všech scénářů, který trvá několik sekund. Pro uživatele je velice pomalé a v realném produktu dle mého názoru zcela nepoužitelné. I přesto je ESP32 je mnohem rychlejší a to zhruba o 1 \si{s}. \\
+			Deep sleep je alternativa mezi kontinuálním a vypnutým stavem. ESP totiž vypne vetšinu svých částí. Díky tomu je schopno relativně rychle zareagovat na budící signál. Reakce obou ovladačů je cirka 1 \si{s}. Zde vede ESP8266, které je zhruba o 100 \si{ms} pomalejší.
+
+			\begin{table}[h]
+				\centering
+				\caption{Porovnání reakčních časů ústálených stavů platforem}
+				\begin{tabular}{||l|r r||}
+					\hline
+					Ustálený stav & ESP8266 & ESP32 \\
+					& (ms) & (ms) \\
+					\hline
+					Kontinuální & {\bf 196} & {\bf 188}\\
+					Enable & {\bf 3 208} & {\bf 2 333}\\
+					Deep sleep & {\bf 983} & {\bf 1 071}\\
+					\hline
+				\end{tabular}
+				\label{Porovnání klidové režimy čas}
+			\end{table}
 
 
 
-
-			% Spotřeba jednotlivých operací ESP8266 byla spočítána:
-			% 	$E = U \times I \times t$
-			% \tabulka{Spotřeba částí WiFi}{Spotřeba jednotlivých akcí}
-			% {Operace & reakční doba & spotřeba\\}
-			% {Dynamické připojení & \SI{4652}{ms} & \SI{385,19}{\micro Wh}\\
-			% Statické připojení & \SI{3238}{ms} & \SI{295,59}{\micro Wh}\\
-			% Zabezpečené připojení & \SI{4709}{ms} & \SI{393,15}{\micro Wh}\\
-			% HTTP komunikace & \SI{718}{ms} & \SI{67,75}{\micro Wh}\\}
 % KONEC MĚŘENÍ
 
 

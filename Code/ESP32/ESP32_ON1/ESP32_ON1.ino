@@ -14,7 +14,7 @@ extern String HTTPRequest1;
 //const int buttton = 16;
 const int buzzer = 13;
 const int LED = 12;
-const int button = 2;
+const int button = 17;
 // promenne
 int buttonState = 0;
 int buttonState2 = 0;
