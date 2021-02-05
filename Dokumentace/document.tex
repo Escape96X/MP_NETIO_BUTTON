@@ -46,7 +46,7 @@
 				\subsubsection{Specifikace}
 					Pro tuto maturitní práci bude použit modul \textbf{WT8266-S1}, který je vytvořen společností \textbf{Wireless-Tag}. Je založen na mikročipu ESP8266.\\
 					ESP8266 integruje vylepšenou verzi procesoru \textbf{L106 Diamond series 32-bit} vytvořený firmou \textbf{Tensilica} s podporou frekvencí 80 \si{MHz} a 160 \si{MHz} a RTOS\footnote{Operační systém v realném čase}.
-					K dispozici je 36 \si{KB} RAM a 16 \si{Mbit} Flash paměti. Intergrovaný v systému je také 10 bitový analog-digitální převodník. Modul podporuje standard {\bf IEEE802.11 b/g/n}	\footnote{Standard pro lokální bezdrátové sítě} a sadu protokolů TCP/IP. WiFi 2,4 \si{GHz} umožňuje WPA/WPA2 \footnote{Chráněný přístup k WiFi} a ke komunikaci využívá anténu PCB. Zařízení má 16 GPIO pinů\footnote{Vstupně výstupní pin} (\viz{ESP8266_piny}). Také obsahuje:
+					K dispozici je 36 \si{KB} RAM a 16 \si{Mbit} Flash paměti. Intergrovaný v systému je také 10 bitový analog-digitální převodník. Modul podporuje standard {\bf IEEE802.11 b/g/n}	\footnote{Standard pro lokální bezdrátové sítě} a sadu protokolů TCP/IP. WiFi 2,4 \si{GHz} umožňuje WPA/WPA2 \footnote{Chráněný přístup k WiFi}, rychlost až 72,2 \si{Mbps} a ke komunikaci využívá anténu PCB. Zařízení má 16 GPIO pinů\footnote{Vstupně výstupní pin} (\viz{ESP8266_piny}). Také obsahuje:
 					\begin{itemize}
 						\item {\bf UART} - univerzální asynchronní přijímač-vysílač pro sériový přenos
 						\item {\bf I$^2$C} - seriová sběrnice o dvou vodičích pro nízkorychlostní zařízení
@@ -83,9 +83,24 @@
 
 
 			\subsection{ESP32}
+				ESP32 je starší model z řady ESP, který byl vydán v roce 2016. Tento mikročip má integrované WiFi i Bluetooth. Série ESP32 obsahuje mikroprocesor Tensilica Xtensa LX6 v dvou jádrové či jednojádrové verzi, který může operovat na 160 \si{MHz} nebo 240 \si{MHz}. SRAM je zde byla zvetšena na 520 \si{kB}. WiFi může dosáhnout rychlosti až 150 \si{Mbps} společně se zabezpečením WPA/WPA2. Kromě IPv4 je možnost použít i IPv6. ESP32 integruje 12 bitový analog-digitální převodník. Oproti ESP8266 je do tohoto modelu zabudován senzor teploty. ESP32 disponuje 36 GPIO piny. Další funkce jsou na obrázku \ref{ESP32_diagram}.
+
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=14cm]{ESP32_diagram.png}
+					\caption{ESP32 blokový diagram funkcí}
+					\label{ESP32_diagram}
+				\end{figure}
+
+
+
 		\section{Komunikace mezi ESP a NETIO zásuvkou}
 
 	\chapter{Tvorba webové stránky}
+		Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
+		Cílem webové stránky je umožnění připojení ovladače k uživatelské WiFi a následně vybrat pomocí IP adresy zařízení NETIO, které chceme ovládat. Stránka také musí umožňovat změnu reakce zásuvky na vyvolanou akci ovladačem.
+		\section{Nastavení webserveru}
+			Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver jelikož po prvním spuštění ovladače ovladač není připojen k WiFi a úprava kódu není přívětivá možnost pro uživatele. 
 
 	% MĚŘENÍ
 	\chapter{Měření spotřeby a času}
