@@ -26,41 +26,30 @@ void httpPost()
 }
 
 void WiFib(){
-  Serial.println('\n');
-  WiFi.disconnect();
-  WiFi.mode(WIFI_OFF);
-  WiFi.mode(WIFI_STA);
-  if(WiFi.status() == WL_CONNECTED){
-   Serial.println('connected');
-  }else{
-  WiFi.begin("Jirickovi_secured", "19192020");
-
-  Serial.println("Connecting to ");
-//  Serial.print(ssid); Serial.println(" ...");
- for(int i = 0; i < 5; i++){
-    delay(500);
-    Serial.println(WiFi.status());
-    if(WiFi.status() == WL_CONNECT_FAILED){
-      esp_deep_sleep_start();}
-    if(WiFi.status() == WL_CONNECTED)
-      break;
+  while (WiFi.status() != WL_CONNECTED) {
+    WiFi.begin("Jirickovi_secured", "19192020");
+      for(int i = 0; i < 5; i++){
+        delay(100);
+        Serial.print(".");
+        if(WiFi.status() == WL_CONNECTED)
+          break;
+      }
   }
-  Serial.println('\n');
-  Serial.println("Connection established!");  
-  Serial.print("IP address:\t");
-  Serial.println(WiFi.localIP());  
-}}
+  Serial.println("Connected to the WiFi network"); 
+}
 
 
 void setup(){
   Serial.begin(115200);
+  Serial.println("START");
     
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
   " Seconds");
   WiFib();
+  Serial.println("SEND BEGIN");
   httpPost();
-  Serial.println("Going to sleep now boot count");
+  Serial.println("END");
   esp_deep_sleep_start();
 }
 
