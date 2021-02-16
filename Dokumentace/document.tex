@@ -23,6 +23,7 @@
 %Zadání
 \begin{document}
 
+
 	\titulniStrana
 	\anotace
 		Maturitní práce se zaměřuje na porovnání platforem ESP8266 a ESP32. Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodná pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.
@@ -116,16 +117,32 @@
 					Z naměřeného případu bude vyjmuta klidová část a rozdíl mezi posledním a prvním vzorkem je poté reakční čas. V případě HTTP requestu nebude počítána část konfigurace WiFi. Společně s měřením byl na {\bf serial monitor} odesílány zprávy, kde se program nachází. Poté se vyjmula část, která dle serial monitoru nepatří do scénáře.
 
 			\section{Ustálené stavy}
-				Pro ustálené stavy byly navrhnuty jednoduché programy pro co nejlepší porovnání.
+				Pro ustálené stavy byly navrhnuty jednoduché programy pro co nejlepší porovnání. Ustálený stav je stav, kdy zařízení čeká na uživatelský podnět jako např. stisknutí tlačítka. Ideální ustálený stav musí splňovat:
+				\begin{enumerate}
+					\item nejkratší možnou reační dobu
+					\item nejnižší možnou spotřebu pro co nejdelší výdrž baterií
+				\end{enumerate}
+				Reakční doba musí být v rámci uživatelské přívětivosti tzn. probuzení z tohoto stavu nesmí trvat více jak 1,5 \si{s}. Zároveň se zařízení nesmí vypnout zdůvodu vybité baterie za krátkou dobu. Porovnání proběhne mezi třemi scénáři, které mají jiné vlastnosti. Vybrány byly následující:
+				\begin{itemize}
+					\item {\bf Kontinuální režim} - V tomto stanu není žádná funkce ESP vypnuta.
+					\item {\bf Deep sleep} - ESP vypne vše až na RTC (kapitola viz. \ref{subsub:Deep sleep} na straně \pageref{subsub:Deep sleep}).
+					\item {\bf Enable button} - ESP je vypnuto pomocí přivedené GROUND na pin ENABLE.
+				\end{itemize}
+
+
 				\subsection{Spotřeba} \label{metodika:Ustálené stavy spotřeba}
-					Cílem měření je nalézt stav s nejmenší spotřebou energie, jelikož finální prvek bude napájen z baterií je důležité co nejdelší výdrž. Pro měření bude použit {\bf ANALOG DISCOVERY} s jeho funkcí osciloskopu. Na napájení bude přidán bočník o velikosti 0,7 \si{\ohm}, 10,5 \si{\ohm} nebo 4,7 \si{\ohm} \footnote{Je nutné zvolit takový odpor, aby byl úbytek napětí měřitelný.}. Pomocí Ohmova zákona $ I = \frac{U}{R} $ je možné zjistit el. proud. Pro měření byly vybrány 3 scénáře.\\
+					Cílem měření je nalézt stav s nejmenší spotřebou energie, jelikož finální prvek bude napájen z baterií je důležité co nejdelší výdrž. Programy, které byly napsány pro měření:\\
 					\begin{itemize}
-						\item {\bf Kontinuální režim} - V tomto stanu není žádná funkce ESP vypnuta. Zařízení má nastavený určitý GPIO na tlačítko a monitoruje zda bylo zmáčknuto. ESP také má otevřenou sériovou komunikaci.
-						\item {\bf Deep sleep} - ESP vypne vše až na RTC (kapitola viz. \ref{subsub:Deep sleep} na straně \pageref{subsub:Deep sleep}). Program zajišťuje probuzení ESP každých 5 \si{s} a odesílání zprávy na serial monitoring.
-						\item {\bf Enable button} - ESP je vypnuto pomocí přivedené GROUND na pin ENABLE. Pro měření této situace není třeba specifický program
+						\item {\bf Kontinuální režim} - Zařízení má nastavený určitý GPIO na tlačítko a monitoruje zda bylo zmáčknuto. ESP také má otevřenou sériovou komunikaci.
+						\item {\bf Deep sleep} - Program zajišťuje probuzení ESP každých 5 \si{s} a odesílání zprávy na serial monitoring.
+						\item {\bf Enable button} - Pro měření této situace není třeba specifický program
 					\end{itemize}
+					Pro měření bude použit {\bf ANALOG DISCOVERY} s jeho funkcí osciloskopu. Na napájení bude přidán bočník o velikosti 0,7 \si{\ohm}, 10,5 \si{\ohm} nebo 4,7 \si{\ohm} \footnote{Je nutné zvolit takový odpor, aby byl úbytek napětí měřitelný.}. Pomocí Ohmova zákona $ I = \frac{U}{R} $ je možné zjistit el. proud.
+					Příkon, který bude porovnán vypočítáme dle vztahu:
+					$$P = U \times I$$
 					{\bf OBRÁZKY ZAPOJENÍ}
 				\subsection{Probuzení z ustálených časů}
+					Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním zprávy zpět ovladači zda se povedlo či nikoliv.\\
 					Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s {\bf 240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu {\bf Sony Vegas} (\viz{sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
 					$$ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}$$
 					\begin{figure}[h]
@@ -152,8 +169,7 @@
 	% MĚŘENÍ
 	\chapter{Měření spotřeby a času}
 		\section{ESP8266}
-			\subsection{Ustálené stavy}
-				\subsubsection{Spotřeba}
+			\subsection{Spotřeba ustálených stavů}
 					Spotřeba jednotlivých scénářů je měřena dle metodiky \ref{metodika:Ustálené stavy spotřeba} na straně \pageref{metodika:Ustálené stavy spotřeba}. Bočník pro měření úbytku napětí byl o velikosti 4,7 \si{\ohm}. \\
 
 					\begin{figure}[h]
@@ -171,67 +187,21 @@
 
 					Situace {\bf enable button} nebyla možná změřit zařízením {\bf ANALOG DISCOVERY 2} ani na bočníku o velikosti 0,7 \si{\ohm} kvůli velice nízkému úbytku napětí, který se v datasheetu WT8266 pohybuje v jednotkách \si{\micro A}. V tomto případě pro výpočty je použita hodnota, kterou určil výrobce v datasheetu.
 
-
-
-
-
-			\subsection{Spotřeba ustálených stavů}
-				Při měření spotřeby ustálených stavů bylo použito napájení z USB. Měřeno bylo zařízením \textbf{Analog Discovery 2} od společnosti \textbf{DIGILENT}. Tímto zařízením je měřeno napětí na rezistoru a dle Ohmova zákona: $I =\frac{U}{R}$ vypočítán eletrický proud. Napětí je 3,3 V.
-
-				\subsubsection{ESP běží kontinuálně}
-					Schéma zapojení \viz{ESP8266_on_schema} \\
-					\obrazek{ESP8266_on_schema}{ESP8266 schéma zapojení kontinuálního ustáleného stavu}{10cm}{ESP8266_on_schema.png}
-					Ústálený stav byl měřen za podmínek:
-					\begin{itemize}
-						\item Měřící rezistor má odpor 0,7 \si{\ohm}
-						\item ESP8266 čeká na zmáčknutí tlačítka na pinu GPIO5
-						\item ESP je neustále zapnuté, probíhá loop funkce pro kontrolu zmáčknutí
-						\item Je připojeno k WiFi, je zaplý access point ESP, běží webserver
-					\end{itemize}
-		 			Při klidovém stavu byl naměřen eletrický proud průměrně 96,81 \si{mA} \viz{ESP8266_on_waiting}. Měření probíhalo 50 \si{s}. Pro jednotné porovnání je třeba vypočítat příkon:
-						$$P = 96,81 \times 10^{-3}\si{A} \times 3,3 \si{ V}$$
-		 			Dle rovnice se příkon rovná $ 319,5 \times 10^{-3}$ \si{\watt}\\
-					\obrazek{ESP8266_on_waiting}{ESP8266 měření klidového stavu kontinualního režimu}{8cm}{ESP8266_on_waiting.png}
-
-				\subsubsection{ESP vypnuté přes ENABLE pin}
-					Schéma zapojení \viz{ESP8266_enable_schema}\\
-					\obrazek{ESP8266_enable_schema}{ESP8266 schéma zapojení vypnutého ESP přes ENABLE pin}{10cm}{ESP8266_enable_schema.png}
-					Měření proběhlo za podmínek:
-					\begin{itemize}
-						\item Měřící rezistor má odpor 10 \si{\ohm}
-						\item pin enable byl připojen manuálně
-					\end{itemize}
-					Po připojení ESP8266 proud nevzrostl a drží se stále na 240 \si{\micro A}, což neodpovídá teoretickým hodnotám, které by se měly pohybovat okolo 3 \si{\micro A}
-					\viz{1_enable}.\\
-					\obrazek{1_enable}{Měření klidového režimu enable případu}{8cm}{1_enable.png}
-					Pro výpočet bude jako průměrný odebraný proud použita hodnota uvedena v datasheetu což je 3 \si{\micro A}. Víme, že napětí je 3,3 \si{V} takže jsme schopni spočítat eletrický příkon:
-				 		$$P = 3\times 10^{-6} \si{A}\times 3,3 \si{V}$$
-					Výsledek je $9,9 \times 10^{-6}$ \si{\watt}.
-
-				\subsubsection{Deep sleep režim}
-					Schéma zapojení \viz{ESP8266_deepsleep_schema}\\
-					\obrazek{ESP8266_deepsleep_schema}{ESP8266 schéma uvedené v deep sleep stavu}{10cm}{ESP8266_deepsleep_schema.png}
-					Kvůli citlivosti Analog Discovery 2 nejsme schopni změřit spotřebu deep sleep režimu, je nutné změřit microampérmetrem. Pro výpočet spotřebované energie dosadíme za průměrný elektrický proud hodnotu z datasheetu, která odpovídá 20 \si{\micro A}. Spočítáme elektrický příkon:
-						$$P = 20\times 10^{-6} \si{A}\times 3,3 \si{V}$$
-					Ten v této situaci odpovídá hodnotě $66 \times 10^{-6}$ \si{\watt}.
-
-				\subsubsection{Shrnutí výsledků měření spotřeby}
-					Dle měření (\viztab{ESP8266 klidové režimy}) nejmenší spotřeba je pokud je ESP8266 vypnuté protože nepracuje žádná část ovladače, díky tomu ovladač je schopen vydržet na bateriích dlouhou dobu. Na druhé straně stojí kontinuální stav, kde ESP nevypne žádnou část a neustále běží. Kompromis je deep sleep, kdy ESP určité části aby ušetřil energii.
-
 					\begin{table}[h]
 						\centering
-						\caption{ESP8266 porovnání ustálených stavů}
-						\begin{tabular}{||l|r r||}
+						\caption{ESP8266 porovnání spotřeby ustálených stavů}
+						\begin{tabular}{||l|r r r||}
 							\hline
-							Ustálený stav & I($A$) & P($W$)\\
+							Ustálený stav & U($V$) & I($A$) & P($W$)\\
 							\hline
-							Kontinuální & $96,81 \times 10^{-3}$ & $319,5 \times 10^{-3}$\\
-							Enable & $3,00\times 10^{-6}$ & $9,9 \times 10^{-6}$\\
-							Deep sleep & $20,00\times 10^{-6}$ & $66,0 \times 10^{-6}$\\
+							Kontinuální & $3,3$& $67,66 \times 10^{-3}$ & $223,3 \times 10^{-3}$\\
+							Deep sleep& $3,3$ & $138,20 \times 10^{-6}$  & $460,0 \times 10^{-6}$\\
+							Enable button & $3,3$ & $3,00\times 10^{-6}$ & $9,9\times 10^{-6}$\\
 							\hline
 						\end{tabular}
-						\label{ESP8266 klidové režimy}
+						\label{ESP8266 klidové režimy spotřeba}
 					\end{table}
+					Dle tabulky \ref{ESP8266 klidové režimy spotřeba} je možné vidět jednotlivé situace. Největším příkonem disponuje kontinuální ustálený stav z důvodu běžícího programu na kontrolu interakce.
 
 			\subsection{Reakční čas jednotlivých situací}
 
@@ -354,7 +324,7 @@
 					\caption{ESP8266 Spotřeba operací}
 					\begin{tabular}{||l| r r r r |r||}
 						\hline
-						Operace & U(V) & I($mA$) & t($ms$) & P($mW$) & \textbf{E}($\mu Wh$)\\
+						Operace & U(V) & I[$mA$] & t[$ms$] & P[$mW$] & \textbf{E}[$\mu Wh$]\\
 						\hline
 						\hline
 					Dynamické připojení & 3,3 & 89,5 & 5 300 & 295 & \textbf{435}\\
