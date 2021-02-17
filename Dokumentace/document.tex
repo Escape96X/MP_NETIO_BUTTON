@@ -100,7 +100,7 @@
 
 	\chapter{Metodika postupu}
 		\section{Tvorba rozhraní}
-		\section{Měření připojení k WiFi a odeslání HTTP requestu}
+		\section{Měření připojení k WiFi a odeslání HTTP requestu} \label{metodika:wifi}
 				Cílem měření je zjistění rychlostí a spotřeby připojení různými způsoby k přístupovému bodu a~následné porovnání případů. Do měření je také započítáné odesílání HTTP requestu zásuvce. Jsou vytvořeny celkem 4 případy akcí:
 				\begin{itemize}
 					\item {\bf statická IP adresa} - 	Zařízení dostane IP adresu, masku a bránu staticky staticky nakonfigurovanou. Na access pointu bude vyplé DHCP a komunikace nebyla zabezpečena.
@@ -109,11 +109,11 @@
 					\item {\bf Odeslání HTTP requestu} - Zařízení je připojené k WiFi. Odešle zprávu zásuvce a pokud dostane zpětnou vazbu od zásuvky, ukončí se činnost.
 				\end{itemize}
 				Ve všech scénářích bude měřeno zařízením {\bf ANALOG DISCOVERY 2} od Digilent. Frekvence procesoru je 160 \si{MHz} a AP je vzdálen 3,5 \si{m} od zásuvky a funkčního vzorku ovladače.
-				\subsection{Spotřeba}
+				\subsection{Spotřeba} \label{metodika:wifi spotreba}
 					Měřen bude úbytek napětí na bočníku\footnote{nízkoohmový rezistor} o velikosti určené u měření. V programu k měřícímu zařízení je možné stejně jako na osciloskopu vytvořit graf naměřených hodnot v dané vzorkovací frekvenci. Hodnoty napětí bude převedeno na hodnoty el. proudu pomocí Ohmova zákona $I = \frac{U}{R}$. Amplitudy el. proudu budou sečteny a vyděleny počtem vzorků {\bf[DOPLNIT VZOREC]}. Tato operace nám poskytne zjištění průměrného el. proudu ve scénáři. Spotřebu již vypočítáme dle:
 					$$E = U \times \overline{I} \times \frac{t}{3600}$$
 					Čas {\bf t} v sekundách je možné zjistit v následující kapitole.
-				\subsection{Reakční čas}
+				\subsection{Reakční čas} \label{metodika:wifi reakce}
 					Z naměřeného případu bude vyjmuta klidová část a rozdíl mezi posledním a prvním vzorkem je poté reakční čas. V případě HTTP requestu nebude počítána část konfigurace WiFi. Společně s měřením byl na {\bf serial monitor} odesílány zprávy, kde se program nachází. Poté se vyjmula část, která dle serial monitoru nepatří do scénáře.
 
 			\section{Ustálené stavy}
@@ -141,7 +141,7 @@
 					Příkon, který bude porovnán vypočítáme dle vztahu:
 					$$P = U \times I$$
 					{\bf OBRÁZKY ZAPOJENÍ}
-				\subsection{Probuzení z ustálených časů}
+				\subsection{Probuzení z ustálených časů} \label{metodika:Ustálené stavy reakce}
 					Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním zprávy zpět ovladači zda se povedlo či nikoliv.\\
 					Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s {\bf 240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu {\bf Sony Vegas} (\viz{sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
 					$$ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}$$
@@ -169,7 +169,8 @@
 	% MĚŘENÍ
 	\chapter{Měření spotřeby a času}
 		\section{ESP8266}
-			\subsection{Spotřeba ustálených stavů}
+			\subsection{Spotřeba a reakční doba ustálených stavů}
+				\subsubsection{Spotřeba}
 					Spotřeba jednotlivých scénářů je měřena dle metodiky \ref{metodika:Ustálené stavy spotřeba} na straně \pageref{metodika:Ustálené stavy spotřeba}. Bočník pro měření úbytku napětí byl o velikosti 4,7 \si{\ohm}. \\
 
 					\begin{figure}[h]
@@ -201,27 +202,97 @@
 						\end{tabular}
 						\label{ESP8266 klidové režimy spotřeba}
 					\end{table}
-					Dle tabulky \ref{ESP8266 klidové režimy spotřeba} je možné vidět jednotlivé situace. Největším příkonem disponuje kontinuální ustálený stav z důvodu běžícího programu na kontrolu interakce.
+					Dle tabulky \ref{ESP8266 klidové režimy spotřeba} je možné vidět jednotlivé situace. Největším příkonem disponuje kontinuální ustálený stav z důvodu běžícího programu na kontrolu interakce. Nejmenší spotřeba je naopak vypnuté ESP přes enable pin. \\
+				\subsubsection{Reakční čas}
+			 		Reakční čas byl měřen dle metodiky \ref{metodika:Ustálené stavy reakce} na straně \pageref{metodika:Ustálené stavy reakce}.
+				 	\begin{table}[]
+					 \centering
+					 \caption{ESP8266 porovnání reakčního času ustálených stavů}
+					 \begin{tabular}{||l|r||}
+						 \hline
+						 Ustálený stav & t(ms)\\
+						 \hline
+						 Kontinuální & {\bf 196}\\
+						 Deep sleep & {\bf 983}\\
+						 Enable button & {\bf 3 208}\\
+						 \hline
+					 \end{tabular}
+					 \label{ESP8266 klidové režimy čas}
+				 	\end{table}
+					Nejrychlejší ustálený stav je kontinuální, kvůli připravenosti na interakci. Nejdéle trvá vypnuté ESP, protože je nutné ESP zapnout, nastavit konfiguraci a připojit na WiFi, zatím co zapnuté ESP je již připraveno.
+				\subsubsection{Porovnání}
+					Pro porovnání spotřeb budeme předpokládat, že zařízení je napájeno 3$\times$ NiZn akumulátorem typu AA, které společně mají kapacitu {\bf 3750 mAh}, což je možné prevést na energii vztahem $E = U_{aku}\times \textrm{kapacita}$.
+					a dále vztahem\footnote{$ t_{p}$ - provoz v ustáleném režimu, $ E_{bat}$ - energie 3$\times$ AA akumulátorů} $ t_{p} = \frac{E_{bat}}{P}$ zjistit provozní čas (\viztab{ESP8266 klidové režimy porovnani}). Zařízení není schopno dosáhnout této výdrže protože pokud napětí klesne pod 3 V, stabilizátor napájení odpojí.\\
+					\begin{table}[]
+						\centering
+						\caption{ESP8266 porovnání ustálených stavů}
+						\begin{tabular}{||l|r r r||}
+							\hline
+							Ustálený stav & P[$W$]& t$_{p}$[$h$] & t[$ms$]\\
+							\hline
+							Kontinuální & $223,3 \times 10^{-3}$& 75,6 & $196$\\
+							Deep sleep & $460,0 \times 10^{-6}$& 36 993,1 & $983$\\
+							Enable button & $9,9\times 10^{-6}$& 1 704 545,0 &  3 208\\
+							\hline
+						\end{tabular}
+						\label{ESP8266 klidové režimy porovnani}
+					\end{table}
+					Kontinuální stav, zatímco má výdrž v rámci několika dní, reakční čas trvá necelých 200~ms. Enable button situace naprosto opačná. Reakční čas je pro uživatele dlouhý, ale výdrž v~tomto stavu bez interakce by se pohybovala v letech. Dobrý kompromis je situace deep sleep, kdy zařízení reagovalo vždy do jedné sekundy a teoretická výdrž je v jednotkách let.\\
 
-			\subsection{Reakční čas jednotlivých situací}
 
-				\begin{table}[]
+
+
+			\subsection{Připojení k WiFi a odeslání HTTP requestu}
+				Měření proběhlo dle metodiky \ref{metodika:wifi} na straně \pageref{metodika:wifi} na bočníku 0,7 \si{\ohm}.
+				\begin{figure}[h]
 					\centering
-					\caption{ESP8266 porovnání reakčního času jednotlivých situací}
-					\begin{tabular}{||l|r||}
-						\hline
-						Ustálený stav & t(ms)\\
-						\hline
-						Kontinuální & {\bf 196}\\
-						Enable & {\bf 3 208}\\
-						Deep sleep & {\bf 983}\\
-						\hline
-					\end{tabular}
-					\label{ESP8266 klidové režimy čas}
-				\end{table}
+					\includegraphics[width=10cm]{ESP8266_network_dynamic_specific.png}
+					\caption{ESP8266 graf WiFi připojení s dynamickou IP}
+					\label{ESP8266_network_dynamic_specific}
+				\end{figure}
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=13cm]{ESP8266_network_static.png}
+					\caption{ESP8266 graf WiFi připojení se statickou IP}
+					\label{ESP8266_network_static}
+				\end{figure}
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=10cm]{ESP8266_network_static_security.png}
+					\caption{ESP8266 graf připojení na zabezpečenou WiFi}
+					\label{ESP8266_network_static_security}
+				\end{figure}
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=13cm]{ESP8266_http.png}
+					\caption{ESP8266 graf HTTP requestu}
+					\label{ESP8266_http}
+				\end{figure}
 
-				\subsubsection{Porovnání reakčních časů}
-					Nejrychlejší reakce byla pokud ESP8266 bylo neustále zapnuto. Nejpomalejší naopak bylo pokud ESP8266 bylo nutné zapnout, je to z důvodu načtení sketche do operační paměti, načtení konfigurace WiFi a následnému připojení \viztab{ESP8266 klidové režimy čas}.
+
+
+
+
+
+
+
+				% \begin{table}[]
+				% 	\centering
+				% 	\caption{ESP8266 porovnání reakčního času jednotlivých situací}
+				% 	\begin{tabular}{||l|r||}
+				% 		\hline
+				% 		Ustálený stav & t(ms)\\
+				% 		\hline
+				% 		Kontinuální & {\bf 196}\\
+				% 		Enable & {\bf 3 208}\\
+				% 		Deep sleep & {\bf 983}\\
+				% 		\hline
+				% 	\end{tabular}
+				% 	\label{ESP8266 klidové režimy čas}
+				% \end{table}
+				%
+				% \subsubsection{Porovnání reakčních časů}
+				% 	Nejrychlejší reakce byla pokud ESP8266 bylo neustále zapnuto. Nejpomalejší naopak bylo pokud ESP8266 bylo nutné zapnout, je to z důvodu načtení sketche do operační paměti, načtení konfigurace WiFi a následnému připojení \viztab{ESP8266 klidové režimy čas}.
 
 
 
@@ -314,11 +385,6 @@
 			% 		\label{HTTP odesílání}
 			% 	\end{table}
 
-			\subsection{Spotřeba jednotlivých operací}
-				Spotřebu budeme měřit pro jednotlivé situace WiFi a odesílání HTTP requestu. Pro tyto situace využijeme data z měření v kapitolách 4.1.3 a 4.1.4. Měření WiFi připojení probíhalo za vzorkovací frekvence 160 Hz a HTTP komunikace za 68,275 Hz. Z veličin, které známe, lze vypočítat \textbf{spotřebovanou energii}:
-				$$E = P \times t$$
-				$$E = U \times I \times t$$
-
 				\begin{table}[h]
 					\centering
 					\caption{ESP8266 Spotřeba operací}
@@ -335,9 +401,7 @@
 					\end{tabular}
 					\label{Spotreba_operaci}
 				\end{table}
-
-				\subsubsection{Shrnutí výsledků spotřeby operací}
-					Z tabulky \ref{Spotreba_operaci} je možné vidět, že {\bf příkon P} je téměř totožný v každé operaci. Největší rozdíl, který ovlivňuje spotřebu, je čas, za který se úkon vykoná. Jelikož {\bf připojení pomocí statické IP adresy} trvalo nejkratší dobu, má také nejmenší spotřebu.\\
+					Z tabulky \ref{Spotreba_operaci} je možné vidět, že {\bf příkon P} je téměř totožný v každé operaci. Největší rozdíl, který ovlivňuje spotřebu, je čas, za který se úkon vykoná. Jelikož {\bf připojení pomocí statické IP adresy} trvalo nejkratší dobu, má také nejmenší spotřebu energie.
 					Samotná {\bf komunikace HTTP} má nejnižší spotřebu ze všech definovaných operací a jeden cyklus operace spotřebuje zanedbatelné množství energie.
 
 
