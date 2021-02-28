@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{hyperref}
+% \usepackage{minted}
 \usepackage[bottom]{footmisc}
 \captionsetup[table]{skip=5pt}
 
@@ -25,10 +26,16 @@
 
 
 	\titulniStrana
-	\anotace
+	\section*{Anotace}
 		Maturitní práce se zaměřuje na porovnání platforem ESP8266 a ESP32. Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodná pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.
-	\annotation
+		\subsubsection*{Klíčová slova}
+		ESP8266, ESP32, měření spotřeby, měření reakčního času, JSON, HTTP, NETIO, PowerCable
+
+	\section*{Annotation}
 		The graduation thesis focuses on the comparison of the ESP8266 and ESP32 platforms. The goal is to create a driver for controlling NETIO sockets with a web application for configuration and to find out which platform is suitable for the implementation of a~functional sample in terms of energy consumption and response time.
+		\subsubsection*{Keywords}
+		ESP8266, ESP32, measuring usage, measuring time of reaction, JSON, HTTP, NETIO, PowerCable
+
 	\podekovani
 		Chtěl bych poděkovat panu učiteli Ing.~Břetislavu Bakalovi za odborné vedení práce a~cenné rady, které mi pomohly tuto práci zkompletovat. Rád bych také poděkoval  technickému řediteli Ing.~Břetislavu Bakalovi ml. společnosti NETIO products a.s. za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování maturitní práce. V~neposlední řadě chci poděkovat Mgr. Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za~pomoc při gramatické a~stylistické kontrole.
 	\tableofcontents
@@ -37,8 +44,9 @@
 	%Teorie
 	\chapter{Teoretický úvod do problematiky}
 
-		\section{Zásuvka NETIO}
-
+		\section{Netio PowerCable REST 101E}
+		PoweCable REST 101E, nebo také Cobra je chytrá zásuvka s možností WiFi připojení. Díky tomu je možné zásuvku ovládat přes řadu protokolů. Zásuvka také nabízí rozhraní otevřeného API, které umožňuje integraci do systémů třetích stran. Zásuvka také dokáže měřit napětí, el. proud nebo také např. příkon. \\
+		K WiFi je možné se připojit přes uživatelské rozhraní. Pro moje účely využiji odesílání JSON dat pomocí HTTP.
 		\section{Platforma ESP}
 			ESP jsou rodina mikročipů od společnosti \textbf{Espressif Systems}.
 			\subsection{ESP8266}
@@ -52,7 +60,7 @@
 
 					\begin{figure}[h]
 						\centering
-						\includegraphics[width=7cm]{ESP8266_piny.png}
+						\includegraphics[width=10cm]{ESP8266_piny.png}
 						\caption{ESP8266 pinout: Literatura [1]}
 						\label{ESP8266_piny}
 					\end{figure}
@@ -103,23 +111,40 @@
 			%https://cs.wikipedia.org/wiki/Power_Good
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width=10cm]{ldln030_datasheet.png}
+				\includegraphics[width=9cm]{ldln030_datasheet.png}
 				\caption{LDLN030 Pinout: Literatura [5]}
 				\label{ldln030_datasheet}
 			\end{figure}
+			\section{Použité protokoly a jiné}
+			\subsection{HTTP}
+			HTTP je protokol pracující na aplikační vrstvě ISO/OSI modelu. Primárně je určen pro pro komunikaci s WWW servery a přenos hypertextových dokumentů ve formátu např. HTML. Typicky používá port TCP/80. Protokol funguje způsobem request/response\footnote{dotaz-odpověď}, kdy klient pošle request na požadovaný dokument. Server na to odpoví pomocí několika dat ohledně dotazu a poté požadovaným dokumentem.
+			%https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+			\subsection{JSON}
+			JavaScript Object Notation je způsob zápisu dat nezávislých na platformě. Data mohou být organizována v polích nebo v objektech s jakýmkoliv datovým typem. JSON může složit k přenosu dat v libovolném programovacím či skriptovacím jazyku. Nevýhodou je, že nelze definovat znakovou sadu přenášeného obsahu, ale to platí jen pro některé implementace.
+			%https://cs.wikipedia.org/wiki/JavaScript_Object_Notation
+			\subsection{DHCP}
+			Dynamic Host Configuration Protocol je protokol z rodiny TCP/IP. Je určen pro automatickou konfiguraci zařízením připojených do dané sítě. DHCP server přiděluje zařízením IP adresu, masku sítě, defaultní bránu, adresu DNS serveru a čas, kdy jsou tyto údaje platné. Tato platnost se prodlužuje pokud je na zařízení zapnut DHCP klient.\\
+			Klienti zažádají server o IP adresu tak, že klient po připojení do sítě vyšle broadcastem {\bf DHCPDISCOVER} paket, na který odpoví DHCP server {\bf DHCPOFFER} s nabídkou IP adresy. Klient si z nabídek vybere jednu IP adresu a o tu požádá paketem {\bf DHCPREQUEST}. Server mu vzápětí potvrdí odpovědí {\bf DHCPACK}, když klient obdrží tuto zprávu, může IP adresu používat.
+			%mirova otazka
 
 
 	\chapter{Metodika postupu}
 		\section{Tvorba měřecího vzorku}
 			Pro měření jednotlivých scénářů jsem si vytvořil vzorek, který byl určen pouze na měření. Cílem bylo vytvořit vzorek jednoduše modifikovatelný, proto jsem zvolil pájivé pole na základní část.\\
 			Na pájivém poli jsem napájel testovanou ESP platformu společně s přívodem, který byl 5 V. ESP má operační napětí 3,3 V, proto bylo nutné přidat stabilizator LDLN030, který napětí stabilizoval na operačním napětí. Stabilizátor byl zapojen dle doporučeného diagramu v datasheetu.
-			\begin{figure}[h]
+			\begin{figure}[h!]
 				\centering
-				\includegraphics[width=5cm]{zapojeni_esp32_vzorek.jpeg}
+				\begin{subfigure}[b]{0.4\linewidth}
+					\includegraphics[width=\linewidth]{zapojeni_esp32_vzorek.jpeg}
+					\caption{Přední část}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.4\linewidth}
+					\includegraphics[width=\linewidth]{zapojeni_esp32_vzorek_zadek.jpeg}
+					\caption{Zadní část}
+				\end{subfigure}
 				\caption{Vzorek pro měření na pajivém poli}
 				\label{zapojeni_esp32_vzorek}
-			\end{figure}
-			\\
+			\end{figure}\\
 			Dále k potřebným GPIO pinům jsem napájel vodiče pro pozdější manipulaci. Pro další specifická zapojení, jako např. tlačítko, jsem použil nepájivé pole, které jsem vždy připojil specificky pro dané měření.
 
 		\section{Měření připojení k WiFi a odeslání HTTP requestu} \label{metodika:wifi}
@@ -162,14 +187,13 @@
 					Pro měření bude použit {\bf ANALOG DISCOVERY} s jeho funkcí osciloskopu. Na napájení bude přidán bočník o velikosti 0,7 \si{\ohm}, 10,5 \si{\ohm} nebo 4,7 \si{\ohm} \footnote{Je nutné zvolit takový odpor, aby byl úbytek napětí měřitelný.}. Pomocí Ohmova zákona $ I = \frac{U}{R} $ je možné zjistit el. proud.
 					Příkon, který bude porovnán vypočítáme dle vztahu:
 					$$P = U \times I$$
-					{\bf OBRÁZKY ZAPOJENÍ}
 				\subsection{Probuzení z ustálených časů} \label{metodika:Ustálené stavy reakce}
 					Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním zprávy zpět ovladači zda se povedlo či nikoliv.\\
 					Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s {\bf 240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu {\bf Sony Vegas} (\viz{sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
 					$$ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}$$
 					\begin{figure}[h]
 						\centering
-						\includegraphics[width=12cm]{sonyvegaspostup.png}
+						\includegraphics[width=7cm]{sonyvegaspostup.png}
 						\caption{Ukázka postupu pro měření reakčních časů}
 						\label{sonyvegaspostup}
 					\end{figure}
@@ -428,10 +452,17 @@
 
 	\chapter{Vytvoření funkčních vzorků}
 		\section{Tvorba uživatelského rozhraní}
-		% 	Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
-		% 	Cílem webové stránky je umožnění připojení ovladače k uživatelské WiFi a následně vybrat pomocí IP adresy zařízení NETIO, které chceme ovládat. Stránka také musí umožňovat změnu reakce zásuvky na vyvolanou akci ovladačem.
-		% 	\section{Nastavení webserveru}
-		% 		Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver jelikož po prvním spuštění ovladače ovladač není připojen k WiFi a úprava kódu není přívětivá možnost pro uživatele.
+		 	Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
+		 	Cílem webové stránky je umožnění připojení ovladače k uživatelské WiFi a následně vybrat pomocí IP adresy zařízení NETIO, které chceme ovládat. Stránka také musí umožňovat změnu reakce zásuvky na vyvolanou akci ovladačem.
+			\section{Nastavení webserveru}
+		 		Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na IP adresu ESP pomocí svého internetového prohlížeče. ESP webserver se zapne pouze pokud uživatel vyžádá interakcí nebo ESP není připojeno k WiFi. Pokud ESP není připojeno k WiFi, uživatel nemůže přistoupit k webové stránce, proto v tomto případě zařízení přejde do access point režimu, na který se uživatel připojí.
+			\section{Připojení k WiFi}
+				Jakmile uživatel přistoupí na webovou stránku, javascript požádá webserver o scannedWiFi.json. ESP poté naskenuje sítě, které se nachazí v okolí. Tyto sítě se uloží do pole tak, v jakém pořadí byly nalezeny. Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv. RSSI jsem před "zabalením" do JSON pole přepočítal na sílu signálu v procentech. Po dokončení sestavení JSONu, odpoví na HTTP žádost javascriptu. Pomocí javascriptu a parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\\
+				Pokud uživatel klikne na tlačítko s názvem dané WiFi sítě, je přesunut do adresa/wifi, kam uživatel zadá heslo. Heslo se odešle webserveru metodou POST, kde se autentizuje. Pokud síť není zabezpečena, začne probíhat připojení.
+			\section{Konfigurace}
+				Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat. Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit. ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť. Ve skutečnosti tyto data ukládáme do FLASH paměti, což má řadu výhod.\\
+				Pro čtení a zápis do paměti jsem vytvořil funkci.... {\bf doplnit}
+
 	\chapter{Závěr}
 
 	\listoftables
@@ -441,6 +472,8 @@
 	\prilohy{
 		\kapitola{Příloha}
 	}
+	% \bibliographystyle{plain}
+	% \bibliography{reference}
 
 	\literatura{
 		\urll{WT8266}{WT8266}{Wireless-Tag Technology Co.,Limited}{Irvine (C)}{Wireless-Tag}{2021}{\today}{https://www.tme.com/Document/12266bdd8a30eeb152305461b089a151/WT8266-S1.pdf}

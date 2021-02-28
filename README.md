@@ -6,13 +6,18 @@
  ┃ ┃ ┣ 📂ESP8266_DEEP_SLEEP - **ESP statický program pro DEEP SLEEP**  
  ┃ ┃ ┗ 📂ESP8266_ON - **WEBSERVER a ESP neustále zapnuté**   
  ┃ ┗ 📂ESP32    
+ ┃ ┃ ┣ 📂ESP32_BUTTON - **ESP Vypínání přes enable**   
+ ┃ ┃ ┣ 📂ESP32_DEEP_SLEEP - **ESP statický program pro DEEP SLEEP**  
+ ┃ ┃ ┗ 📂ESP32_ON - **WEBSERVER a ESP neustále zapnuté**   
  ┣ 📂Dokumentace - **Dokumentace pro latex**  
- ┃ ┣ 📂images  
- ┃ ┃ ┗ 📜logo.jpg  
+ ┃ ┣ 📂images   
  ┃ ┣ 📜document.pdf   
  ┃ ┗ 📜document.tex  
  ┣ 📂Mereni - **Waveform a screenshoty**    
- ┃ ┣ 📂Enable  
+ ┃ ┣ 📂ESP32  
+ ┃ ┗ 📂ESP8266  
+ ┣ 📂Navrh vzorku - **Eagle**    
+ ┃ ┣ 📂ESP32  
  ┃ ┗ 📂ESP8266  
  ┣ 📂Images   
  ┣ 📜.gitignore  
