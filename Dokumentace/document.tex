@@ -22,6 +22,7 @@
 
 %Zadání
 \begin{document}
+    \nocite{*}
 
 
     \titulniStrana
@@ -77,13 +78,13 @@
     \begin{figure}[h]
         \centering
         \includegraphics[width=10cm]{images/ESP8266_piny}
-        \caption{ESP8266 pinout: Literatura [1]}
+        \caption{ESP8266 pinout: Literatura~\cite{WT8266}}
         \label{fig:esp8266_piny}
     \end{figure}
     \begin{figure}[h]
         \centering
         \includegraphics[width=10cm]{images/ESP8266_diagram}
-        \caption{ESP8266 blokový diagram funkcí: Literatura [2]}
+        \caption{ESP8266 blokový diagram funkcí: Literatura~\cite{ESP8266}}
         \label{fig:esp8266_diagram}
     \end{figure}
 
@@ -106,7 +107,7 @@
         \end{subfigure}
         \begin{subfigure}[b]{0.4\linewidth}
             \includegraphics[width=\linewidth]{images/ESP32_diagram}
-            \caption{blokový diagram: Literatura [3]}
+            \caption{blokový diagram: Literatura~\cite{ESP32}}
         \end{subfigure}
         \caption{ESP32 pinout a blokový diagram}
         \label{fig:esp32_diagram_pinout}
@@ -131,7 +132,7 @@
             \includegraphics[width=\linewidth]{images/ESP8266_pressed_deepsleep}
             \caption{Hardwarově}
         \end{subfigure}
-        \caption{ESP8266 probuzení z deep sleep po daném čase: Literatura [4]}
+        \caption{ESP8266 probuzení z deep sleep po daném čase: Literatura~\cite{randomnerd}}
         \label{fig:esp8266_timed_pressed_deepsleep}
     \end{figure}\\
     Jelikož ESP32 je novější model, deep sleep se liší v používání. ESP32 neprobouzíme přes RESET pin protože se ani na mikročipu ani nenachází. Pokud chceme ESP probudit po určitém čase, nastavíme to pouze v programu a nemusíme žádné piny propojovat. V situaci hardwarového probuzení je nutné definovat pin probuzení a při jaké logické hodnotě se má probudit. Tento pin musí být tzv. RTC\_GPIO\footnote{Pin, který je v činnosti i během spánku ESP}.
@@ -144,7 +145,7 @@
     \begin{figure}[h]
         \centering
         \includegraphics[width=9cm]{images/ldln030_datasheet}
-        \caption{LDLN030 Pinout: Literatura [5]}
+        \caption{LDLN030 Pinout: Literatura~\cite{stabilizator}}
         \label{fig:ldln030_datasheet}
     \end{figure}
 
@@ -170,7 +171,7 @@
 
     \section{Tvorba měřecího vzorku}
     Pro měření jednotlivých scénářů jsem si vytvořil vzorek, který byl určen pouze na měření. Cílem bylo vytvořit vzorek jednoduše modifikovatelný, proto jsem zvolil pájivé pole na základní část.\\
-    Na pájivém poli jsem napájel testovanou ESP platformu společně s přívodem, který byl 5 V. ESP má operační napětí 3,3 V, proto bylo nutné přidat stabilizator LDLN030, který napětí stabilizoval na operačním napětí. Stabilizátor byl zapojen dle doporučeného diagramu v datasheetu.
+    Na pájivém poli jsem napájel testovanou ESP platformu společně s přívodem, který byl 5 V. ESP má operační napětí 3,3 V, proto bylo nutné přidat stabilizator LDLN030, který napětí stabilizoval na operačním napětí. Stabilizátor byl zapojen dle doporučeného diagramu v datasheetu. Mezi zdrojem a IN pinem stabilizatoru jsem připojil bočník a vyvedl vodiče aby bylo možné měřit.
     \begin{figure}[h!]
         \centering
         \begin{subfigure}[b]{0.4\linewidth}
@@ -184,7 +185,7 @@
         \caption{Vzorek pro měření na pajivém poli}
         \label{fig:zapojeni_esp32_vzorek}
     \end{figure}\\
-    Dále k potřebným GPIO pinům jsem napájel vodiče pro pozdější manipulaci. Pro další specifická zapojení, jako např. tlačítko, jsem použil nepájivé pole, které jsem vždy připojil specificky pro dané měření.
+    Dále k potřebným GPIO pinům jsem napájel vodiče pro pozdější manipulaci. Pro další specifická zapojení, jako např. tlačítko, jsem použil nepájivé pole, které jsem vždy připojil specificky pro dané měření.\\
 
 
     \section{Měření připojení k WiFi a odeslání HTTP requestu}
@@ -508,23 +509,25 @@
 
     \section{Tvorba uživatelského rozhraní}
     Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
-    Cílem webové stránky je umožnění připojení ovladače k uživatelské WiFi a následně vybrat pomocí IP adresy zařízení NETIO, které chceme ovládat. Stránka také musí umožňovat změnu reakce zásuvky na vyvolanou akci ovladačem.
+    Cílem webové stránky je připojit ovladač do příslušné WiFi sítě, připojit až dvě zásuvky k ovladači a popřípadě upravit samotnou konfiguraci.
 
 
-    \section{Nastavení webserveru}
-    Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na IP adresu ESP pomocí svého internetového prohlížeče. ESP webserver se zapne pouze pokud uživatel vyžádá interakcí nebo ESP není připojeno k WiFi. Pokud ESP není připojeno k WiFi, uživatel nemůže přistoupit k webové stránce, proto v tomto případě zařízení přejde do access point režimu, na který se uživatel připojí.
+    \subsection{Nastavení webserveru}
+    Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na IP adresu ESP pomocí svého internetového prohlížeče. ESP webserver se zapne pouze pokud uživatel vyžádá stisknutím obou interačních tlačítek najednou. Za podmínky, že ovladač není připojen k WiFi síti, vytvoří access point, kde je možné provést konfiguraci. Pokud je ovladač připojen k WiFi, může přistoupit k webové stránce pomocí IP adresy přidělenou přístupovým bodem.
 
 
-    \section{Připojení k WiFi}
+    \subsection{Připojení k WiFi}
     Jakmile uživatel přistoupí na webovou stránku, javascript požádá webserver o scannedWiFi.json. ESP poté naskenuje sítě, které se nachazí v okolí. Tyto sítě se uloží do pole tak, v jakém pořadí byly nalezeny. Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv. RSSI jsem před "zabalením" do JSON pole přepočítal na sílu signálu v procentech. Po dokončení sestavení JSONu, odpoví na HTTP žádost javascriptu. Pomocí javascriptu a parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\\
     Pokud uživatel klikne na tlačítko s názvem dané WiFi sítě, je přesunut do adresa/wifi, kam uživatel zadá heslo. Heslo se odešle webserveru metodou POST, kde se autentizuje. Pokud síť není zabezpečena, začne probíhat připojení.
 
 
-    \section{Konfigurace}
-    Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat. Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit. ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť. Ve skutečnosti tyto data ukládáme do FLASH paměti, což má řadu výhod.\\
-    Pro čtení a zápis do paměti jsem vytvořil funkci.... \textbf{doplnit}
-    \cite{WT8266}
-    \nocite{*}
+    \subsection{Konfigurace reakce zásuvky}
+    Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat.\\ Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit. ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť. Ve skutečnosti tyto data ukládáme do FLASH paměti, což má řadu výhod.\\
+    Pro zápis do paměti jsem vytvořil funkci, která string rozdělí na jednotlivé charaktery a ty poté jednotlivě ukládá. Jelikož velikost může být různá tak za poslední charakter se zapíše -1, což nastaví byte na 255 neboli nastaví ho na prázdný. Délky jsem nastavil pro IP adresy zásuvek na 15 charakterů a JSON zprávy na 100 charakterů. Načítání probíhá opačně. Načítá charaktery a složí je do stringu. Pokud narazí na byte 255, ukončí sestavení předčastně.\\
+    Uživatel po dokončení nastavení ovladače ho může uspat.
+    \textbf{DOPLNIT OBRAZKY}
+
+
 
 
     \chapter{Závěr}
