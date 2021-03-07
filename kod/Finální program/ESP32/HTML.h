@@ -47,7 +47,9 @@ const char indexHTML[] PROGMEM = R"rawliteral(
         <button onclick="window.location.href=window.location.href">Scan</button>
         <button onclick="location.href = '/netioProduct';">NETIOIP</button>
         <button onclick="location.href = '/buttonConfigure';">Configure</button>
+        <button onclick="location.href = '/settings';">Settings</button>
         <button onclick="location.href = '/deepsleep';">Deep sleep</button>
+        <button onclick="location.href = '/disconnect';">Disconnect</button>
         <p>Scan can takes a while</p>
         <h1>WIFIs</h1>
         
@@ -86,7 +88,7 @@ const char indexHTML[] PROGMEM = R"rawliteral(
                 var form = document.createElement('form');
                 if(protection[i] == "None"){
                     form.method = 'POST';
-                    form.action = '/wifi/check'
+                    form.action = '/wifi/redirect'
                 } else{
                     form.method = 'GET'
                     form.action = '/wifi';
@@ -171,10 +173,10 @@ const char passwordHTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 const char NetioHTML[] PROGMEM = R"rawliteral(
-<html>
-    <head>
+<html lang="cs">
+<head>
     <style>
-    button {
+        button {
             background-color: #4CAF50; /* Green */
             color: white;
             width: 200px;
@@ -183,10 +185,9 @@ const char NetioHTML[] PROGMEM = R"rawliteral(
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            display: block;
             margin: 0 auto;
-          }
-    input[type=text] {
+        }
+        input[type=text] {
             width: 50%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -194,24 +195,35 @@ const char NetioHTML[] PROGMEM = R"rawliteral(
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-}
-        </style>
-    </head>
-    <body>
-      <center>
-        <meta charset="UTF-8">
-        <form method ="POST" action ="/netioProduct/check1">
-            <label for = "ip">IP OF NETIO PRODUCT</label>
-            <input type="input" name="ip" id="ip">
-            <button type="submit">submit</button>
-        </form>
-        <form method ="POST" action ="/netioProduct/check2">
-            <label for = "ip">IP OF NETIO PRODUCT</label>
-            <input type="input" name="ip" id="ip">
-            <button type="submit">submit</button>
-        </form>
-        <button onClick="location.href = '/';">Return</button>
-    </body>
+        }
+    </style>
+    <title>NETIO Button</title>
+</head>
+<body>
+<center>
+    <meta charset="UTF-8">
+    <form method ="POST" action ="/netioProduct/check">
+        <label for = "ip1">IP OF NETIO PRODUCT</label>
+        <input type="input" name="ip1" id="ip1">
+        <button type="submit">submit</button>
+    </form>
+    <form method ="POST" action ="/netioProduct/check">
+        <label for = "ip2">IP OF NETIO PRODUCT</label>
+        <input type="input" name="ip2" id="ip2">
+        <button type="submit">submit</button>
+    </form>
+    <button onClick="location.href = '/';">Return</button>
+</center>
+<script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            var input1 = document.getElementsByTagName('input')[0];
+            wifiname.value = urlParams.get('ssid');
+            form.appendChild(wifiname);
+            form.appendChild(document.createTextNode(urlParams.get('ssid')));
+</script>
+</body>
 </html>
 )rawliteral";
 
@@ -246,12 +258,12 @@ const char configHTML[] PROGMEM = R"rawliteral(
     </head>
     <body>
     <center>
-        <form method ="POST" action ="/buttonConfigure/check1">
+        <form method ="POST" action ="/buttonConfigure/check">
             <label for = "button1">Config 1st button</label>
             <input type="input" name="button1" id="button1">
             <button type="submit">submit button 1</button>
         </form>
-        <form method ="POST" action ="/buttonConfigure/check2">
+        <form method ="POST" action ="/buttonConfigure/check">
             <label for = "button2">Config 2nd button</label>
             <input type="input" name="button2" id="button2">
             <button type="submit">submit button 2</button>

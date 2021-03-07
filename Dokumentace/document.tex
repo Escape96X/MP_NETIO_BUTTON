@@ -2,9 +2,10 @@
 \usepackage{monapack}
 \usepackage{siunitx}
 \usepackage{caption}
+\usepackage{listings}
 \usepackage{subcaption}
 \usepackage{hyperref}
-% \usepackage{minted}
+\usepackage{minted}
 \usepackage[bottom]{footmisc}
 \captionsetup[table]{skip=5pt}
 
@@ -23,6 +24,7 @@
 %Zadání
 \begin{document}
     \nocite{*}
+    \renewcommand{\listingscaption}{Úryvek kódu}
 
 
     \titulniStrana
@@ -201,7 +203,7 @@
 
     \subsection{Spotřeba}
     \label{subsec:wifi-spotreba}
-    Měřen bude úbytek napětí na bočníku\footnote{nízkoohmový rezistor} o velikosti určené u měření. V programu k měřícímu zařízení je možné stejně jako na osciloskopu vytvořit graf naměřených hodnot v dané vzorkovací frekvenci. Hodnoty napětí bude převedeno na hodnoty el. proudu pomocí Ohmova zákona $I = \frac{U}{R}$. Amplitudy el. proudu budou sečteny a vyděleny počtem vzorků \textbf{DOPLNIT VZOREC}. Tato operace nám poskytne zjištění průměrného el. proudu ve scénáři. Spotřebu již vypočítáme dle:
+    Měřen bude úbytek napětí na bočníku\footnote{nízkoohmový rezistor} o velikosti určené u měření. V programu k měřícímu zařízení je možné stejně jako na osciloskopu vytvořit graf naměřených hodnot v dané vzorkovací frekvenci. Hodnoty napětí bude převedeno na hodnoty el. proudu pomocí Ohmova zákona $I = \frac{U}{R}$. Amplitudy el. proudu budou sečteny a vyděleny počtem vzorků. Tato operace nám poskytne zjištění průměrného el. proudu ve scénáři. Spotřebu již vypočítáme dle:
     \[E = U \times \overline{I} \times \frac{t}{3600}\]
     Čas \textbf{t} v sekundách je možné zjistit v následující kapitole.
 
@@ -238,14 +240,8 @@
     \subsection{Probuzení z ustálených časů}
     \label{subsec:ustalene-stavy-reakce}
     Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním zprávy zpět ovladači zda se povedlo či nikoliv.\\
-    Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s \textbf{240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu \textbf{Sony Vegas} (\viz{sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
+    Reakční doba byla změřena pomocí kamery. K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s \textbf{240 snímky za sekundu}. Pro upravení videa jsem použil trial verzi programu \textbf{Sony Vegas} (\viz{fig:sonyvegaspostup}). Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa. Program poskytuje zobrazení počtu snímku daného úseku. Reakční čas je následovně možný zjistit pomocí:
     \[ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}\]
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=7cm]{images/sonyvegaspostup}
-        \caption{Ukázka postupu pro měření reakčních časů}
-        \label{fig:sonyvegaspostup}
-    \end{figure}
 
     % MĚŘENÍ
 
@@ -319,11 +315,11 @@
         \caption{ESP8266 porovnání ustálených stavů}
         \begin{tabular}{||l|r r r||}
             \hline
-            Ustálený stav & P[$W$]                 & t$_{p}$[$h$]   & t[$ms$]  \\
+            Ustálený stav & P[$W$]                 & t$_{p}$[$h$]  & t[$ms$] \\
             \hline
-            Kontinuální   & $223,3 \times 10^{-3}$ & $75,6$         & $196$    \\
-            Deep sleep    & $460,0 \times 10^{-6}$ & $36--993,1$    & $983$    \\
-            Enable button & $9,9\times 10^{-6}$    & $1--704 545,0$ & $3--208$ \\
+            Kontinuální   & $223,3 \times 10^{-3}$ & $75,6$        & $196$   \\
+            Deep sleep    & $460,0 \times 10^{-6}$ & $36 993,1$    & $983$   \\
+            Enable button & $9,9\times 10^{-6}$    & $1 704 545,0$ & $3 208$ \\
             \hline
         \end{tabular}
         \label{tab:esp8266-klidove-rezimy-porovnani}
@@ -482,9 +478,9 @@
     Z tabulky~\ref{tab:porovnani-klidove-rezimy-cas} je možné vidět jak si platformy vedly proti sobě. \\
     Pokud ovladač neustále běží s připojenou WiFi čas reakce je velmi rychlý a v obou případech uživatel nepostřehne prodlevu mezi aktivací ovladače a sepnutí relé v zásuvce. Časy mezi platformami se liší minimálně a rozdíl se pohybuje v rámci milisekund, přesto je ESP32 lehce rychlejší. \\
     Zapnutí vypnutého ESP, následné načtení a připojení k WiFi je nejdelší ze všech scénářů, který trvá několik sekund. Pro uživatele je velice pomalé a v realném produktu dle mého názoru zcela nepoužitelné. I přesto je ESP32 je mnohem rychlejší a to zhruba o 1 \si{s}. \\
-    Deep sleep je alternativa mezi kontinuálním a vypnutým stavem. ESP totiž vypne vetšinu svých částí. Díky tomu je schopno relativně rychle zareagovat na budící signál. Reakce obou ovladačů je cirka 1 \si{s}. Zde vede ESP8266, které je zhruba o 100 \si{ms} rychlejší. Je to zdůvodu komplikovanější struktuře ESP32.
+    Deep sleep je alternativa mezi kontinuálním a vypnutým stavem. ESP totiž vypne vetšinu svých částí. Díky tomu je schopno relativně rychle zareagovat na budící signál. Reakce obou ovladačů je cirka 1 \si{s}. Zde vede ESP8266, které je zhruba o 100 \si{ms} rychlejší. Je to z důvodu komplikovanější struktury ESP32.
 
-    \begin{table}[h]
+    \begin{table}[h!]
         \centering
         \caption{Porovnání reakčních časů ústálených stavů platforem}
         \begin{tabular}{||l|r r||}
@@ -498,7 +494,23 @@
             \hline
         \end{tabular}
         \label{tab:porovnani-klidove-rezimy-cas}
-    \end{table}
+    \end{table}\\
+    Z hlediska spotřeby
+    \begin{table}[h!]
+        \centering
+        \caption{Porovnání spotřeby ústálených stavů platforem}
+        \begin{tabular}{||l|r r||}
+            \hline
+            Ustálený stav & ESP8266        & ESP32          \\
+            & [ms]           & [ms]           \\
+            \hline
+            Kontinuální   & \textbf{196}   & \textbf{188}   \\
+            Enable        & \textbf{3 208} & \textbf{2 333} \\
+            Deep sleep    & \textbf{983}   & \textbf{1 071} \\
+            \hline
+        \end{tabular}
+        \label{tab:porovnani-klidove-rezimy-spotreba}
+    \end{table}\\
 
 
 % KONEC MĚŘENÍ
@@ -511,36 +523,101 @@
     Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
     Cílem webové stránky je připojit ovladač do příslušné WiFi sítě, připojit až dvě zásuvky k ovladači a popřípadě upravit samotnou konfiguraci.
 
-
     \subsection{Nastavení webserveru}
     Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na IP adresu ESP pomocí svého internetového prohlížeče. ESP webserver se zapne pouze pokud uživatel vyžádá stisknutím obou interačních tlačítek najednou. Za podmínky, že ovladač není připojen k WiFi síti, vytvoří access point, kde je možné provést konfiguraci. Pokud je ovladač připojen k WiFi, může přistoupit k webové stránce pomocí IP adresy přidělenou přístupovým bodem.
 
-
     \subsection{Připojení k WiFi}
-    Jakmile uživatel přistoupí na webovou stránku, javascript požádá webserver o scannedWiFi.json. ESP poté naskenuje sítě, které se nachazí v okolí. Tyto sítě se uloží do pole tak, v jakém pořadí byly nalezeny. Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv. RSSI jsem před "zabalením" do JSON pole přepočítal na sílu signálu v procentech. Po dokončení sestavení JSONu, odpoví na HTTP žádost javascriptu. Pomocí javascriptu a parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\\
+    Jakmile uživatel přistoupí na webovou stránku, javascript požádá webserver o scannedWiFi.json. ESP poté naskenuje sítě, které se nachazí v okolí. Tyto sítě se uloží do pole tak, v jakém pořadí byly nalezeny. Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string viz. Uryvek kódu 1, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv. RSSI jsem před zabalením do JSON pole přepočítal na sílu signálu v procentech. Po dokončení sestavení JSONu, odpoví na HTTP žádost javascriptu. Pomocí javascriptu a parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\\
     Pokud uživatel klikne na tlačítko s názvem dané WiFi sítě, je přesunut do adresa/wifi, kam uživatel zadá heslo. Heslo se odešle webserveru metodou POST, kde se autentizuje. Pokud síť není zabezpečena, začne probíhat připojení.
-
 
     \subsection{Konfigurace reakce zásuvky}
     Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat.\\ Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit. ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť. Ve skutečnosti tyto data ukládáme do FLASH paměti, což má řadu výhod.\\
-    Pro zápis do paměti jsem vytvořil funkci, která string rozdělí na jednotlivé charaktery a ty poté jednotlivě ukládá. Jelikož velikost může být různá tak za poslední charakter se zapíše -1, což nastaví byte na 255 neboli nastaví ho na prázdný. Délky jsem nastavil pro IP adresy zásuvek na 15 charakterů a JSON zprávy na 100 charakterů. Načítání probíhá opačně. Načítá charaktery a složí je do stringu. Pokud narazí na byte 255, ukončí sestavení předčastně.\\
-    Uživatel po dokončení nastavení ovladače ho může uspat.
-    \textbf{DOPLNIT OBRAZKY}
+    \begin{listing}[]
+        \begin{minted}{cpp}
+String jsonOfNetworks() {
+    int numberOfNetworks = WiFi.scanNetworks();
+    String networks = "{\"numOfNetworks\": \"";
+    networks += numberOfNetworks;
+    networks += "\", \"networks\": [";
+    for (int i = 0; i < numberOfNetworks; i++) {
+        networks += "\"";
+        networks += WiFi.SSID(i);
+        networks += "\"";
+        networks += (i + 1 == numberOfNetworks) ? " " : ", ";
+    }
+    networks += "], \"strengh\": [";
+    for (int i = 0; i < numberOfNetworks; i++) {
+        networks += "\"";
+        networks += dBmtoPercentage(WiFi.RSSI(i));
+        networks += " %\" ";
+        networks += (i + 1 == numberOfNetworks) ? " " : ", ";
+    }
+    networks += "], \"protection\": [";
+    for (int i = 0; i < numberOfNetworks; i++) {
+        networks += "\"";
+        networks += (WiFi.encryptionType(i) == 0) ? "None" : "Encrypted";
+        networks += "\" ";
+        networks += (i + 1 == numberOfNetworks) ? " " : ", ";
+    }
+    networks += "]}";
+    return networks;
+}
+        \end{minted}
+        \label{lst:json}
+        \caption{Tvorba JSON zprávy}
+    \end{listing}
+    Pro zápis do paměti jsem vytvořil funkci, která string rozdělí na jednotlivé charaktery a ty poté jednotlivě ukládá viz. Úryvek kódu 2. Jelikož velikost může být různá tak za poslední charakter se zapíše -1, což nastaví byte na 255 neboli nastaví ho na prázdný. Délky jsem nastavil pro IP adresy zásuvek na 15 charakterů a JSON zprávy na 100 charakterů. Načítání probíhá opačně. Načítá charaktery a složí je do stringu. Pokud narazí na byte 255, ukončí sestavení předčastně.\\
+    Uživatel po dokončení nastavení ovladače ho může uspat.\\
 
+
+    \begin{listing}[]
+    \begin{minted}{cpp}
+void saveToEEPROM(String sToSave, int startPosition) {
+    char arr[sToSave.length() + 1];
+    strcpy(arr, sToSave.c_str());
+    for (int i = 0; i < sToSave.length(); i++) {
+        EEPROM.write(startPosition + i, arr[i]);
+    }
+    EEPROM.write(startPosition + sToSave.length(), -1);
+    EEPROM.commit();
+    delay(500);
+}
+
+String readEEPROM(int numberOfStart, int len) {
+    String tempString = "";
+    for (int i = 0; i < len; i++) {
+        char character = EEPROM.read(numberOfStart + i);
+        if (character == 255)
+            break;
+        tempString += character;
+    }
+    return tempString;
+}
+    \end{minted}
+    \label{listing:eeprom}
+    \caption{Načítání a ukládání řetězců do/z paměti}
+    \end{listing}
 
 
 
     \chapter{Závěr}
-
+    \renewcommand\listoflistingscaption{Seznam úryvků kódu}
+    \listoflistings
     \listoftables
 
     \listoffigures
 
     \prilohy{
         \kapitola{Příloha}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=12cm]{images/sonyvegaspostup}
+            \caption{Ukázka postupu pro měření reakčních časů}
+            \label{fig:sonyvegaspostup}
+        \end{figure}
     }
-     \bibliographystyle{czechiso}
-     \bibliography{reference}
+    \bibliographystyle{czechiso}
+    \bibliography{reference}
 
 %    \literatura{
 %        \urll{WT8266}{WT8266}{Wireless-Tag Technology Co.,Limited}{Irvine (C)}{Wireless-Tag}{2021}{\today}{https://www.tme.com/Document/12266bdd8a30eeb152305461b089a151/WT8266-S1.pdf}

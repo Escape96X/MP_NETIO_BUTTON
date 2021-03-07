@@ -1,0 +1,30 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{String} \PYG{n+nf}{jsonOfNetworks}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{numberOfNetworks} \PYG{o}{=} \PYG{n}{WiFi}\PYG{p}{.}\PYG{n}{scanNetworks}\PYG{p}{();}
+    \PYG{n}{String} \PYG{n}{networks} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}\PYGZob{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{numOfNetworks}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{: }\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+    \PYG{n}{networks} \PYG{o}{+=} \PYG{n}{numberOfNetworks}\PYG{p}{;}
+    \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{, }\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{networks}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{: [\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{numberOfNetworks}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{n}{WiFi}\PYG{p}{.}\PYG{n}{SSID}\PYG{p}{(}\PYG{n}{i}\PYG{p}{);}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{==} \PYG{n}{numberOfNetworks}\PYG{p}{)} \PYG{o}{?} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{:} \PYG{l+s}{\PYGZdq{}, \PYGZdq{}}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}], }\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{strengh}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{: [\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{numberOfNetworks}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{n}{dBmtoPercentage}\PYG{p}{(}\PYG{n}{WiFi}\PYG{p}{.}\PYG{n}{RSSI}\PYG{p}{(}\PYG{n}{i}\PYG{p}{));}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{} \PYGZpc{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{ \PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{==} \PYG{n}{numberOfNetworks}\PYG{p}{)} \PYG{o}{?} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{:} \PYG{l+s}{\PYGZdq{}, \PYGZdq{}}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}], }\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{protection}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{: [\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{numberOfNetworks}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{\PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{WiFi}\PYG{p}{.}\PYG{n}{encryptionType}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{?} \PYG{l+s}{\PYGZdq{}None\PYGZdq{}} \PYG{o}{:} \PYG{l+s}{\PYGZdq{}Encrypted\PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s}{ \PYGZdq{}}\PYG{p}{;}
+        \PYG{n}{networks} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{==} \PYG{n}{numberOfNetworks}\PYG{p}{)} \PYG{o}{?} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{:} \PYG{l+s}{\PYGZdq{}, \PYGZdq{}}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{n}{networks} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}]\PYGZcb{}\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{return} \PYG{n}{networks}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
