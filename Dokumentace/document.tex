@@ -363,9 +363,9 @@
             Operace               & U(V) & I[$mA$] & t[$ms$] & P[$mW$] & \textbf{E}[$\mu Wh$] \\
             \hline
             \hline
-            Dynamické připojení   & 3,3  & 89,5    & 5--300  & 295     & \textbf{435}         \\
-            Statické připojení    & 3,3  & 83,0    & 3--143  & 274     & \textbf{239}         \\
-            Zabezpečené připojení & 3,3  & 90,9    & 4--606  & 300     & \textbf{383}         \\
+            Dynamické připojení   & 3,3  & 89,5    & 5 300  & 295     & \textbf{435}         \\
+            Statické připojení    & 3,3  & 83,0    & 3 143  & 274     & \textbf{239}         \\
+            Zabezpečené připojení & 3,3  & 90,9    & 4 606  & 300     & \textbf{383}         \\
             HTTP komunikace       & 3,3  & 76,7    & 483     & 253     & \textbf{34}          \\
             \hline
         \end{tabular}
@@ -421,8 +421,8 @@
             Ustálený stav & t[ms]           \\
             \hline
             Kontinuální   & \textbf{188}    \\
-            Enable button & \textbf{2--333} \\
-            Deep sleep    & \textbf{1--071} \\
+            Deep sleep    & \textbf{1 071} \\
+            Enable button & \textbf{2 333} \\
             \hline
         \end{tabular}
         \label{tab:esp32-klidove-rezimy-cas}
@@ -454,32 +454,30 @@
         \label{fig:esp32_http}
     \end{figure}
 
+    \subsection{Rychlost WiFi připojení a HTTP request}
     \begin{table}[h]
         \centering
-        \caption{ESP8266 Spotřeba operací}
+        \caption{ESP32 Spotřeba operací}
         \begin{tabular}{||l| r r r r |r||}
             \hline
             Operace               & U[V] & I[$mA$] & t[$ms$] & P[$mW$] & \textbf{E}[$\mu Wh$] \\
             \hline
             \hline
-            Dynamické připojení   & 3,3  & 72,0    & 1--406  & 238     & \textbf{92}          \\
-            Statické připojení    & 3,3  & 69,2    & 1--400  & 228     & \textbf{88}          \\
-            Zabezpečené připojení & 3,3  & 74,7    & 1--081  & 246     & \textbf{74}          \\
-            HTTP komunikace       & 3,3  & 62,6    & 281     & 207     & \textbf{16}          \\
+            Dynamické připojení   & 3,3  & 72,0    & 1406  & 238     & \textbf{92}          \\
+            Statické připojení    & 3,3  & 69,2    & 1400  & 228     & \textbf{88}          \\
+            Zabezpečené připojení & 3,3  & 74,7    & 1081  & 246     & \textbf{74}          \\
+            HTTP komunikace       & 3,3  & 62,6    & 281   & 207     & \textbf{16}          \\
             \hline
         \end{tabular}
         \label{tab:esp32-spotreba-operaci}
     \end{table}
-
 
     \section{Porovnání získaných výsledků}
 
     \subsection{Ustálené stavy}
     Z tabulky~\ref{tab:porovnani-klidove-rezimy-cas} je možné vidět jak si platformy vedly proti sobě. \\
     Pokud ovladač neustále běží s připojenou WiFi čas reakce je velmi rychlý a v obou případech uživatel nepostřehne prodlevu mezi aktivací ovladače a sepnutí relé v zásuvce. Časy mezi platformami se liší minimálně a rozdíl se pohybuje v rámci milisekund, přesto je ESP32 lehce rychlejší. \\
-    Zapnutí vypnutého ESP, následné načtení a připojení k WiFi je nejdelší ze všech scénářů, který trvá několik sekund. Pro uživatele je velice pomalé a v realném produktu dle mého názoru zcela nepoužitelné. I přesto je ESP32 je mnohem rychlejší a to zhruba o 1 \si{s}. \\
-    Deep sleep je alternativa mezi kontinuálním a vypnutým stavem. ESP totiž vypne vetšinu svých částí. Díky tomu je schopno relativně rychle zareagovat na budící signál. Reakce obou ovladačů je cirka 1 \si{s}. Zde vede ESP8266, které je zhruba o 100 \si{ms} rychlejší. Je to z důvodu komplikovanější struktury ESP32.
-
+    Zapnutí vypnutého ESP, následné načtení a připojení k WiFi je nejdelší ze všech scénářů, který trvá několik sekund. Pro uživatele je velice pomalé a v realném produktu dle mého názoru zcela nepoužitelné. I přesto je ESP32 je mnohem rychlejší a to zhruba o 1 \si{s}.
     \begin{table}[h!]
         \centering
         \caption{Porovnání reakčních časů ústálených stavů platforem}
@@ -495,28 +493,55 @@
         \end{tabular}
         \label{tab:porovnani-klidove-rezimy-cas}
     \end{table}\\
-    Z hlediska spotřeby
+    Deep sleep je alternativa mezi kontinuálním a vypnutým stavem. ESP totiž vypne vetšinu svých částí. Díky tomu je schopno relativně rychle zareagovat na budící signál. Reakce obou ovladačů je cirka 1 \si{s}. Zde vede ESP8266, které je zhruba o 100 \si{ms} rychlejší. Je to z důvodu komplikovanější struktury ESP32.
+    Z tabulky~\ref{tab:porovnani-klidove-rezimy-spotreba} je možné porovnat elektrický proud a příkon jednotlivých ustálených stavů napříč platformami. Dle měření je kontinuální režim úspornější v ESP32. Větší rozdíl je možné nalézt během Deep sleep stavu. ESP8266 a ESP32 je liší skoro o dvojnásobek i přesto, že podmínky byly stejné. Stále se ale pohybujeme v řádech mikroWatt. Enable button stav kvůli citlivosti měřícího zařízení bylo možné porovnat pouze datasheet hodnoty. Zde je úspornější ESP32 ale stále jsou tyto hodnoty velice nízké.
     \begin{table}[h!]
         \centering
         \caption{Porovnání spotřeby ústálených stavů platforem}
-        \begin{tabular}{||l|r r||}
+        \begin{tabular}{||l|r r|r r||}
             \hline
-            Ustálený stav & ESP8266        & ESP32          \\
-            & [ms]           & [ms]           \\
+            Ustálený stav & \multicolumn{2}{C|}{I[A]} & \multicolumn{2}{C||}{P[W]}   \\
+                          & ESP8266        & ESP32   & ESP8266 & ESP32 \\
             \hline
-            Kontinuální   & \textbf{196}   & \textbf{188}   \\
-            Enable        & \textbf{3 208} & \textbf{2 333} \\
-            Deep sleep    & \textbf{983}   & \textbf{1 071} \\
+            Kontinuální   & $67,66 \times 10^{-3}$   & $57,39 \times 10^{-3}$ & $233,3 \times 10^{-3}$& $189,4 \times 10^{-3}$ \\
+            Deep sleep       & $138,20 \times 10^{-6}$ & $253,39 \times 10^{-6}$ & $460,0 \times 10^{-6}$&$838,0 \times 10^{-6}$\\
+            Enable button    &  $3,00 \times 10^{-6}$   & $1,00 \times 10^{-6}$ & $9,9 \times 10^{-6}$&$3,3 \times 10^{-6}$\\
             \hline
         \end{tabular}
         \label{tab:porovnani-klidove-rezimy-spotreba}
+    \end{table}\\ \pagebreak
+    Z hlediska poměru reakčního času a spotřeby je nejlepší ustálený stav deep sleep, jelikož reakční čas je přijatelný pro uživatele a díky nízkému příkonu zaření vydržet přijatelnou dobu. K sestavení funkčního vzorku proto bude použit tento ustálený stav pro obě platformy.
+    \subsection{WiFi a HTTP}
+    \begin{table}[h]
+        \centering
+        \caption{Porovnání operací}
+        \begin{tabular}{||l| r r r r |r r||}
+            \hline
+            Operace & \multicolumn{2}{c}{t[ms]} & \multicolumn{2}{c}{P[mW]} & \multicolumn{2}{c||}{\textbf{E}[$\mu Wh$]} \\
+            & ESP8266 & ESP32 & ESP8266 & ESP32 & ESP8266 & ESP32 \\
+            \hline
+            \hline
+            Dynamické připojení   & 5300  & 1406    & 295  & 238     & \textbf{435}&\textbf{92}          \\
+            Statické připojení    & 3143  & 1400    & 274  & 228     & \textbf{239}&\textbf{88}          \\
+            Zabezpečené připojení & 4606  & 1081    & 300  & 246     & \textbf{383}&\textbf{74}          \\
+            HTTP komunikace       & 483  & 281    & 253   & 207     & \textbf{34}&\textbf{16}          \\
+            \hline
+        \end{tabular}
+        \label{tab:porovnani-spotreba-operaci}
     \end{table}\\
+    Z hlediska připojení do WiFi sítě jednotlivými možnostmi lepší novější model ESP, který ve všech situacích ve výhodě. Menší reakční čas vede i k menší spotřebované energii platformy.
+    Situace zabezpečené připojení trvá kratší dobu než dynamické z důvodu, že je to simulace uživatelského připojení a zařízení se nachází v DHCP tabulce s rezervovanou IP adresou.
+
+
 
 
 % KONEC MĚŘENÍ
 
 
     \chapter{Vytvoření funkčních vzorků}
+    \section{Hardwarová část}
+    \subsection{ESP8266}
+    Jak jsem již zmínil v předchozí kapitole, na základě měření jsem zvolil ustálený stav deep sleep. Podrobnosti se nachází v sekci~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}. ESP8266 je možné probudit tak, že se na pin RST přivede na krátkou dobu GROUND a tím se zařízení resetuje. Nicméně cílem je sestavit zařízení s dvěmi ovládacími tlačítky, které musíme rozpoznávat mezi sebou aby byla sepnuta správná zásuvka. Takže tlačítka jsem připojil na RST přes kondenzátor a na GPIO 12 a 14. Kondenzátor sloužil k vytvoření záporné špičky na krátkou dobu tzn. zařízení se vyresetovalo, ale uživatel tlačítko stále držel a stav se mohl zaznamenat na příslušném pinu. Testováním různých velikostí kondenzátorů jsem dospěl k velikosti 3,3 \si{\micro F}. Dosáhl jsem toho, že se při stisku jakéhokoliv spínače přivedl GROUND na oba GPIO piny.
 
 
     \section{Tvorba uživatelského rozhraní}
@@ -618,17 +643,5 @@ String readEEPROM(int numberOfStart, int len) {
     }
     \bibliographystyle{czechiso}
     \bibliography{reference}
-
-%    \literatura{
-%        \urll{WT8266}{WT8266}{Wireless-Tag Technology Co.,Limited}{Irvine (C)}{Wireless-Tag}{2021}{\today}{https://www.tme.com/Document/12266bdd8a30eeb152305461b089a151/WT8266-S1.pdf}
-%
-%        \urll{ESP8266}{ESP8266}{Espressif Systems}{Shangai, Čína}{Espressif Systems}{2020}{\today}{https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex\_datasheet\_en.pdf}
-%
-%        \urll{ESP32}{ESP32}{Espressif Systems}{Shangai, Čína}{Espressif Systems}{2020}{\today}{https://www.espressif.com/sites/default/files/documentation/esp32\_datasheet\_en.pdf}
-%
-%        \urll{ESP8266 Deep sleep}{ESP8266 deep sleep}{Random Nerd Tutorials}{Porto, Portugalsko}{RandomNerdTutorials.com}{2019}{\today}{https://randomnerdtutorials.com/esp8266-deep-sleep-with-arduino-ide/}
-%
-%        \wiki{DHCP protokol wiki}{DHCP protokol}{2021}{\today}{https://en.wikipedia.org/wiki\_Dynamic\_Host\_Configuration\_Protocol}
-%    }
 
 \end{document}
