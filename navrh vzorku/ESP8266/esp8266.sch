@@ -76,43 +76,54 @@
 <libraries>
 <library name="WT8266">
 <packages>
-<package name="WT8266-S1">
-<rectangle x1="0" y1="0" x2="15" y2="18.6" layer="21"/>
-<pad name="IO13" x="3.7" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<pad name="IO5" x="5.2" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<pad name="VRXD" x="6.7" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<pad name="GND2" x="8.2" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<pad name="VTXD" x="9.7" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<pad name="RST" x="11.2" y="0" drill="0.01" diameter="0.8" shape="square" rot="R90"/>
-<wire x1="15" y1="2.75" x2="15.36" y2="2.75" width="0.127" layer="21"/>
-<pad name="TOUT" x="15" y="3.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="EN" x="15" y="4.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO16" x="15" y="6.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO12" x="15" y="7.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO14" x="15" y="9.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="GND" x="15" y="10.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="GND1" x="0" y="3.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO15" x="0" y="4.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO2" x="0" y="6.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO0" x="0" y="7.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="IO4" x="0" y="9.15" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<pad name="3.3V" x="0" y="10.65" drill="0.01" diameter="0.8" shape="square" rot="R180"/>
-<dimension x1="15" y1="0" x2="15" y2="18.6" x3="18.4" y3="9.3" textsize="1.27" layer="21"/>
-<text x="2.54" y="20.32" size="1.27" layer="25">WT8266-S1</text>
-</package>
 <package name="LDLN030">
 <rectangle x1="0" y1="0" x2="2.9" y2="2.8" layer="21"/>
-<pad name="GND" x="1.45" y="0.2" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+<pad name="GND" x="1.45" y="-0.1" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
 <rectangle x1="0" y1="0.7" x2="2.9" y2="1.45" layer="7"/>
 <rectangle x1="0" y1="0.6" x2="2.9" y2="0.7" layer="7"/>
 <rectangle x1="0" y1="1.4" x2="2.9" y2="2.2" layer="7"/>
-<pad name="IN" x="0.5" y="0.2" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
-<pad name="EN" x="2.4" y="0.2" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
-<pad name="PG" x="2.4" y="2.6" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
-<pad name="OUT" x="0.5" y="2.6" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+<pad name="IN" x="0.5" y="-0.1" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+<pad name="EN" x="2.4" y="-0.1" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+<pad name="PG" x="2.4" y="2.9" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+<pad name="OUT" x="0.5" y="2.9" drill="0.01" diameter="0.4064" shape="long" rot="R90"/>
+</package>
+<package name="WT8266-S1">
+<rectangle x1="0" y1="0" x2="15" y2="18.6" layer="21"/>
+<pad name="IO13" x="3.7" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<pad name="IO5" x="5.2" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<pad name="VRXD" x="6.7" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<pad name="GND2" x="8.2" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<pad name="VTXD" x="9.7" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<pad name="RST" x="11.2" y="0" drill="0.01" diameter="1.143" shape="long" rot="R90"/>
+<wire x1="15" y1="2.75" x2="15.36" y2="2.75" width="0.127" layer="21"/>
+<pad name="TOUT" x="15" y="3.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="EN" x="15" y="4.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO16" x="15" y="6.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO12" x="15" y="7.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO14" x="15" y="9.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="GND" x="15" y="10.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="GND1" x="0" y="3.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO15" x="0" y="4.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO2" x="0" y="6.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO0" x="0" y="7.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="IO4" x="0" y="9.15" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<pad name="3.3V" x="0" y="10.65" drill="0.01" diameter="1.143" shape="long" rot="R180"/>
+<dimension x1="15" y1="0" x2="15" y2="18.6" x3="18.4" y3="9.3" textsize="1.27" layer="21"/>
+<text x="2.54" y="20.32" size="1.27" layer="25">WT8266-S1</text>
 </package>
 </packages>
 <symbols>
+<symbol name="LDLN030">
+<wire x1="-7.62" y1="20.32" x2="-7.62" y2="0" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="0" x2="10.16" y2="0" width="0.1524" layer="94"/>
+<wire x1="10.16" y1="0" x2="10.16" y2="20.32" width="0.1524" layer="94"/>
+<wire x1="10.16" y1="20.32" x2="-7.62" y2="20.32" width="0.1524" layer="94"/>
+<pin name="IN" x="-12.7" y="15.24" length="middle"/>
+<pin name="GND" x="-12.7" y="10.16" length="middle"/>
+<pin name="EN" x="-12.7" y="5.08" length="middle"/>
+<pin name="OUT" x="12.7" y="15.24" length="short" rot="R180"/>
+<pin name="PG" x="12.7" y="5.08" length="short" rot="R180"/>
+</symbol>
 <symbol name="WT8266-S1">
 <wire x1="0" y1="2.54" x2="17.78" y2="2.54" width="0.254" layer="94"/>
 <wire x1="17.78" y1="2.54" x2="17.78" y2="30.48" width="0.254" layer="94"/>
@@ -138,19 +149,27 @@
 <pin name="TOUT" x="20.32" y="12.7" length="short" rot="R180"/>
 <text x="2.54" y="33.02" size="1.778" layer="95">WT8266-S1</text>
 </symbol>
-<symbol name="LDLN030">
-<wire x1="-7.62" y1="20.32" x2="-7.62" y2="0" width="0.1524" layer="94"/>
-<wire x1="-7.62" y1="0" x2="10.16" y2="0" width="0.1524" layer="94"/>
-<wire x1="10.16" y1="0" x2="10.16" y2="20.32" width="0.1524" layer="94"/>
-<wire x1="10.16" y1="20.32" x2="-7.62" y2="20.32" width="0.1524" layer="94"/>
-<pin name="IN" x="-12.7" y="15.24" length="middle"/>
-<pin name="GND" x="-12.7" y="10.16" length="middle"/>
-<pin name="EN" x="-12.7" y="5.08" length="middle"/>
-<pin name="OUT" x="12.7" y="15.24" length="short" rot="R180"/>
-<pin name="PG" x="12.7" y="5.08" length="short" rot="R180"/>
-</symbol>
 </symbols>
 <devicesets>
+<deviceset name="LDLN030">
+<gates>
+<gate name="G$1" symbol="LDLN030" x="-20.32" y="-7.62"/>
+</gates>
+<devices>
+<device name="" package="LDLN030">
+<connects>
+<connect gate="G$1" pin="EN" pad="EN"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="IN" pad="IN"/>
+<connect gate="G$1" pin="OUT" pad="OUT"/>
+<connect gate="G$1" pin="PG" pad="PG"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 <deviceset name="WT8266-S1">
 <gates>
 <gate name="G$1" symbol="WT8266-S1" x="2.54" y="0"/>
@@ -176,25 +195,6 @@
 <connect gate="G$1" pin="TOUT" pad="TOUT"/>
 <connect gate="G$1" pin="VRXD" pad="VRXD"/>
 <connect gate="G$1" pin="VTXD" pad="VTXD"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="LDLN030">
-<gates>
-<gate name="G$1" symbol="LDLN030" x="-20.32" y="-7.62"/>
-</gates>
-<devices>
-<device name="" package="LDLN030">
-<connects>
-<connect gate="G$1" pin="EN" pad="EN"/>
-<connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="IN" pad="IN"/>
-<connect gate="G$1" pin="OUT" pad="OUT"/>
-<connect gate="G$1" pin="PG" pad="PG"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -8732,6 +8732,39 @@ Source: www.kingbright.com</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="supply1" urn="urn:adsk.eagle:library:371">
+<description>&lt;b&gt;Supply Symbols&lt;/b&gt;&lt;p&gt;
+ GND, VCC, 0V, +5V, -5V, etc.&lt;p&gt;
+ Please keep in mind, that these devices are necessary for the
+ automatic wiring of the supply signals.&lt;p&gt;
+ The pin name defined in the symbol is identical to the net which is to be wired automatically.&lt;p&gt;
+ In this library the device names are the same as the pin names of the symbols, therefore the correct signal names appear next to the supply symbols in the schematic.&lt;p&gt;
+ &lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<packages>
+</packages>
+<symbols>
+<symbol name="GND" urn="urn:adsk.eagle:symbol:26925/1" library_version="1">
+<wire x1="-1.905" y1="0" x2="1.905" y2="0" width="0.254" layer="94"/>
+<text x="-2.54" y="-2.54" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="GND" x="0" y="2.54" visible="off" length="short" direction="sup" rot="R270"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="GND" urn="urn:adsk.eagle:component:26954/1" prefix="GND" library_version="1">
+<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
+<gates>
+<gate name="1" symbol="GND" x="0" y="0"/>
+</gates>
+<devices>
+<device name="">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -8745,8 +8778,6 @@ Source: www.kingbright.com</description>
 <schematic_group name="STABILIZATOR1"/>
 </groups>
 <parts>
-<part name="U$1" library="WT8266" deviceset="WT8266-S1" device=""/>
-<part name="U$2" library="WT8266" deviceset="LDLN030" device=""/>
 <part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2" value="100k"/>
 <part name="C1" library="capacitor-wima" library_urn="urn:adsk.eagle:library:116" deviceset="C" device="2.5/2" package3d_urn="urn:adsk.eagle:package:5415/1" value="1 uF"/>
 <part name="C2" library="capacitor-wima" library_urn="urn:adsk.eagle:library:116" deviceset="C" device="2.5/2" package3d_urn="urn:adsk.eagle:package:5415/1" value="1 uF"/>
@@ -8768,14 +8799,16 @@ Source: www.kingbright.com</description>
 <part name="LED1" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="5MM" package3d_urn="urn:adsk.eagle:package:15799/2"/>
 <part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="0207/10" package3d_urn="urn:adsk.eagle:package:23491/2" value="650"/>
 <part name="SG1" library="buzzer" library_urn="urn:adsk.eagle:library:113" deviceset="F/CM12P" device="" package3d_urn="urn:adsk.eagle:package:5265/1"/>
+<part name="U$2" library="WT8266" deviceset="LDLN030" device=""/>
+<part name="U$1" library="WT8266" deviceset="WT8266-S1" device=""/>
+<part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 </plain>
 <instances>
-<instance part="U$1" gate="G$1" x="73.66" y="38.1" smashed="yes"/>
-<instance part="U$2" gate="G$1" x="15.24" y="48.26" smashed="yes" grouprefs="STABILIZATOR1"/>
 <instance part="R1" gate="G$1" x="30.48" y="58.42" smashed="yes" rot="R90" grouprefs="STABILIZATOR1">
 <attribute name="NAME" x="34.0614" y="57.15" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="36.322" y="57.15" size="1.778" layer="96" rot="R90"/>
@@ -8860,15 +8893,21 @@ Source: www.kingbright.com</description>
 <attribute name="NAME" x="78.74" y="6.35" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="69.85" y="12.7" size="1.778" layer="96" rot="R180"/>
 </instance>
+<instance part="U$2" gate="G$1" x="15.24" y="48.26" smashed="yes"/>
+<instance part="U$1" gate="G$1" x="73.66" y="38.1" smashed="yes"/>
+<instance part="GND1" gate="1" x="-7.62" y="73.66" smashed="yes">
+<attribute name="VALUE" x="-10.16" y="71.12" size="1.778" layer="96"/>
+</instance>
+<instance part="GND2" gate="1" x="55.88" y="5.08" smashed="yes">
+<attribute name="VALUE" x="53.34" y="2.54" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
 <nets>
 <net name="N$1" class="0">
 <segment>
-<pinref part="U$2" gate="G$1" pin="IN"/>
 <wire x1="2.54" y1="63.5" x2="0" y2="63.5" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<pinref part="U$2" gate="G$1" pin="EN"/>
 <wire x1="0" y1="63.5" x2="-7.62" y2="63.5" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
 <wire x1="2.54" y1="53.34" x2="0" y2="53.34" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
 <wire x1="0" y1="53.34" x2="0" y2="63.5" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
@@ -8880,49 +8919,15 @@ Source: www.kingbright.com</description>
 <wire x1="12.7" y1="83.82" x2="12.7" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="0" y1="63.5" x2="0" y2="83.82" width="0.1524" layer="91"/>
 <junction x="0" y="83.82"/>
+<pinref part="U$2" gate="G$1" pin="IN"/>
+<pinref part="U$2" gate="G$1" pin="EN"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
-<pinref part="U$2" gate="G$1" pin="PG"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="27.94" y1="53.34" x2="30.48" y2="53.34" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="NAPAJENI" gate="G$1" pin="1"/>
-<wire x1="5.08" y1="101.6" x2="-2.54" y2="101.6" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="GND"/>
-<wire x1="2.54" y1="58.42" x2="-2.54" y2="58.42" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<wire x1="-2.54" y1="58.42" x2="-2.54" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<wire x1="-2.54" y1="55.88" x2="-7.62" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<wire x1="38.1" y1="40.64" x2="-2.54" y2="40.64" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<wire x1="-2.54" y1="40.64" x2="-2.54" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
-<junction x="-2.54" y="55.88" grouprefs="STABILIZATOR1"/>
-<pinref part="C1" gate="G$1" pin="2"/>
-<pinref part="C2" gate="G$1" pin="2"/>
-<wire x1="-2.54" y1="101.6" x2="-2.54" y2="78.74" width="0.1524" layer="91"/>
-<junction x="-2.54" y="58.42"/>
-<pinref part="U$1" gate="G$1" pin="GND"/>
-<wire x1="-2.54" y1="78.74" x2="-2.54" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="63.5" x2="99.06" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="63.5" x2="99.06" y2="78.74" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="78.74" x2="58.42" y2="78.74" width="0.1524" layer="91"/>
-<junction x="-2.54" y="78.74"/>
-<pinref part="R3" gate="G$1" pin="1"/>
-<wire x1="58.42" y1="78.74" x2="-2.54" y2="78.74" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="53.34" x2="58.42" y2="78.74" width="0.1524" layer="91"/>
-<junction x="58.42" y="78.74"/>
-<wire x1="99.06" y1="63.5" x2="111.76" y2="63.5" width="0.1524" layer="91"/>
-<junction x="99.06" y="63.5"/>
-<wire x1="111.76" y1="63.5" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="S2" gate="1" pin="P1"/>
-<wire x1="111.76" y1="60.96" x2="111.76" y2="45.72" width="0.1524" layer="91"/>
-<wire x1="111.76" y1="45.72" x2="114.3" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="S1" gate="1" pin="P"/>
-<wire x1="114.3" y1="60.96" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
-<junction x="111.76" y="60.96"/>
+<pinref part="U$2" gate="G$1" pin="PG"/>
 </segment>
 </net>
 <net name="N$10" class="0">
@@ -8938,14 +8943,13 @@ Source: www.kingbright.com</description>
 </net>
 <net name="N$7" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="VTXD"/>
 <pinref part="READ_WRITE" gate="G$1" pin="1"/>
 <wire x1="86.36" y1="38.1" x2="86.36" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="VTXD"/>
 </segment>
 </net>
 <net name="N$3" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="IO0"/>
 <wire x1="71.12" y1="58.42" x2="55.88" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="58.42" x2="55.88" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="R2" gate="G$1" pin="1"/>
@@ -8953,21 +8957,22 @@ Source: www.kingbright.com</description>
 <pinref part="UARTMODE" gate="G$1" pin="2"/>
 <wire x1="53.34" y1="45.72" x2="53.34" y2="53.34" width="0.1524" layer="91"/>
 <junction x="53.34" y="53.34"/>
+<pinref part="U$1" gate="G$1" pin="IO0"/>
 </segment>
 </net>
 <net name="N$8" class="0">
 <segment>
 <pinref part="UARTMODE" gate="G$1" pin="1"/>
 <wire x1="55.88" y1="45.72" x2="55.88" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="GND1"/>
 <wire x1="55.88" y1="50.8" x2="71.12" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="GND1"/>
 </segment>
 </net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="2"/>
-<pinref part="U$1" gate="G$1" pin="IO15"/>
 <wire x1="68.58" y1="53.34" x2="71.12" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="IO15"/>
 </segment>
 </net>
 <net name="N$12" class="0">
@@ -8975,7 +8980,6 @@ Source: www.kingbright.com</description>
 <pinref part="R6" gate="G$1" pin="2"/>
 <pinref part="S2" gate="1" pin="S"/>
 <wire x1="129.54" y1="45.72" x2="127" y2="45.72" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="IO12"/>
 <wire x1="127" y1="45.72" x2="124.46" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="58.42" x2="101.6" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="58.42" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
@@ -8984,13 +8988,13 @@ Source: www.kingbright.com</description>
 <junction x="127" y="45.72"/>
 <pinref part="D1" gate="1" pin="C"/>
 <wire x1="127" y1="45.72" x2="127" y2="35.56" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="IO12"/>
 </segment>
 </net>
 <net name="N$13" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="2"/>
 <pinref part="S1" gate="1" pin="S1"/>
-<pinref part="U$1" gate="G$1" pin="IO14"/>
 <wire x1="129.54" y1="60.96" x2="124.46" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="60.96" x2="104.14" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="60.96" x2="104.14" y2="55.88" width="0.1524" layer="91"/>
@@ -9001,25 +9005,23 @@ Source: www.kingbright.com</description>
 <wire x1="129.54" y1="60.96" x2="129.54" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="129.54" y1="30.48" x2="127" y2="30.48" width="0.1524" layer="91"/>
 <junction x="129.54" y="60.96"/>
+<pinref part="U$1" gate="G$1" pin="IO14"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="EN"/>
 <wire x1="93.98" y1="53.34" x2="96.52" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
 <pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="139.7" y1="45.72" x2="139.7" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="60.96" x2="139.7" y2="81.28" width="0.1524" layer="91"/>
 <junction x="139.7" y="60.96"/>
-<pinref part="U$2" gate="G$1" pin="OUT"/>
 <wire x1="27.94" y1="63.5" x2="30.48" y2="63.5" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
 <wire x1="30.48" y1="63.5" x2="38.1" y2="63.5" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
 <wire x1="38.1" y1="63.5" x2="38.1" y2="48.26" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <junction x="30.48" y="63.5" grouprefs="STABILIZATOR1"/>
 <pinref part="C2" gate="G$1" pin="1"/>
-<pinref part="U$1" gate="G$1" pin="3.3V"/>
 <wire x1="38.1" y1="63.5" x2="53.34" y2="63.5" width="0.1524" layer="91"/>
 <junction x="38.1" y="63.5"/>
 <pinref part="R2" gate="G$1" pin="2"/>
@@ -9034,14 +9036,17 @@ Source: www.kingbright.com</description>
 <wire x1="127" y1="25.4" x2="139.7" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="25.4" x2="139.7" y2="45.72" width="0.1524" layer="91"/>
 <junction x="139.7" y="45.72"/>
+<pinref part="U$2" gate="G$1" pin="OUT"/>
+<pinref part="U$1" gate="G$1" pin="3.3V"/>
+<pinref part="U$1" gate="G$1" pin="EN"/>
 </segment>
 </net>
 <net name="N$11" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="RST"/>
 <wire x1="88.9" y1="38.1" x2="88.9" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="C3" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="33.02" x2="101.6" y2="33.02" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="RST"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -9061,19 +9066,19 @@ Source: www.kingbright.com</description>
 </net>
 <net name="N$5" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="VRXD"/>
 <wire x1="81.28" y1="38.1" x2="81.28" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="81.28" y1="22.86" x2="83.82" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="READ_WRITE" gate="G$1" pin="2"/>
 <wire x1="83.82" y1="22.86" x2="83.82" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="VRXD"/>
 </segment>
 </net>
 <net name="N$15" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="IO13"/>
 <wire x1="76.2" y1="30.48" x2="76.2" y2="38.1" width="0.1524" layer="91"/>
 <pinref part="R8" gate="G$1" pin="1"/>
 <wire x1="73.66" y1="30.48" x2="76.2" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="IO13"/>
 </segment>
 </net>
 <net name="N$16" class="0">
@@ -9084,15 +9089,14 @@ Source: www.kingbright.com</description>
 </net>
 <net name="N$17" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="IO5"/>
 <pinref part="SG1" gate="G$1" pin="1"/>
 <wire x1="78.74" y1="38.1" x2="78.74" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="IO5"/>
 </segment>
 </net>
-<net name="N$18" class="0">
+<net name="GND" class="0">
 <segment>
 <pinref part="SG1" gate="G$1" pin="2"/>
-<pinref part="U$1" gate="G$1" pin="GND2"/>
 <wire x1="83.82" y1="38.1" x2="83.82" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="83.82" y1="25.4" x2="71.12" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="25.4" x2="71.12" y2="15.24" width="0.1524" layer="91"/>
@@ -9100,6 +9104,47 @@ Source: www.kingbright.com</description>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <wire x1="55.88" y1="30.48" x2="55.88" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="15.24" x2="71.12" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="GND2"/>
+<pinref part="GND2" gate="1" pin="GND"/>
+<wire x1="55.88" y1="7.62" x2="55.88" y2="15.24" width="0.1524" layer="91"/>
+<junction x="55.88" y="15.24"/>
+</segment>
+<segment>
+<pinref part="NAPAJENI" gate="G$1" pin="1"/>
+<wire x1="5.08" y1="101.6" x2="-2.54" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="58.42" x2="-2.54" y2="58.42" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
+<wire x1="-2.54" y1="58.42" x2="-2.54" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
+<wire x1="-2.54" y1="55.88" x2="-7.62" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
+<wire x1="38.1" y1="40.64" x2="-2.54" y2="40.64" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
+<wire x1="-2.54" y1="40.64" x2="-2.54" y2="55.88" width="0.1524" layer="91" grouprefs="STABILIZATOR1"/>
+<junction x="-2.54" y="55.88" grouprefs="STABILIZATOR1"/>
+<pinref part="C1" gate="G$1" pin="2"/>
+<pinref part="C2" gate="G$1" pin="2"/>
+<wire x1="-2.54" y1="101.6" x2="-2.54" y2="78.74" width="0.1524" layer="91"/>
+<junction x="-2.54" y="58.42"/>
+<wire x1="-2.54" y1="78.74" x2="-2.54" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="63.5" x2="99.06" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="63.5" x2="99.06" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="78.74" x2="58.42" y2="78.74" width="0.1524" layer="91"/>
+<junction x="-2.54" y="78.74"/>
+<pinref part="R3" gate="G$1" pin="1"/>
+<wire x1="58.42" y1="78.74" x2="-2.54" y2="78.74" width="0.1524" layer="91"/>
+<wire x1="58.42" y1="53.34" x2="58.42" y2="78.74" width="0.1524" layer="91"/>
+<junction x="58.42" y="78.74"/>
+<wire x1="99.06" y1="63.5" x2="111.76" y2="63.5" width="0.1524" layer="91"/>
+<junction x="99.06" y="63.5"/>
+<wire x1="111.76" y1="63.5" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="S2" gate="1" pin="P1"/>
+<wire x1="111.76" y1="60.96" x2="111.76" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="111.76" y1="45.72" x2="114.3" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="S1" gate="1" pin="P"/>
+<wire x1="114.3" y1="60.96" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
+<junction x="111.76" y="60.96"/>
+<pinref part="U$2" gate="G$1" pin="GND"/>
+<pinref part="U$1" gate="G$1" pin="GND"/>
+<wire x1="-2.54" y1="78.74" x2="-7.62" y2="78.74" width="0.1524" layer="91"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+<wire x1="-7.62" y1="78.74" x2="-7.62" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
