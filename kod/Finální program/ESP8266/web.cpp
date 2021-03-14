@@ -193,6 +193,7 @@ void handleConfigCheck() {
 
 void handleDeepSleep() {
     feedback_timer(400, 1);
+    digitalWrite(4, LOW);
     ESP.deepSleep(0);
 }
 void handleSettings(){

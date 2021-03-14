@@ -26,9 +26,13 @@ void feedback_timer(int duration, int quantity) {
 }
 
 bool pin_pressed(esp_sleep_wakeup_cause_t wakeup_reason) {
-    if(wakeup_reason != ESP_SLEEP_WAKEUP_EXT0 && wakeup_reason != ESP_SLEEP_WAKEUP_EXT1)
-        esp_deep_sleep_start();
-    else{
+    if(wakeup_reason != ESP_SLEEP_WAKEUP_EXT0 && wakeup_reason != ESP_SLEEP_WAKEUP_EXT1){
+      if(digitalRead(15) == true){
+        return true;
+      }else{
+        return false;
+        }
+    }else{
         if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) {
             return true;
         } else {
@@ -108,6 +112,8 @@ void send_message() {
 }
 
 void setup_boot() {
+    pinMode(26, OUTPUT);
+    digitalWrite(26, HIGH);
     Serial.begin(115200);
     EEPROM.begin(512);
     pinMode(WAKEUP_PIN1, INPUT);
@@ -133,6 +139,7 @@ void setup() {
        Serial.println("nekonf");
         send_message();
         WiFi.disconnect();
+        digitalWrite(26, LOW);
         esp_deep_sleep_start();
     }
 }

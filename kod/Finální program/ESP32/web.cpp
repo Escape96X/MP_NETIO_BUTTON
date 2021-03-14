@@ -194,6 +194,7 @@ void handleConfigCheck() {
 void handleDeepSleep() {
     feedback_timer(400, 1);
     WiFi.disconnect();
+    digitalWrite(26, LOW);
     esp_deep_sleep_start();
 }
 void handleSettings(){

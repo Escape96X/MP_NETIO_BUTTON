@@ -141,7 +141,7 @@
 
 
     \section{LDLN030}
-    LDLN030 je napěťový regulátor, který pracuje se vstupním napětím od 1,6 V do 5,5 V. Výstupní napětí dokáže stabilizovat na 3,3 V a pokud napětí klesne pod 3 V, odpojí zařízení napojené na výstupu. Tato součástka má časté použití v mobilních telefonech, HDD a SSD discích a ostatních rařízeních napájené baterií. \\
+    LDLN030 je napěťový regulátor, který pracuje se vstupním napětím od 1,6 V do 5,5 V. Výstupní napětí dokáže stabilizovat na 3,3 V a pokud napětí klesne pod 3 V, odpojí zařízení napojené na výstupu. Klidový elektrický proud je 16 \si{\micro A} a logicky řízený enable pin uvede zařízení do vypnutého stavu, spotřeba elektrického proudu je nežší než 1 \si{\micro A}. Tato součástka má časté použití v mobilních telefonech, HDD a SSD discích, jelikož zařízení poskytuje nízký výstupní šum a vysoké PSRR\footnote{Schopnost obvodu udržovat výstupní napětí při změně vstupního napětí viz. literatura~\cite{PSRR}} \\
     Regulátor má celkem 5 pinů, a to vstup, výstup, GROUND, enable pin a Power Good. Enable pin rozhoduje zda součástka funguje či nikoliv, pokud je přivedena na zem, výstup je 0 V. Power Good je pin, který může informovat například základní desku během POST\footnote{Power On Self Test}, že napájení je v pořádku a může pokračovat v činnosti.
     %https://cs.wikipedia.org/wiki/Power_Good
     \begin{figure}[h]
@@ -149,6 +149,13 @@
         \includegraphics[width=9cm]{images/ldln030_datasheet}
         \caption{LDLN030 Pinout: Literatura~\cite{stabilizator}}
         \label{fig:ldln030_datasheet}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=9cm]{images/ldln030_datasheet2}
+        \caption{LDLN030 Pinout: Literatura~\cite{stabilizator}}
+        \label{fig:ldln030_datasheet2}
     \end{figure}
 
 
@@ -509,7 +516,7 @@
             \hline
         \end{tabular}
         \label{tab:porovnani-klidove-rezimy-spotreba}
-    \end{table}\\ \pagebreak
+    \end{table}\\
     Z hlediska poměru reakčního času a spotřeby je nejlepší ustálený stav deep sleep, jelikož reakční čas je přijatelný pro uživatele a díky nízkému příkonu zaření vydržet přijatelnou dobu. K sestavení funkčního vzorku proto bude použit tento ustálený stav pro obě platformy.
     \subsection{WiFi a HTTP}
     \begin{table}[h]
@@ -541,8 +548,18 @@
     \chapter{Vytvoření funkčních vzorků}
     \section{Hardwarová část}
     \subsection{ESP8266}
-    Jak jsem již zmínil v předchozí kapitole, na základě měření jsem zvolil ustálený stav deep sleep. Podrobnosti se nachází v sekci~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}. ESP8266 je možné probudit tak, že se na pin RST přivede na krátkou dobu GROUND a tím se zařízení resetuje. Nicméně cílem je sestavit zařízení s dvěmi ovládacími tlačítky, které musíme rozpoznávat mezi sebou aby byla sepnuta správná zásuvka. Takže tlačítka jsem připojil na RST přes kondenzátor a na GPIO 12 a 14. Kondenzátor sloužil k vytvoření záporné špičky na krátkou dobu tzn. zařízení se vyresetovalo, ale uživatel tlačítko stále držel a stav se mohl zaznamenat na příslušném pinu. Testováním různých velikostí kondenzátorů jsem dospěl k velikosti 3,3 \si{\micro F}. Dosáhl jsem toho, že se při stisku jakéhokoliv spínače přivedl GROUND na oba GPIO piny.
-
+    Jak jsem již zmínil v předchozí kapitole, na základě měření jsem zvolil ustálený stav deep sleep. Podrobnosti se nachází v sekci~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}. ESP8266 je možné probudit tak, že se na pin RST přivede na krátkou dobu GROUND a tím se zařízení resetuje. Nicméně cílem je sestavit zařízení s dvěmi ovládacími tlačítky, které musíme rozpoznávat mezi sebou aby byla sepnuta správná zásuvka. Takže tlačítka jsem připojil na RST přes kondenzátor a na GPIO 12 a 14. Kondenzátor sloužil k vytvoření záporné špičky na krátkou dobu tzn. zařízení se vyresetovalo, ale uživatel tlačítko stále držel a stav se mohl zaznamenat na příslušném pinu. Testováním různých velikostí kondenzátorů jsem dospěl k velikosti 3,3 \si{\micro F} \viz{fig:3.3uf-esp8266}. Dosáhl jsem toho, že se při stisku jakéhokoliv spínače přivedl GROUND na oba GPIO piny. Abych tomuto zamezil, mezi každý spínač a kondenzátor jsem vložil diodu tak, aby el. proud nemohl protékat druhým pinem. \\
+    Abych mohl napájet ESP baterií musel přivést napětí 3,3 \si{V}, čehož docílil třemi bateriemi seriově zapojené a stabilizátorem, který mi stabilizuje 4,5\si{V} napětí na 3,3 \si{V}. Stabilizátor je zapojen dle doporučení uvedené v datasheetu produktu .\\
+    Do zapojení, \viz{fig:ESP8266_DPS}, jsem také počítal s programováním, které bude umožněno jumperem na pinu GPIO 0 přepnu ESP do UART boot módu\footnote{Je to mód, kdy ESP zapisuje do flash paměti program ze sériové komunikace s počítačem} a připojení na piny TXD a RXD\@. \\
+    Pro porovnání deep sleepu s enable button ustáleným stavem. zabudoval jsem do finálního vzorku možnost přepnout mezi těmito dvěma módy. Pro zapnutí enable button stavu, přehodíme jumpery do druhé polohy. Tlačítka místo propojení přes diody s RST se propojí s tranzistory. Tranzistor má za úkol přepínat enable pin z 0 V na 3,3 V a tím aktivovat činnost ovladače. Tranzistory jsou typu P mosfet, tzn. pokud uzemním gate, přivedu napětí na enable. To způsobí, že ESP se aktivuje nastaví GPIO 4 na HIGH, což z něho udělá přídržný pin, který je také připojen na enable pin. Dokud je GPIO 4 na HIGH hodnotě, ESP zůstane zaplé.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=12cm]{images/esp8266_schema}
+        \caption{ESP8266 schéma zapojení}
+        \label{fig:ESP8266_DPS}
+    \end{figure}
+    \subsubsection{Princip programu}
+    Program nahraný v ESP8266 při zapnutí nejprve nastaví přídržný pin pro případ, že uživatel testuje enable button ustálený stav. Poté nastaví piny na čtení pro identifikaci správného zmáčknutého tlačítka pro sepnutí správné zásuvky. Program je ošetřen proti krátkému zmáčknutí tlačítek, kdy se ozve pípnutí bzučáku a rozsvícení LED.
 
     \section{Tvorba uživatelského rozhraní}
     Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
@@ -639,6 +656,12 @@ String readEEPROM(int numberOfStart, int len) {
             \includegraphics[width=12cm]{images/sonyvegaspostup}
             \caption{Ukázka postupu pro měření reakčních časů}
             \label{fig:sonyvegaspostup}
+        \end{figure}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=12cm]{images/esp8266_3,3uf}
+            \caption{ESP8266 reakce kondenzátoru graf}
+            \label{fig:3.3uf-esp8266}
         \end{figure}
     }
     \bibliographystyle{czechiso}

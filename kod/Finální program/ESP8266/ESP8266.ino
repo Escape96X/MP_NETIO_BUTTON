@@ -70,6 +70,7 @@ void wifi_setup() {
         feedback_timer(200, 2);
     Serial.println("Nepripojeno");
 WiFi.disconnect();
+digitalWrite(4, LOW);
         ESP.deepSleep(0);
     }
     }
@@ -95,6 +96,8 @@ void send_message() {
 }
 
 void setup_boot() {
+    pinMode(4, OUTPUT);
+    digitalWrite(4, HIGH);
     pinMode(WAKEUP_PIN1, INPUT);
     pinMode(WAKEUP_PIN2, INPUT);
     BUTTONSTATE1 = digitalRead(WAKEUP_PIN1);
@@ -122,6 +125,7 @@ void setup() {
       digitalWrite(LED_PIN, HIGH);
        Serial.println("nekonf");
         send_message();
+        digitalWrite(4, LOW);
         ESP.deepSleep(0);
     }
 }
