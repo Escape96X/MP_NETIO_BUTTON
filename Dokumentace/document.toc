@@ -1,0 +1,49 @@
+\babel@toc {czech}{}
+\contentsline {chapter}{\numberline {1}Úvod}{5}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Teoretický rozbor}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Netio PowerCable REST 101E}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Platforma ESP}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}ESP8266}{6}{subsection.2.2.1}%
+\contentsline {subsubsection}{Historie}{6}{subsubsection*.2}%
+\contentsline {subsubsection}{Specifikace}{6}{subsubsection*.4}%
+\contentsline {subsection}{\numberline {2.2.2}ESP32}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Deep sleep}{8}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}LDLN030}{10}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Použité protokoly a jiné}{11}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}HTTP}{11}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}JSON}{11}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}DHCP}{12}{subsection.2.4.3}%
+\contentsline {chapter}{\numberline {3}Metodika postupu}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Tvorba měřecího vzorku}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Měření připojení k WiFi a odeslání HTTP requestu}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Spotřeba}{14}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Reakční čas}{15}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Ustálené stavy}{15}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Spotřeba}{15}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Probuzení z ustálených časů}{16}{subsection.3.3.2}%
+\contentsline {chapter}{\numberline {4}Měření spotřeby a času}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}ESP8266}{17}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Spotřeba a reakční doba ustálených stavů}{17}{subsection.4.1.1}%
+\contentsline {subsubsection}{Spotřeba}{17}{subsubsection*.12}%
+\contentsline {subsubsection}{Reakční čas}{18}{subsubsection*.15}%
+\contentsline {subsubsection}{Porovnání}{18}{subsubsection*.17}%
+\contentsline {subsection}{\numberline {4.1.2}Připojení k WiFi a odeslání HTTP requestu}{19}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}ESP32}{21}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Spotřeba a reakční doba ustálených stavů}{21}{subsection.4.2.1}%
+\contentsline {subsubsection}{Spotřeba}{21}{subsubsection*.22}%
+\contentsline {subsubsection}{Reakční čas}{22}{subsubsection*.25}%
+\contentsline {subsection}{\numberline {4.2.2}Připojení k WiFi a odeslání HTTP requestu}{23}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Porovnání získaných výsledků}{25}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Ustálené stavy}{25}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}WiFi a HTTP}{26}{subsection.4.3.2}%
+\contentsline {chapter}{\numberline {5}Vytvoření funkčních vzorků}{27}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Hardwarová část}{27}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}ESP8266}{27}{subsection.5.1.1}%
+\contentsline {subsubsection}{Princip programu}{28}{subsubsection*.34}%
+\contentsline {section}{\numberline {5.2}Tvorba uživatelského rozhraní}{28}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Nastavení webserveru}{29}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Připojení k WiFi}{29}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Konfigurace reakce zásuvky}{29}{subsection.5.2.3}%
+\contentsline {chapter}{\numberline {6}Závěr}{33}{chapter.6}%
+\contentsline {chapter}{Přílohy}{36}{chapter*.38}%
+\contentsline {chapter}{\numberline {A}Příloha}{37}{appendix.A}%
