@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n+nf}{saveToEEPROM}\PYG{p}{(}\PYG{n}{String} \PYG{n}{sToSave}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{startPosition}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{char} \PYG{n}{arr}\PYG{p}{[}\PYG{n}{sToSave}\PYG{p}{.}\PYG{n}{length}\PYG{p}{()} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{];} \PYG{c+c1}{// Vytvoří pole o velikosti stringu}
+    \PYG{n}{strcpy}\PYG{p}{(}\PYG{n}{arr}\PYG{p}{,} \PYG{n}{sToSave}\PYG{p}{.}\PYG{n}{c\PYGZus{}str}\PYG{p}{());} \PYG{c+c1}{// Převede string a pole charakterů}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{sToSave}\PYG{p}{.}\PYG{n}{length}\PYG{p}{();} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{EEPROM}\PYG{p}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{startPosition} \PYG{o}{+} \PYG{n}{i}\PYG{p}{,} \PYG{n}{arr}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]);} \PYG{c+c1}{// Zapíše charakter do paměti}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+c1}{// Zapíše poslední ASCII 255}
+    \PYG{n}{EEPROM}\PYG{p}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{startPosition} \PYG{o}{+} \PYG{n}{sToSave}\PYG{p}{.}\PYG{n}{length}\PYG{p}{(),} \PYG{l+m+mi}{\PYGZhy{}1}\PYG{p}{);}
+    \PYG{n}{EEPROM}\PYG{p}{.}\PYG{n}{commit}\PYG{p}{();}
+    \PYG{n}{delay}\PYG{p}{(}\PYG{l+m+mi}{500}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{String} \PYG{n+nf}{readEEPROM}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{numberOfStart}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{len}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{String} \PYG{n}{tempString} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{len}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{char} \PYG{n}{character} \PYG{o}{=} \PYG{n}{EEPROM}\PYG{p}{.}\PYG{n}{read}\PYG{p}{(}\PYG{n}{numberOfStart} \PYG{o}{+} \PYG{n}{i}\PYG{p}{);}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{character} \PYG{o}{==} \PYG{l+m+mi}{255}\PYG{p}{)}
+            \PYG{k}{break}\PYG{p}{;}
+        \PYG{n}{tempString} \PYG{o}{+=} \PYG{n}{character}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{return} \PYG{n}{tempString}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -70,8 +70,7 @@ void wifi_setup() {
         feedback_timer(200, 2);
     Serial.println("Nepripojeno");
 WiFi.disconnect();
-digitalWrite(4, LOW);
-        ESP.deepSleep(0);
+setWiFiServer2();
     }
     }
 }

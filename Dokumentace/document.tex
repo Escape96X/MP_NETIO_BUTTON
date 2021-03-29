@@ -8,7 +8,7 @@
 \usepackage{minted}
 \usepackage[bottom]{footmisc}
 \captionsetup[table]{skip=5pt}
-
+\usepackage{indentfirst}
 %Proměnné
 \student{Milan Jiříček}
 \trida{B4.I}
@@ -31,35 +31,44 @@
     \section*{Anotace}
     Maturitní práce se zaměřuje na porovnání platforem ESP pro navrhovanou aplikaci.
     Cílem je vytvořit ovladač pro ovládání zásuvek značky NETIO s webovou aplikací pro konfiguraci a zjistit, která platforma je vhodná pro realizaci funkčního vzorku z hlediska spotřeby energie a~reakční doby.\\
-    \textbf{Klíčová slova}\\
+    \textbf{Klíčová slova}\par
     ESP8266;\ ESP32;\ měření spotřeby;\ měření reakčního času;\ JSON;\ HTTP;\ NETIO;\ PowerCable
 
     \section*{Annotation}
     The graduation thesis focuses on the comparison of the ESP platforms for proposed application.
     The goal is to create a driver for controlling NETIO sockets with a web application for configuration and to find out which platform is suitable for the implementation of a~functional sample in terms of energy consumption and response time.\\
-    \textbf{Keywords}\\
+    \textbf{Keywords}\par
     ESP8266;\ ESP32;\ measuring usage;\ measuring time of reaction;\ JSON;\ HTTP;\ NETIO;\ PowerCable
 
     \podekovani
     Chtěl bych poděkovat panu učiteli Ing.~Břetislavu Bakalovi za odborné vedení práce a~cenné rady, které mi pomohly tuto práci zkompletovat.
     Rád bych také poděkoval technickému řediteli Ing.~Břetislavu Bakalovi ml.
-    společnosti NETIO products a.s.\ za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování maturitní práce.
-    V~neposlední řadě chci poděkovat Mgr.~Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za~pomoc při gramatické a~stylistické kontrole.
+    společnosti NETIO products a.s.\ za cenné rady, věcné připomínky a~vstřícnost při konzultacích a~vypracování maturitní práce. \par
+   % V~neposlední řadě chci poděkovat Mgr.~Haně Maříkové a~Mgr.~Vladimíře Špirhanzlové za~pomoc při gramatické a~stylistické kontrole.
     \tableofcontents
 
 
     \chapter{Úvod}\label{ch:uvod}
-    %Teorie
+    V této maturitní práci porovnám platformy ESP8266 a ESP32 z hlediska spotřeby a~reakčního času v takových podmínkách, aby bylo možné určit platformu, která je vhodnější pro funkční vzorek ovladače zásuvek od společnosti NETIO Products a.~s.
+    Jelikož je cílem vytvořit co nejvíce úsporné zařízení, jak je jen možné, budu porovnávat jednotlivé ustálené stavy\footnote{Stav, kdy zařízení čeká na interakci uživatele}.
+    Zařízení také musí být uživatelsky přívětivé, tzn. není ideální, když uživatel musí čekat na reakci několik sekund.
+    Dále na každé platformě porovnám rychlost a~spotřebu připojení k WiFi síti a následné odeslání HTTP requestu.\par
+Po vybrání vhodné metody ustáleného stavu, vytvořím konfigurační rozhraní pro editaci nastavení sítě a HTTP requestu, do kterého se bude přistupovat přes access point zařízení ESP.\par
+    Ve finále vytvořím dva funkční koncepty ovladačů pro každou platformu.
+    Tento koncept bude vycházet z předchozího měření a zjištění.
+    Funkčním vzorkem bude možné ovládat, buď dvě různé zásuvky, nebo jednu zásuvku z dvěma výstupy.
+    V závěru práce zhodnotím, zda je možné vytvořit plnohodnotný produkt, či nikoliv.
 
 
     \chapter{Teoretický rozbor}\label{ch:teorie}
 
 
     \section{Netio PowerCable REST 101E}\label{sec:netio-powercable-rest-101e}
-    PoweCable REST 101E, nebo také Cobra je chytrá zásuvka s možností WiFi připojení.
+
+    PoweCable REST 101E, nebo také Cobra, je chytrá zásuvka s možností WiFi připojení.
     Díky tomu je možné zásuvku ovládat přes řadu protokolů.
-    Zásuvka také nabízí rozhraní otevřeného API, které umožňuje integraci do systémů třetích stran.
-    Zásuvka také dokáže měřit napětí, el. proud nebo také např. příkon. \\
+    Zásuvka nabízí rozhraní otevřeného API, které umožňuje integraci do systémů třetích stran.
+    Zásuvka dokáže měřit napětí, el. proud nebo také např. příkon.\par
     K WiFi je možné se připojit přes uživatelské rozhraní.
     Pro moje účely využiji odesílání JSON dat pomocí HTTP\@.
 
@@ -73,16 +82,16 @@
     \begin{figure}[h!]
         \centering
         \includegraphics[width=9cm]{images/ESP8266_piny}
-        \caption{ESP8266 pinout: literatura~\cite{WT8266}}
+        \caption{WT8266-S1 pinout: literatura~\cite{WT8266}}
         \label{fig:esp8266_piny}
     \end{figure}
-    ESP8266 je levný mikročip, který umí využívat WiFi. První chip, který se dostal na světlo světa byl v modulu \textbf{ESP-01}.
-    Tento modul dokázal připojit se na WiFi síť a provádět jednoduché TCP/IP spojení. Získal si velkou oblibu díky nízké ceně.
-    Jsou vhodné pro IoT jako například automatizace, zabezpečení, chytré domy atd.
+    ESP8266 je levný mikročip, který umí využívat WiFi. První čip, který se dostal na světlo světa byl v modulu \textbf{ESP-01}.
+    Tento modul se dokázal připojit na WiFi síť a provádět jednoduché TCP/IP spojení. Získal si velkou oblibu díky nízké ceně.
+    Jsou vhodné pro IoT jako například automatizace, zabezpečení, chytré domy, atd.
 
     \subsubsection{Specifikace}
-    Pro tuto maturitní práci bude použit modul \textbf{WT8266-S1}, který je vytvořen společností \textbf{Wireless-Tag}, protože tento modul je používán ve společnosti NETIO products a. s.\\
-    ESP8266 integruje vylepšenou verzi procesoru \textbf{L106 Diamond series 32-bit} vytvořený firmou \textbf{Tensilica} s podporou frekvencí 80~\si{MHz} a 160~\si{MHz} a RTOS\footnote{Operační systém v realném čase}.
+    Pro tuto maturitní práci bude použit modul \textbf{WT8266-S1}, který je vytvořen společností \textbf{Wireless-Tag}, protože je používán ve společnosti NETIO products a.~s.\par
+    ESP8266 integruje vylepšenou verzi procesoru \textbf{L106 Diamond series 32-bit}, vytvořený firmou \textbf{Tensilica} s podporou frekvencí 80~\si{MHz} a 160~\si{MHz} a RTOS\footnote{Operační systém v realném čase}.
     K dispozici je RAM velká 36~\si{KB} a SPI flash paměť o velikosti 32~\si{Mb}.
     \begin{figure}[h!]
         \centering
@@ -91,8 +100,9 @@
         \label{fig:esp8266_diagram}
     \end{figure}
 
-    Intergrovaný v systému je také 10 bitový analog-digitální převodník.
-    Modul podporuje standard \textbf{IEEE802.11 b/g/n}\footnote{Standard pro lokální bezdrátové sítě} a sadu protokolů TCP/IP. WiFi 2,4~\si{GHz} umožňuje WPA/WPA2 \footnote{Chráněný přístup k WiFi}, rychlost až 72,2~\si{Mbps} a ke komunikaci využívá anténu PCB. Zařízení má 16~GPIO pinů\footnote{Vstupně výstupní pin} (\viz{fig:esp8266_piny}) z toho jsou některé piny využívány na specifické činnosti.
+    V systému je také intergrovaný 10 bitový analogo-digitální převodník.
+    Modul podporuje standard \textbf{IEEE802.11 b/g/n}\footnote{Standard pro lokální bezdrátové sítě} a sadu protokolů TCP/IP. WiFi 2,4~\si{GHz} umožňuje WPA/WPA2 \footnote{Chráněný přístup k WiFi}, rychlost až 72,2~\si{Mbps} a ke komunikaci využívá anténu PCB. \par
+    Zařízení má 16~GPIO pinů\footnote{Vstupně výstupní pin} (\viz{fig:esp8266_piny}) z toho jsou některé piny využívány na~specifické činnosti.
     Např. pokud při bootu ESP8266 přivedeme GROUND na GPIO~0, zařízení se přepne do UART\footnote{Univerzální asynchronní přijmač, vysílač} módu a je možné nahrát do flash paměti program. Další informace jsou na obrázku~\ref{fig:esp8266_diagram}.
 
 
@@ -101,11 +111,12 @@
     Tento mikročip má integrované WiFi i Bluetooth.
     Série ESP32 obsahuje mikroprocesor Tensilica Xtensa LX6 v dvou jádrové či jednojádrové verzi, který může operovat na 160~\si{MHz} nebo 240~\si{MHz}.
     RAM má velikost 520~\si{KB}.
-    WiFi může dosáhnout rychlosti až 150~\si{Mbps} společně se zabezpečením WPA/WPA2. Kromě IPv4 je možnost použít i IPv6.
-    ESP32 integruje 12 bitový analog-digitální převodník.
+    WiFi může dosáhnout rychlosti až 150~\si{Mbps} společně se zabezpečením WPA/WPA2.
+    Kromě IPv4 je možnost použít i IPv6.
+    ESP32 integruje 12~bitový analog-digitální převodník.
     Oproti ESP8266 je do tohoto modelu zabudován senzor teploty.
     ESP32 disponuje 36 GPIO piny.
-    Další funkce jsou na obrázku~\ref{fig:esp32_diagram_pinout}. \\
+    Další funkce jsou na obrázku~\ref{fig:esp32_diagram_pinout}.
 
     \begin{figure}[h!]
         \centering
@@ -123,19 +134,19 @@
 
     \subsection{Deep sleep} \label{subsec:deep-sleep}
     Platforma ESP lze také uvést do úsporného režimu.
-    Jednoduše to znamená vypnutí nedůležitých částí po určitou doub.
+    Jednoduše to znamená vypnutí nedůležitých částí po určitou dobu.
     ESP8266 celkově nabízí 3 druhy úsporných režimů.
-    Modem sleep, light sleep a deep sleep. \viz{fig:sleep_tabulka}.
+    Modem sleep, light sleep a deep sleep (\viz{fig:sleep_tabulka}).
     \begin{figure}[h!]
         \centering
         \includegraphics[width=11cm]{images/tabulka_sleep}
         \caption{podrobná tabulka sleep režimů: literatura~\cite{randomnerd}}
         \label{fig:sleep_tabulka}
-    \end{figure}
+    \end{figure}\par
     Pro moji maturitní práci použiji deep sleep, který poskytuje největší počet vypnutých částí včetně CPU či WiFi.
-    Jedinou vyjimkou je \textbf{RTC}\footnote{Hodiny realného času}.
+    Jedinou výjimkou je \textbf{RTC}\footnote{Hodiny realného času}.
     V tomto režimu je také možné uchovat data v tzv. RTC paměti, která jsou dostupná i po obnovení.
-    Průměrná spotřeba je 20 \si{\micro A} a je vhodný pro jakýkoliv projekt na akumulátor či baterii. \\
+    Průměrná spotřeba je 20 \si{\micro A} a je vhodný pro jakýkoliv projekt na akumulátor či baterii. \par
     Probuzení ESP8266 probíhá, buď po nastaveném čase, kde je nutné připojit pin \textbf{GPIO 16} tzv. wake-up pin na \textbf{RESET} (\viz{fig:esp8266_timed_pressed_deepsleep}a), ten po uplynutí nastaveného času se na krátkou dobu přepne z log. 1 na log. 0 a vyresetuje ESP8266, a nebo můžeme na \textbf{RESET}  přivést krátce tlačítkem logickou nulu a obnovíme ESP hardwarově (\viz{fig:esp8266_timed_pressed_deepsleep}b).
     \begin{figure}[h!]
         \centering
@@ -149,41 +160,58 @@
         \end{subfigure}
         \caption{ESP8266 probuzení z deep sleep po daném čase: literatura~\cite{randomnerd}}
         \label{fig:esp8266_timed_pressed_deepsleep}
-    \end{figure}\\
+    \end{figure}\par
     Jelikož ESP32 je novější model, deep sleep se liší v používání.
-    ESP32 neprobouzíme přes RESET pin a proto se na mikročipu ani nenachází.
+    ESP32 neprobouzíme přes RESET pin, a proto se na mikročipu ani nenachází.
     Pokud chceme ESP probudit po určitém čase, nastavíme to pouze v programu a nemusíme žádné piny propojovat.
-    V situaci hardwarového probuzení je nutné definovat pin probuzení a při jaké logické hodnotě se má probudit.
+    V situaci hardwarového probuzení je nutné definovat pin probuzení, a při jaké logické hodnotě se má probudit.
     Tento pin musí být tzv. RTC\_GPIO\footnote{Pin, který je v činnosti i během spánku ESP}.
 
 
     \section{LDLN030}
-    LDLN030 je napěťový regulátor, který pracuje se vstupním napětím od 1,6 V do 5,5 V. Výstupní napětí dokáže stabilizovat na 3,3 V a pokud napětí klesne pod 3 V, odpojí zařízení napojené na výstupu.
-    Klidový elektrický proud je 16 \si{\micro A} a logicky řízený enable pin uvede zařízení do vypnutého stavu, spotřeba elektrického proudu je nežší než 1 \si{\micro A}.
-    Tato součástka má časté použití v mobilních telefonech, HDD a SSD discích, jelikož zařízení poskytuje nízký výstupní šum a vysoké PSRR\footnote{Schopnost obvodu udržovat výstupní napětí při změně vstupního napětí viz. literatura~\cite{PSRR}} \\
+    LDLN030 je napěťový regulátor, který pracuje se vstupním napětím od 1,6 V do 5,5~V. Výstupní napětí dokáže stabilizovat na 3,3 V, a pokud napětí klesne pod 3 V, odpojí zařízení napojené na výstupu.
+    Klidový elektrický proud je 16 \si{\micro A} a logicky řízený enable pin uvede zařízení do vypnutého stavu, spotřeba elektrického proudu je nižší než 1 \si{\micro A}. \par
+    Tato součástka má časté použití v mobilních telefonech, HDD a SSD discích, jelikož zařízení poskytuje nízký výstupní šum a vysoké PSRR\footnote{Schopnost obvodu udržovat výstupní napětí při změně vstupního napětí viz. literatura~\cite{PSRR}} \par
     Regulátor má celkem 5 pinů, a to vstup, výstup, GROUND, enable pin a Power Good.
-    Enable pin rozhoduje zda součástka funguje či nikoliv, pokud je přivedena na zem, výstup je 0 V. Power Good je pin, který může informovat například základní desku během POST\footnote{Power On Self Test}, že napájení je v pořádku a může pokračovat v činnosti.
+    Enable pin rozhoduje, zda součástka funguje, či nikoliv. Pokud je přivedena na zem, výstup je 0 V. Power Good je pin, který může informovat například základní desku během POST\footnote{Power On Self Test}, že napájení je v pořádku a může pokračovat v činnosti.
     %https://cs.wikipedia.org/wiki/Power_Good
-    \begin{figure}[h]
+
+    \begin{figure}[h!]
         \centering
-        \includegraphics[width=9cm]{images/ldln030_datasheet}
-        \caption{LDLN030 Pinout: literatura~\cite{stabilizator}}
+        \begin{subfigure}[b]{0.39\linewidth}
+            \includegraphics[width=\linewidth]{images/ldln030_datasheet}
+            \caption{Pinout}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.49\linewidth}
+            \includegraphics[width=\linewidth]{images/ldln030_datasheet2}
+            \caption{Doporučené zapojení}
+        \end{subfigure}
+        \caption{LDLN030: literatura~\cite{stabilizator}}
         \label{fig:ldln030_datasheet}
     \end{figure}
 
-    \begin{figure}[h]
+
+    \section{Komunikace zásuvky NETIO - ovladač}
+    V této sekci popíšu komunikaci mezi zásuvkou a ovladačem pomocí diagramu~\ref{fig:diagram}.
+    Pokud jsou zařízení ve stejné síti, zásuvka odešle HTTP dotaz s JSON zprávou.
+    Zásuvka přijme dotaz a zhodnotí zda ho je možné splnit. Pokud ano, změní svůj stav dle zprávy a~pošle kladnou odpověď ovladači.
+    \begin{figure}[h!]
         \centering
-        \includegraphics[width=9cm]{images/ldln030_datasheet2}
-        \caption{LDLN030 Pinout: literatura~\cite{stabilizator}}
-        \label{fig:ldln030_datasheet2}
+        \begin{subfigure}[b]{0.49\linewidth}
+            \includegraphics[width=\linewidth]{images/Blokove schema button}
+            \caption{Ovladač}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.49\linewidth}
+            \includegraphics[width=\linewidth]{images/blokove schema zasuvka}
+            \caption{Zásuvka}
+        \end{subfigure}
+        \caption{Diagram komunikace}
+        \label{fig:diagram}
     \end{figure}
-
-
-    \section{Použité protokoly a jiné}
 
     \subsection{HTTP}
     HTTP je protokol pracující na aplikační vrstvě ISO/OSI modelu.
-    Primárně je určen pro pro komunikaci s WWW servery a přenos hypertextových dokumentů ve formátu např. HTML\@.
+    Primárně je určen pro komunikaci s WWW servery a přenos hypertextových dokumentů ve formátu např.~HTML\@.
     Typicky používá port TCP/80.
     Protokol funguje způsobem request/response\footnote{dotaz-odpověď}, kdy klient pošle request na požadovaný dokument.
     Server na to odpoví pomocí několika dat ohledně dotazu a poté požadovaným dokumentem.
@@ -201,23 +229,98 @@
     \subsection{DHCP}
     Dynamic Host Configuration Protocol je protokol z rodiny TCP/IP. Je určen pro automatickou konfiguraci zařízením připojených do dané sítě.
     DHCP server přiděluje zařízením IP adresu, masku sítě, defaultní bránu, adresu DNS serveru a čas, kdy jsou tyto údaje platné.
-    Tato platnost se prodlužuje pokud je na zařízení zapnut DHCP klient.\\
-    Klienti zažádají server o IP adresu tak, že klient po připojení do sítě vyšle broadcastem \textbf{DHCPDISCOVER} paket, na který odpoví DHCP server \textbf{DHCPOFFER} s nabídkou IP adresy.
-    Klient si z nabídek vybere jednu IP adresu a o tu požádá paketem \textbf{DHCPREQUEST}.
-    Server mu vzápětí potvrdí odpovědí \textbf{DHCPACK}, když klient obdrží tuto zprávu, může IP adresu používat.
+    Tato platnost se prodlužuje pokud je na zařízení zapnut DHCP klient.
     DHCP použiji pro připojení mého zařízení do bezdrátové sítě.
+    Předpokládá se, že DHCP protokol bude mít vliv na reakční dobu ovladače.
     %mirova otazka
 
 
-    \chapter{Metodika postupu}
+    \chapter{Metodika postupu měření}
+    \section{Měření připojení k WiFi a odeslání HTTP requestu}
+    \label{sec:wifi}
+    Cílem měření je zjistění rychlostí a spotřeby připojení různými způsoby k přístupovému bodu ,a~následné porovnání případů.
+    Do měření je také započítáné odesílání HTTP requestu zásuvce.
+    Jsou vytvořeny celkem 4 případy akcí:
+    \begin{itemize}
+        \item \textbf{Statická IP adresa} - Zařízení dostane IP adresu, masku a bránu staticky nakonfigurovanou.
+        Na access pointu bude vyplé DHCP a komunikace nebude zabezpečena.
+        \item \textbf{Dynamická IP adresa} - Bude využit DHCP protokol, kde zařízení požádá DHCP server o IP adresu, kterou mu access point přidělí společně s bránou, maskou a~s~časem, kdy tato adresa platí.
+        Při měření nebude přístupový bod zabezpečen.
+        \item \textbf{Zabezpečené připojení} - Připojení na access point bude šifrované pomocí WPA2~-~PSK. DHCP server bude zapnut.
+        Toto je simulace klasického uživatelského používání.
+        \item \textbf{Odeslání HTTP requestu} - Zařízení je připojené k WiFi. Odešle zprávu zásuvce, a pokud dostane zpětnou vazbu od zásuvky, ukončí se činnost.
+    \end{itemize}
+    Ve všech scénářích bude měřeno zařízením \textbf{ANALOG DISCOVERY 2}\footnote{Analog Discovery je osciloskop, který je možno připojit pomocí USB k PC. Také má zabudované funkce jako zdroj napětí a další.} od Digilent.
+    Frekvence procesoru je 160 \si{MHz} a AP je vzdálen 3,5 \si{m} od zásuvky a funkčního vzorku ovladače.
 
+    \subsection{Spotřeba}
+    \label{subsec:wifi-spotreba}
+    Měřen bude úbytek napětí na bočníku\footnote{nízkoohmový rezistor} o velikosti určené u měření.
+    V programu k~měřícímu zařízení je možné stejně jako na osciloskopu vytvořit graf naměřených hodnot v~dané vzorkovací frekvenci.
+    Hodnoty napětí bude převedeno na hodnoty el. proudu pomocí Ohmova zákona $I = \frac{U}{R}$.
+    Amplitudy el. proudu budou sečteny a vyděleny počtem vzorků.
+    Tato operace nám poskytne zjištění průměrného el. proudu ve scénáři.
+    Spotřebu již vypočítáme dle:
+    \[E = U \times \overline{I} \times \frac{t}{3600}\]
+    Čas \textbf{t} v sekundách je možné zjistit v následující kapitole.
+
+    \subsection{Reakční čas}
+    \label{subsec:wifi-reakce}
+    Z naměřeného případu bude vyjmuta klidová část, a rozdíl mezi posledním a prvním vzorkem je poté reakční čas.
+    V případě HTTP requestu nebude počítána část konfigurace WiFi.
+    Společně s měřením jsem nechal vypisovat aktuální stav programu na \textbf{Serial monitor}.
+    Poté se vyjmula část, která dle serial monitoru nepatří do scénáře.
+
+
+    \section{Ustálené stavy}
+    Pro ustálené stavy byly navrhnuty jednoduché programy pro co nejlepší porovnání.
+    Ustálený stav je stav, kdy zařízení čeká na uživatelský podnět, jako např. stisknutí tlačítka.
+    Ideální ustálený stav musí splňovat:
+    \begin{enumerate}
+        \item nejkratší možnou reační dobu
+        \item nejnižší možnou spotřebu pro co nejdelší výdrž baterií
+    \end{enumerate}
+    Reakční doba musí být v rámci uživatelské přívětivosti, tzn. probuzení z tohoto stavu nesmí trvat více jak 1,5 \si{s}.
+    Zároveň se zařízení nesmí vypnout, zdůvodu vybité baterie za~krátkou dobu. Porovnání proběhne mezi třemi scénáři, které mají jiné vlastnosti. \par
+    Vybrány byly následující:
+    \begin{itemize}
+        \item \textbf{Kontinuální režim} - V tomto stavu není žádná funkce ESP vypnuta.
+        \item \textbf{Deep sleep} - ESP vypne vše, až na RTC (kapitola viz.~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}).
+        \item \textbf{Enable button} - ESP je vypnuto pomocí přivedené GROUND na pin ENABLE\@.
+    \end{itemize}
+
+    \subsection{Spotřeba}
+    \label{subsec:ustalene-stavy-spotreba}
+    Cílem měření je nalézt stav s nejmenší spotřebou energie, jelikož finální prvek bude napájen z baterií, je důležité, co nejdelší výdrž.\par
+    Programy, které byly napsány pro měření:
+    \begin{itemize}
+        \item \textbf{Kontinuální režim} - Zařízení má nastavený určitý GPIO na tlačítko a monitoruje zda bylo zmáčknuto.
+        ESP má také otevřenou sériovou komunikaci pro debuggíng.
+        \item \textbf{Deep sleep} - Program zajišťuje probuzení ESP každých 5 \si{s}\footnote{Zvolil jsem 5 s kvůli měření} a odesílání zprávy na~serial monitoring.
+        \item \textbf{Enable button} - Pro měření této situace není třeba specifický program
+    \end{itemize}
+    Pro měření bude použit \textbf{ANALOG DISCOVERY} s jeho funkcí osciloskopu.
+    Na napájení bude přidán bočník o velikosti 0,7 \si{\ohm}, 10,5 \si{\ohm} nebo 4,7 \si{\ohm} \footnote{Je nutné zvolit takový odpor, aby byl úbytek napětí měřitelný.}.
+    Pomocí Ohmova zákona $ I = \frac{U}{R} $ je možné zjistit el. proud. \par
+    Příkon, který bude porovnán vypočítáme dle vztahu:
+    \[P = U \times I\]
+
+    \subsection{Probuzení z ustálených časů}
+    \label{subsec:ustalene-stavy-reakce}
+    Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním HTTP response zpět ovladači zda se povedlo či~nikoliv.\par
+    Reakční doba byla změřena pomocí kamery.
+    K tlačítku jsem připojil LED. Místnost jsem izoloval od světla, a proces jsem natočil ve zpomaleném režimu s \textbf{240 snímky za sekundu}.
+    Pro upravení videa jsem použil trial verzi programu \textbf{Sony Vegas} (\viz{fig:sonyvegaspostup}).
+    Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa.
+    Program poskytuje zobrazení počtu snímku daného úseku.\par
+    Reakční čas je následovně možný zjistit pomocí:
+    \[ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}\]
 
     \section{Tvorba měřecího vzorku}
-    Pro měření jednotlivých scénářů jsem si vytvořil vzorek, který byl určen pouze na měření.
-    Cílem bylo vytvořit vzorek jednoduše modifikovatelný, proto jsem zvolil pájivé pole na základní část.\\
-    Na pájivém poli jsem napájel testovanou ESP platformu společně s přívodem, který byl 5 V. ESP má operační napětí 3,3 V, proto bylo nutné přidat stabilizator LDLN030, který napětí stabilizoval na operačním napětí.
-    Stabilizátor byl zapojen dle doporučeného diagramu v datasheetu.
-    Mezi zdrojem a IN pinem stabilizatoru jsem připojil bočník a vyvedl vodiče aby bylo možné měřit.
+    Pro měření jednotlivých scénářů jsem si vytvořil vzorek, který byl určen pouze na~měření.
+    Cílem bylo vytvořit vzorek jednoduše modifikovatelný, proto jsem zvolil pájivé pole na~základní část.\par
+    Na pájivém poli jsem napájel testovanou ESP platformu společně s přívodem, který byl 5 V. ESP má operační napětí 3,3 V, proto bylo nutné přidat stabilizator LDLN030, který byl zapojen dle doporučeného diagramu.
+    Mezi zdrojem a IN pinem stabilizatoru jsem připojil bočník a~vyvedl vodiče, aby bylo možné měřit ustálené stavy a připojení na bezdrátovou síť.
     \begin{figure}[h!]
         \centering
         \begin{subfigure}[b]{0.4\linewidth}
@@ -230,96 +333,17 @@
         \end{subfigure}
         \caption{Vzorek pro měření na pajivém poli}
         \label{fig:zapojeni_esp32_vzorek}
-    \end{figure}\\
+    \end{figure}\par
     Dále k potřebným GPIO pinům jsem napájel vodiče pro pozdější manipulaci.
-    Pro další specifická zapojení, jako např. tlačítko, jsem použil nepájivé pole, které jsem vždy připojil specificky pro dané měření.\\
+    Pro další specifická zapojení (jako např. tlačítko) jsem použil nepájivé pole, které jsem vždy připojil specificky pro dané měření.
 
 
-    \section{Měření připojení k WiFi a odeslání HTTP requestu}
-    \label{sec:wifi}
-    Cílem měření je zjistění rychlostí a spotřeby připojení různými způsoby k přístupovému bodu a~následné porovnání případů.
-    Do měření je také započítáné odesílání HTTP requestu zásuvce.
-    Jsou vytvořeny celkem 4 případy akcí:
-    \begin{itemize}
-        \item \textbf{statická IP adresa} - Zařízení dostane IP adresu, masku a bránu staticky nakonfigurovanou.
-        Na access pointu bude vyplé DHCP a komunikace nebude zabezpečena.
-        \item \textbf{dynamická IP adresa} - Bude využit DHCP protokol, kde zařízení požádá DHCP server o IP adresu, kterou mu access point přidělí společně s bránou, maskou a~s~časem, kdy tato adresa platí.
-        Při měření nebude přístupový bod zabezpečen.
-        \item \textbf{Zabezpečené připojení} - Připojení na access point bude šifrované pomocí WPA2~-~PSK. DHCP server bude zapnut.
-        Toto je simulace klasického uživatelského používání.
-        \item \textbf{Odeslání HTTP requestu} - Zařízení je připojené k WiFi. Odešle zprávu zásuvce a pokud dostane zpětnou vazbu od zásuvky, ukončí se činnost.
-    \end{itemize}
-    Ve všech scénářích bude měřeno zařízením \textbf{ANALOG DISCOVERY 2} od Digilent.
-    Frekvence procesoru je 160 \si{MHz} a AP je vzdálen 3,5 \si{m} od zásuvky a funkčního vzorku ovladače.
-
-    \subsection{Spotřeba}
-    \label{subsec:wifi-spotreba}
-    Měřen bude úbytek napětí na bočníku\footnote{nízkoohmový rezistor} o velikosti určené u měření.
-    V programu k měřícímu zařízení je možné stejně jako na osciloskopu vytvořit graf naměřených hodnot v dané vzorkovací frekvenci.
-    Hodnoty napětí bude převedeno na hodnoty el. proudu pomocí Ohmova zákona $I = \frac{U}{R}$.
-    Amplitudy el. proudu budou sečteny a vyděleny počtem vzorků.
-    Tato operace nám poskytne zjištění průměrného el. proudu ve scénáři.
-    Spotřebu již vypočítáme dle:
-    \[E = U \times \overline{I} \times \frac{t}{3600}\]
-    Čas \textbf{t} v sekundách je možné zjistit v následující kapitole.
-
-    \subsection{Reakční čas}
-    \label{subsec:wifi-reakce}
-    Z naměřeného případu bude vyjmuta klidová část a rozdíl mezi posledním a prvním vzorkem je poté reakční čas.
-    V případě HTTP requestu nebude počítána část konfigurace WiFi.
-    Společně s měřením byl na \textbf{serial monitor} odesílány zprávy, kde se program nachází.
-    Poté se vyjmula část, která dle serial monitoru nepatří do scénáře.
-
-
-    \section{Ustálené stavy}
-    Pro ustálené stavy byly navrhnuty jednoduché programy pro co nejlepší porovnání.
-    Ustálený stav je stav, kdy zařízení čeká na uživatelský podnět jako např. stisknutí tlačítka.
-    Ideální ustálený stav musí splňovat:
-    \begin{enumerate}
-        \item nejkratší možnou reační dobu
-        \item nejnižší možnou spotřebu pro co nejdelší výdrž baterií
-    \end{enumerate}
-    Reakční doba musí být v rámci uživatelské přívětivosti tzn. probuzení z tohoto stavu nesmí trvat více jak 1,5 \si{s}.
-    Zároveň se zařízení nesmí vypnout zdůvodu vybité baterie za krátkou dobu. Porovnání proběhne mezi třemi scénáři, které mají jiné vlastnosti.
-    Vybrány byly následující:
-    \begin{itemize}
-        \item \textbf{Kontinuální režim} - V tomto stavu není žádná funkce ESP vypnuta.
-        \item \textbf{Deep sleep} - ESP vypne vše až na RTC (kapitola viz.~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}).
-        \item \textbf{Enable button} - ESP je vypnuto pomocí přivedené GROUND na pin ENABLE\@.
-    \end{itemize}
-
-    \subsection{Spotřeba}
-    \label{subsec:ustalene-stavy-spotreba}
-    Cílem měření je nalézt stav s nejmenší spotřebou energie, jelikož finální prvek bude napájen z baterií je důležité co nejdelší výdrž.
-    Programy, které byly napsány pro měření:\\
-    \begin{itemize}
-        \item \textbf{Kontinuální režim} - Zařízení má nastavený určitý GPIO na tlačítko a monitoruje zda bylo zmáčknuto.
-        ESP také má otevřenou sériovou komunikaci.
-        \item \textbf{Deep sleep} - Program zajišťuje probuzení ESP každých 5 \si{s} a odesílání zprávy na serial monitoring.
-        \item \textbf{Enable button} - Pro měření této situace není třeba specifický program
-    \end{itemize}
-    Pro měření bude použit \textbf{ANALOG DISCOVERY} s jeho funkcí osciloskopu.
-    Na napájení bude přidán bočník o velikosti 0,7 \si{\ohm}, 10,5 \si{\ohm} nebo 4,7 \si{\ohm} \footnote{Je nutné zvolit takový odpor, aby byl úbytek napětí měřitelný.}.
-    Pomocí Ohmova zákona $ I = \frac{U}{R} $ je možné zjistit el. proud.
-    Příkon, který bude porovnán vypočítáme dle vztahu:
-    \[P = U \times I\]
-
-    \subsection{Probuzení z ustálených časů}
-    \label{subsec:ustalene-stavy-reakce}
-    Ovladač, který je již připojen k WiFi, po stisknutí tlačítka odešle HTTP request zásuvce, která zareaguje přepnutím stavu a odesláním zprávy zpět ovladači zda se povedlo či nikoliv.\\
-    Reakční doba byla změřena pomocí kamery.
-    K tlačítku jsem připojil LED, místnost jsem izoloval od světla a zmáčknutí tlačítka a reakci zásuvky jsem natočil ve zpomaleném režimu s \textbf{240 snímky za sekundu}.
-    Pro upravení videa jsem použil trial verzi programu \textbf{Sony Vegas} (\viz{fig:sonyvegaspostup}).
-    Našel jsem rozsvícení LED tlačítka a rozsvícení LED zásuvky ve videu a ustřihl jsem tento úsek od zbytku videa.
-    Program poskytuje zobrazení počtu snímku daného úseku.
-    Reakční čas je následovně možný zjistit pomocí:
-    \[ t = \frac{\textrm{Počet snímků úseku}}{\textrm{Počet snímků za sekundu}}\]
 
     % MĚŘENÍ
 
 
-    \chapter{Měření spotřeby a času}
-    Všechny výpočty jsou k nalezení v adresáři Měření v souborech excel společně s použitými programy a naměřenými hodnotami v grafech.
+    \chapter{Měření parametrů na měřícím vzorku}
+    Všechny výpočty jsou k nalezení v adresáři Měření na githubu\footnote{Escape96X/MP\_NETIO\_BUTTON}. V souborech excel společně s~použitými programy a naměřenými hodnotami v grafech.
 
 
     \section{ESP8266}
@@ -327,16 +351,14 @@
     \subsection{Spotřeba a reakční doba ustálených stavů}
 
     \subsubsection{Spotřeba}
-    Spotřeba jednotlivých scénářů (\viz{fig:esp8266_waiting}) je měřena dle metodiky~\ref{subsec:ustalene-stavy-spotreba} na straně~\pageref{subsec:ustalene-stavy-spotreba}.
-    Bočník pro měření úbytku napětí byl o velikosti 4,7 \si{\ohm}. \\
-    Situace \textbf{enable button} nebyla možná změřit zařízením \textbf{ANALOG DISCOVERY 2} ani na bočníku o velikosti 0,7 \si{\ohm} kvůli velice nízkému úbytku napětí, který se v datasheetu WT8266 pohybuje v jednotkách \si{\micro A}.
-    V tomto případě pro výpočty je použita hodnota, kterou určil výrobce v datasheetu.
-    \begin{table}[h]
+    Spotřeba jednotlivých scénářů (\viz{fig:esp8266_waiting} a tabulka~\ref{tab:esp8266-klidove-rezimy-spotreba}), je měřena dle metodiky~\ref{subsec:ustalene-stavy-spotreba} na straně~\pageref{subsec:ustalene-stavy-spotreba}.
+    Vzhledem k předpokládaným měřeným proudům, bočník pro měření úbytku napětí byl o velikosti 4,7 \si{\ohm}. \par
+    \begin{table}[h!]
         \centering
         \caption{ESP8266 porovnání spotřeby ustálených stavů}
         \begin{tabular}{||l|r r r||}
             \hline
-            Ustálený stav & U($V$) & I($A$)                  & P($W$)                 \\
+            Ustálený stav & U[$V$] & I[$A$]                  & P[$W$]                \\
             \hline
             Kontinuální   & $3,3$  & $67,66 \times 10^{-3}$  & $223,3 \times 10^{-3}$ \\
             Deep sleep    & $3,3$  & $138,20 \times 10^{-6}$ & $460,0 \times 10^{-6}$ \\
@@ -345,9 +367,12 @@
         \end{tabular}
         \label{tab:esp8266-klidove-rezimy-spotreba}
     \end{table}
+    Situace \textbf{enable button} nebyla možná změřit zařízením \textbf{ANALOG DISCOVERY 2} ani na bočníku o velikosti 10 \si{\ohm}, kvůli velice nízkému úbytku napětí, který se v datasheetu WT8266 pohybuje v jednotkách \si{\micro A}.\par
+    V tomto případě pro výpočty je použita hodnota, kterou určil výrobce v datasheetu.
     Dle tabulky~\ref{tab:esp8266-klidove-rezimy-spotreba} je možné vidět jednotlivé situace.
-    Největším příkonem disponuje kontinuální ustálený stav z důvodu běžícího programu na kontrolu interakce.
-    Nejmenší spotřeba je naopak vypnuté ESP přes enable pin. \\
+    Největším příkonem disponuje kontinuální ustálený stav, z důvodu běžícího programu na kontrolu interakce.
+    Nejmenší spotřeba je naopak vypnuté ESP přes enable pin.
+
     \begin{figure}[h!]
         \centering
         \begin{subfigure}[b]{0.6\linewidth}
@@ -363,13 +388,12 @@
     \end{figure}
 
     \subsubsection{Reakční čas}
-    Reakční čas byl měřen dle metodiky~\ref{subsec:ustalene-stavy-reakce} na straně~\pageref{subsec:ustalene-stavy-reakce}.
-    \begin{table}[]
+    \begin{table}[h!]
         \centering
         \caption{ESP8266 porovnání reakčního času ustálených stavů}
         \begin{tabular}{||l|r||}
             \hline
-            Ustálený stav & t(ms)          \\
+            Ustálený stav & t[ms]          \\
             \hline
             Kontinuální   & \textbf{196}   \\
             Deep sleep    & \textbf{983}   \\
@@ -378,13 +402,15 @@
         \end{tabular}
         \label{tab:esp8266-klidove-rezimy-cas}
     \end{table}
-    Nejrychlejší ustálený stav je kontinuální, kvůli připravenosti na interakci \viztab{ESP8266 klidové režimy porovnani}.
-    Nejdéle trvá vypnuté ESP, protože je nutné ESP zapnout, nastavit konfiguraci a připojit na WiFi, zatím co zapnuté ESP je již připraveno.
+    Reakční čas byl měřen dle metodiky~\ref{subsec:ustalene-stavy-reakce} na straně~\pageref{subsec:ustalene-stavy-reakce}.
+    Nejrychlejší ustálený stav je kontinuální, kvůli připravenosti na interakci (\viztab{tab:esp8266-klidove-rezimy-cas}).
+    Nejdéle trvá vypnuté ESP,
+    protože je nutné ESP zapnout, nastavit konfiguraci a připojit na WiFi, zatímco zapnuté ESP je již připraveno.
 
-    \subsubsection{Porovnání}
-    Pro porovnání spotřeb budeme předpokládat, že zařízení je napájeno 3$\times$ NiZn akumulátorem typu AA, které společně mají kapacitu \textbf{3750 mAh}, což je možné prevést na energii vztahem $E = U_{aku}\times \textrm{kapacita}$.
-    a dále vztahem\footnote{$ t_{p}$ - provoz v ustáleném režimu, $ E_{bat}$ - energie 3$\times$ AA akumulátorů} $ t_{p} = \frac{E_{bat}}{P}$ zjistit provozní čas (\viztab{ESP8266 klidové režimy porovnani}).
-    Zařízení není schopno dosáhnout této výdrže protože pokud napětí klesne pod 3 V, stabilizátor napájení odpojí.
+    \subsubsection{Výdrž baterie}
+    Pro porovnání spotřeb budeme předpokládat, že zařízení je napájeno 3$\times$ NiZn akumulátorem typu AA, které společně mají kapacitu \textbf{3 750 mAh}, což je možné prevést na energii vztahem $E = U_{aku}\times \textrm{KAPACITA BATERIE}$,
+    a dále vztahem\footnote{$ t_{p}$ - provoz v ustáleném režimu, $ E_{bat}$ - energie 3$\times$ AA akumulátorů} $ t_{p} = \frac{E_{bat}}{P}$ zjistit provozní čas (\viztab{tab:esp8266-klidove-rezimy-porovnani}).\par
+    Zařízení není schopno dosáhnout této výdrže, protože pokud napětí klesne pod 3 V, stabilizátor napájení odpojí.
 
     \begin{table}[h!]
         \centering
@@ -400,17 +426,17 @@
         \end{tabular}
         \label{tab:esp8266-klidove-rezimy-porovnani}
     \end{table}
-    Kontinuální stav, zatímco má výdrž v rámci několika dní, reakční čas trvá necelých 200~ms.
+    Kontinuální stav, má výdrž v rámci několika dní, reakční čas trvá necelých 200~ms.
     Enable button situace naprosto opačná.
     Reakční čas je pro uživatele dlouhý, ale výdrž v~tomto stavu bez interakce by se pohybovala v letech.
-    Dobrý kompromis je situace deep sleep, kdy zařízení reagovalo vždy do jedné sekundy a teoretická výdrž je v jednotkách let.\\
+    Dobrý kompromis je situace deep sleep, kdy zařízení reagovalo vždy do jedné sekundy a teoretická výdrž je v~jednotkách~let.
 
     \subsection{Připojení k WiFi a odeslání HTTP requestu}
     Měření proběhlo dle metodiky~\ref{sec:wifi} na straně~\pageref{sec:wifi} na bočníku 0,7 \si{\ohm}.
     Z tabulky~\ref{tab:esp8266-spotreba-operaci} je možné vidět, že \textbf{příkon P} je téměř totožný v každé operaci.
-    Největší rozdíl, který ovlivňuje spotřebu, je čas, za který se úkon vykoná.
+    Největší rozdíl, který ovlivňuje spotřebu, je čas, za který se operace vykoná.
     Jelikož \textbf{připojení pomocí statické IP adresy} trvalo nejkratší dobu, má také nejmenší spotřebu energie.
-    Samotná \textbf{komunikace HTTP} má nejnižší spotřebu ze všech definovaných operací a jeden cyklus operace spotřebuje zanedbatelné množství energie.
+    Samotná \textbf{komunikace HTTP} má nejnižší spotřebu ze všech definovaných operací. Jeden cyklus operace spotřebuje zanedbatelné množství energie vůči připojení do sítě.
     \newpage
 
     \begin{figure}[h!]
@@ -439,13 +465,14 @@
         \label{fig:esp8266_http}
     \end{figure}
 
+    \subsubsection{Celkové shrnutí spotřeby a času}
 
     \begin{table}[h]
         \centering
         \caption{ESP8266 Spotřeba operací}
         \begin{tabular}{||l| r r r r |r||}
             \hline
-            Operace               & U(V) & I[$mA$] & t[$ms$] & P[$mW$] & \textbf{E}[$\mu Wh$] \\
+            Operace               & U[V] & I[$mA$] & t[$ms$] & P[$mW$] & \textbf{E}[$\mu Wh$] \\
             \hline
             \hline
             Dynamické připojení   & 3,3  & 89,5    & 5 300  & 295     & \textbf{435}         \\
@@ -464,7 +491,7 @@
 
     \subsubsection{Spotřeba}
     Spotřeba jednotlivých scénářů je měřena dle metodiky~\ref{subsec:ustalene-stavy-spotreba} na straně~\pageref{subsec:ustalene-stavy-spotreba}.
-    Bočník pro měření úbytku napětí byl o velikosti 10,5 \si{\ohm}.\\
+    Bočník pro měření úbytku napětí byl o velikosti 10,5 \si{\ohm}.\par
     \begin{figure}[h!]
         \centering
         \begin{subfigure}[b]{0.6\linewidth}
@@ -478,7 +505,7 @@
         \caption{ESP32 grafy ustálených stavů}
         \label{fig:esp32-waiting}
     \end{figure}
-    Ustálený stav enable pin nebyl naměřen zařízením Analog Discovery 2 z důvodu velmi nízkému úbytku napětí na bočníku.
+    Ustálený stav enable pin nebyl naměřen zařízením Analog Discovery 2, z důvodu velmi nízkému úbytku napětí na bočníku.
     K porovnání bude použita hodnota z datasheetu.
     \begin{table}[h!]
         \centering
@@ -498,7 +525,7 @@
     \subsubsection{Reakční čas}
     Získání reakčních časů jednotlivých možností zapojení ESP32 proběhlo způsobem dle~\ref{subsec:ustalene-stavy-spotreba} na straně~\pageref{subsec:ustalene-stavy-spotreba}.
     Tabulka~\ref{tab:esp32-klidove-rezimy-cas} ukazuje, že nejdéle trval ustálený režim v podobě vypnutého ESP32 přes enable pin a nejkratší dobu trval kontinuální ustálený stav.
-    Kompromis mezi těmito dvěma stavy byl deep sleep ustálený stav, který se pohyboval okolo sekundy.
+    Kompromis mezi těmito dvěma stavy byl deep sleep stav, který se pohyboval okolo sekundy.
 
     \begin{table}[h]
         \centering
@@ -514,9 +541,52 @@
         \end{tabular}
         \label{tab:esp32-klidove-rezimy-cas}
     \end{table}
+    \subsubsection{Výdrž baterie}
+    Stejně jako v případě ESP8266 budeme předpokládat, že ovladač bude napájen $3 \times$ NiZn akumulátorem typu AA, které mají celkovou kapacitu \textbf{3 750 mAh}. Pro snížení napětí využiji stabilizator, který stabilizuje napětí na 3,3 V\@.
+
+    \begin{table}[h!]
+        \centering
+        \caption{ESP32 porovnání ustálených stavů}
+        \begin{tabular}{||l|r r r||}
+            \hline
+            Ustálený stav & P[$W$]                 & t$_{p}$[$h$]  & t[$ms$] \\
+            \hline
+            Kontinuální   & $189,4 \times 10^{-3}$ & $89,1$        & $188$   \\
+            Deep sleep    & $838,0 \times 10^{-6}$ & $36 684,7$    & $1 071$   \\
+            Enable button & $3,3\times 10^{-6}$    & $1 704 545,5$ & $2 333$ \\
+            \hline
+        \end{tabular}
+        \label{tab:esp32-klidove-rezimy-porovnani}
+    \end{table}\par
+
 
     \subsection{Připojení k WiFi a odeslání HTTP requestu}
     Měření proběhlo podle metodiky~\ref{sec:wifi} na straně~\pageref{sec:wifi}.
+    Z tabulky~\ref{tab:esp32-spotreba-operaci} je možné vydedukovat, že připojení k WiFi síti trvá přibližně stejně dlouho.
+    Připojení k zabezpečené síti pomocí DHCP je kratší cca o 0,5 s jelikož zařízení se již nachází v DHCP listu.
+    \begin{figure}[!ht]
+        \centering
+        \begin{subfigure}[b]{0.55\linewidth}
+            \includegraphics[width=\linewidth]{images/ESP32_network_dynamic}
+            \caption{Dynamická IP}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\linewidth}
+            \includegraphics[width=\linewidth]{images/ESP32_network_static}
+            \caption{Statická IP}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.55\linewidth}
+            \includegraphics[width=\linewidth]{images/ESP32_network_static_security}
+            \caption{Zabezpečené, dynamická IP}
+        \end{subfigure}
+        \caption{ESP32 grafy WiFi situací}
+        \label{fig:esp32_network}
+    \end{figure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=10cm]{images/ESP32_http}
+        \caption{ESP32 graf HTTP requestu}
+        \label{fig:esp32_http}
+    \end{figure}
     \begin{table}[h]
         \centering
         \caption{ESP32 Spotřeba operací}
@@ -533,41 +603,17 @@
         \end{tabular}
         \label{tab:esp32-spotreba-operaci}
     \end{table}
-    \begin{figure}[h!]
-        \centering
-        \includegraphics[width=12cm]{images/ESP32_http}
-        \caption{ESP83 graf HTTP requestu}
-        \label{fig:esp32_http}
-    \end{figure}
 
-    \begin{figure}[!ht]
-    \centering
-    \begin{subfigure}[b]{0.55\linewidth}
-        \includegraphics[width=\linewidth]{images/ESP32_network_dynamic}
-        \caption{Dynamická IP}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.55\linewidth}
-        \includegraphics[width=\linewidth]{images/ESP32_network_static}
-        \caption{Statická IP}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.55\linewidth}
-        \includegraphics[width=\linewidth]{images/ESP32_network_static_security}
-        \caption{Zabezpečené, dynamická IP}
-    \end{subfigure}
-    \caption{ESP32 grafy WiFi situací}
-    \label{fig:esp32_network}
-\end{figure}
-    \newpage
 
     \section{Porovnání získaných výsledků}
 
     \subsection{Ustálené stavy}
-    Z tabulky~\ref{tab:porovnani-klidove-rezimy-cas} je možné vidět jak si platformy vedly proti sobě. \\
-    Pokud ovladač neustále běží s připojenou WiFi čas reakce je velmi rychlý a v obou případech uživatel nepostřehne prodlevu mezi aktivací ovladače a sepnutí relé v zásuvce.
-    Časy mezi platformami se liší minimálně a rozdíl se pohybuje v rámci milisekund, přesto je ESP32 lehce rychlejší. \\
+    Z tabulky~\ref{tab:porovnani-klidove-rezimy-cas} znázorňuje porovnání platforem.
+    Pokud ovladač neustále běží s připojenou WiFi, reakční čas je velice krátký, a v obou případech uživatel nepostřehne prodlevu mezi aktivací ovladače a sepnutí relé v zásuvce.
+    Časy mezi platformami se liší minimálně, a rozdíl se pohybuje v rámci milisekund, přesto je ESP32 lehce rychlejší. \par
     Zapnutí vypnutého ESP, následné načtení a připojení k WiFi je nejdelší ze všech scénářů, který trvá několik sekund.
     Pro uživatele je velice pomalé a v realném produktu dle mého názoru zcela nepoužitelné.
-    I přesto je ESP32 je mnohem rychlejší a to zhruba o 1 \si{s}.
+    I přesto ESP32 je mnohem rychlejší, a to zhruba o~1~\si{s}.
     \begin{table}[h!]
         \centering
         \caption{Porovnání reakčních časů ústálených stavů platforem}
@@ -588,20 +634,20 @@
     Díky tomu je schopno relativně rychle zareagovat na budící signál.
     Reakce obou ovladačů cca 1 \si{s}.
     Zde vede ESP8266, které je zhruba o 100 \si{ms} rychlejší.
-    Je to z důvodu komplikovanější struktury ESP32.
-    Z tabulky~\ref{tab:porovnani-klidove-rezimy-spotreba} je možné porovnat elektrický proud a příkon jednotlivých ustálených stavů napříč platformami.
+    Je to zřejmě z~důvodu komplikovanější struktury ESP32.\par
+    Z~tabulky~\ref{tab:porovnani-klidove-rezimy-spotreba} je možné porovnat elektrický proud a příkon jednotlivých ustálených stavů napříč platformami.
     Dle měření je kontinuální režim úspornější v ESP32.
     Větší rozdíl je možné nalézt během Deep sleep stavu.
     ESP8266 a ESP32 je liší skoro o dvojnásobek i přesto, že podmínky byly stejné.
     Stále se ale pohybujeme v řádech mikroWatt.
-    Enable button stav kvůli citlivosti měřícího zařízení bylo možné porovnat pouze datasheet hodnoty.
-    Zde je úspornější ESP32 ale stále jsou tyto hodnoty velice nízké.
+    Enable button ustálený stav nebylo možné naměřit pomocí Analog Discovery 2, proto jsem využíp hodnoty uvedené výrobcem.
+    Zde je úspornější ESP32, ale stále jsou tyto hodnoty velice nízké.
     \begin{table}[h!]
         \centering
         \caption{Porovnání spotřeby ústálených stavů platforem}
         \begin{tabular}{||l|r r|r r||}
             \hline
-            Ustálený stav & \multicolumn{2}{C|}{I[A]} & \multicolumn{2}{C||}{P[W]}   \\
+            Ustálený stav & \multicolumn{2}{c|}{I[A]} & \multicolumn{2}{C||}{P[W]}   \\
                           & ESP8266        & ESP32   & ESP8266 & ESP32 \\
             \hline
             Kontinuální   & $67,66 \times 10^{-3}$   & $57,39 \times 10^{-3}$ & $233,3 \times 10^{-3}$& $189,4 \times 10^{-3}$ \\
@@ -610,8 +656,8 @@
             \hline
         \end{tabular}
         \label{tab:porovnani-klidove-rezimy-spotreba}
-    \end{table}\\
-    Z hlediska poměru reakčního času a spotřeby je nejlepší ustálený stav deep sleep, jelikož reakční čas je přijatelný pro uživatele a díky nízkému příkonu zaření vydržet přijatelnou dobu.
+    \end{table}\par
+    Z hlediska poměru reakčního času a spotřeby, je nejlepší ustálený stav deep sleep, jelikož reakční čas je přijatelný pro uživatele, a díky nízkému příkonu zaření vydržet přijatelnou dobu.
     K sestavení funkčního vzorku proto bude použit tento ustálený stav pro obě platformy.
     \subsection{WiFi a HTTP}
     \begin{table}[h]
@@ -633,7 +679,8 @@
     \end{table}\\
     Z hlediska připojení do WiFi sítě jednotlivými možnostmi lepší novější model ESP, který ve všech situacích ve výhodě.
     Menší reakční čas vede i k menší spotřebované energii platformy.
-    Situace zabezpečené připojení trvá kratší dobu než dynamické z důvodu, že je to simulace uživatelského připojení a zařízení se nachází v DHCP tabulce s rezervovanou IP adresou.
+    Situace zabezpečené připojení trvá kratší dobu než dynamické z důvodu, že je to simulace uživatelského připojení a zařízení se nachází v DHCP tabulce s rezervovanou IP adresou.\par
+    V ESP8266 je nejlepší varianta se statickou IP adresu bez DHCP z hlediska rychlosti, ale z hlediska uživatelské přívětivosti je lepší připojení pomocí DHCP. U ESP32 je varianta statická a dynamická přibližně stejná tzn. varianta s DHCP připojením je vhodnější kvůli uživatelům, kteří nemají znalosti s počítačovými sítěmi.
 
 
 
@@ -646,23 +693,22 @@
     \subsection{ESP8266}
     Jak jsem již zmínil v předchozí kapitole, na základě měření jsem zvolil ustálený stav deep sleep.
     Podrobnosti se nachází v sekci~\ref{subsec:deep-sleep} na straně~\pageref{subsec:deep-sleep}.
-    ESP8266 je možné probudit tak, že se na pin RST přivede na krátkou dobu GROUND a tím se zařízení resetuje.
-    Nicméně cílem je sestavit zařízení s dvěmi ovládacími tlačítky, které musíme rozpoznávat mezi sebou aby byla sepnuta správná zásuvka.
-    Takže tlačítka jsem připojil na RST přes kondenzátor a na GPIO 12 a 14.
-    Kondenzátor sloužil k vytvoření záporné špičky na krátkou dobu tzn. zařízení se vyresetovalo, ale uživatel tlačítko stále držel a stav se mohl zaznamenat na příslušném pinu.
-    Testováním různých velikostí kondenzátorů jsem dospěl k velikosti 3,3 \si{\micro F} \viz{fig:3.3uf-esp8266}.
+    ESP8266 je možné probudit tak, že se na pin RST přivede na krátkou dobu GROUND, a tím se zařízení resetuje.
+    Nicméně cílem je sestavit zařízení s dvěmi ovládacími tlačítky, které musíme rozpoznávat mezi sebou, aby byla sepnuta správná zásuvka.\par
+    Takže tlačítka jsem připojil na RST přes kondenzátor a na vstupy rozlišení tlačítek. RST je také připojen na pullup rezistor.
+    Kondenzátor sloužil k vytvoření záporné špičky na krátkou dobu, tzn. aby se zařízení se vyresetovalo. Ale uživatel tlačítko stále držel a~stav se mohl zaznamenat na příslušném pinu.
+    Testováním různých velikostí kondenzátorů jsem dospěl k~velikosti 3,3~\si{\micro F}. Na obrázku~\ref{fig:3.3uf-esp8266} je možné vidět realizovaný obvod.\par
     Dosáhl jsem toho, že se při stisku jakéhokoliv spínače přivedl GROUND na oba GPIO piny.
-    Abych tomuto zamezil, mezi každý spínač a kondenzátor jsem vložil diodu tak, aby el. proud nemohl protékat druhým pinem. \\
-    Abych mohl napájet ESP baterií musel přivést napětí 3,3 \si{V}, čehož docílil třemi bateriemi seriově zapojené a stabilizátorem, který mi stabilizuje 4,5\si{V} napětí na 3,3 \si{V}.
-    Stabilizátor je zapojen dle doporučení uvedené v datasheetu produktu .\\
-    Do zapojení, \viz{fig:ESP8266_DPS}, jsem také počítal s programováním, které bude umožněno jumperem na pinu GPIO 0 přepnu ESP do UART boot módu\footnote{Je to mód, kdy ESP zapisuje do flash paměti program ze sériové komunikace s počítačem} a připojení na piny TXD a RXD\@. \\
-    Pro porovnání deep sleepu s enable button ustáleným stavem.
-    zabudoval jsem do finálního vzorku možnost přepnout mezi těmito dvěma módy.
+    Abych tomuto zamezil, mezi každý spínač a kondenzátor jsem vložil diodu tak, aby el. proud nemohl protékat druhým pinem. \par
+    Pro zajištění stabilního napájení ESP 3,3 V z baterie (3x 1,5 V) jsem použil stabilizátor, který mi stabilizuje 4,5\si{V} napětí na 3,3 \si{V}.
+    Stabilizátor je zapojen dle doporučení uvedené v datasheetu produktu.\par
+    Do zapojení (\viz{fig:ESP8266_DPS}), jsem také počítal s programováním. To bude umožněno jumperem na pinu GPIO 0, který přepne ESP do UART boot módu\footnote{Je to mód, kdy ESP zapisuje do flash paměti program ze sériové komunikace s počítačem} \par
+    Pro možnost porovnání deep sleep mode s enable button ustáleným stavem, vytvořil jsem finální vzorek s možností přepínání mezi těmito módy.
     Pro zapnutí enable button stavu, přehodíme jumpery do druhé polohy.
-    Tlačítka místo propojení přes diody s RST se propojí s tranzistory.
+    Tlačítka místo propojení přes diody s RST se propojí s~tranzistory.
     Tranzistor má za úkol přepínat enable pin z 0 V na 3,3 V a tím aktivovat činnost ovladače.
     Tranzistory jsou typu P mosfet, tzn. pokud uzemním gate, přivedu napětí na enable.
-    To způsobí, že ESP se aktivuje nastaví GPIO 4 na HIGH, což z něho udělá přídržný pin, který je také připojen na enable pin. Dokud je GPIO 4 na HIGH hodnotě, ESP zůstane zaplé.
+    To způsobí, že ESP se aktivuje nastaví GPIO 4 na HIGH, což z~něho udělá přídržný pin, který je také připojen na enable pin. Dokud je GPIO 4 na HIGH hodnotě, ESP zůstane zaplé.
     \begin{figure}[h]
         \centering
         \includegraphics[width=12cm]{images/esp8266_schema}
@@ -673,44 +719,177 @@
     Program nahraný v ESP8266 při zapnutí nejprve nastaví přídržný pin pro případ, že uživatel testuje enable button ustálený stav.
     Poté nastaví piny na čtení pro identifikaci správného zmáčknutého tlačítka pro sepnutí správné zásuvky.
     Program je ošetřen proti krátkému zmáčknutí tlačítek, kdy se ozve pípnutí bzučáku a rozsvícení LED\@.
-
+    \subsection{ESP32}
+    Na platfomě ESP32 můžeme narozdíl od ESP8266 určit, které piny chceme použít jako probouzecí a můžeme jich nastavit i více. Díky tomu můžeme pouze pomocí programu zjistit důvod probuzení a rozpoznat, s kterým tlačítkem uživatel provedl interakci. \par
+    Jelikož chci vytvořit možnost porovnání enable button stav a deep sleep stav, tak do obvodu přidám jumpery pro přepnutí do enable button stavu.
+    Z tlačítek vede vodič do enable pinu přes diodu, aby mohlo být rozpoznáno, které tlačítko bylo zmáčknuto.\par
+    Jakmile se na enable pin přivede Vcc, ESP nastaví pin GPIO 25 na HIGH, a zůstane tak zapnuté.
+    Až dokončí celý proces nastaví GPIO 26 na LOW, a tím se ESP vypne.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=12cm]{images/esp32_schema}
+        \caption{ESP32 schéma zapojení}
+        \label{fig:ESP32_DPS}
+    \end{figure}
+    \subsubsection{Princip programu}
+    Ovladač nejprve zjistí, jaký tzv. reset reason zapl ESP. Pokud se reset reason nerovná externímu probuzení, a důvod je jiný (např. software reset nebo power on), tak interakci ignoruje a uvede se zpět do deep sleep stavu. Jestliže reset reason je externí probuzení, ovladač rozpozná o které se jedná a nastaví boolean proměnnou na true nebo na false\footnote{True je zásuvka číslo 1 a false je zásuvka číslo 2}. Ovladač ihned poté zkontroluje stav zmáčknutých pinů a v případě, že obě tlačítka jsou zmáčknuta přepne se ovladač do konfiguračního módu. Pokud ne, tak proběhne HTTP request.
     \section{Tvorba uživatelského rozhraní}
-    Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE.\\
+    Veškerý kód byl napsán v textovém editoru visual studio code s pluginem Platform.io, které usnadňuje některé metody používané v Arduino IDE\@.
     Cílem webové stránky je připojit ovladač do příslušné WiFi sítě, připojit až dvě zásuvky k ovladači a popřípadě upravit samotnou konfiguraci.
 
+    \subsection{Proces interakce tlačítka}
+    Tlačítko komunikuje se zásuvkou pomocí HTTP, což znamená, že musíme znát IP adresu zásuvky.
+    Pokud se ovladač nenachází v konfiguračním módu, interakcí vyvoláme reakci zásuvky dle nastavení.
+    Toto nastavení lze změnit ve zmíněném konfiguračním módu.
+    Po stisknutí tlačítka ovladač rozpozná, které tlačítko bylo zmáčknuto a dle toho vybere z EEPROM paměti příslušnou IP adresu zásuvky\footnote{IP adresu nastaví uživatel na webové stránce a ta se uloží do EEPROM}, a tu dosadí to stringu tak, aby se utvořil řetězec \textbf{http://ip\_adresa/netio.json} (viz. Úryvek kódu~1 na straně~\pageref{listing:http}).
     \subsection{Nastavení webserveru}
-    Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na IP adresu ESP pomocí svého internetového prohlížeče.
-    ESP webserver se zapne pouze pokud uživatel vyžádá stisknutím obou interačních tlačítek najednou.
-    Za podmínky, že ovladač není připojen k WiFi síti, vytvoří access point, kde je možné provést konfigura
-    ci.
-    Pokud je ovladač připojen k WiFi, může přistoupit k webové stránce pomocí IP adresy přidělenou přístupovým bodem.
+    Pro možnost nastavení ESP jsem vybral metodu konfigurace přes webserver, kdy uživatel se připojí na přístupový bod ESP na IP adresu\footnote{Defaultní IP adresa ESP zařízení je 192.168.4.1} pomocí svého internetového prohlížeče.
+    ESP webserver se zapne, pouze pokud uživatel vyžádá stisknutím obou interačních tlačítek najednou.
+    Za podmínky, že ovladač není připojen k WiFi síti, vytvoří access point, kde je možné provést konfiguraci.\par
+    Pokud je ovladač připojen k WiFi, není nutné použít AP ovladače, ale může přistoupit k webové stránce pomocí IP adresy přidělenou přístupovým bodem.
 
     \subsection{Připojení k WiFi}
-    Jakmile uživatel přistoupí na webovou stránku \viz{fig:website}, javascript požádá webserver o scannedWiFi.json.
+    Jakmile uživatel přistoupí na webovou stránku (\viz{fig:website}), javascript požádá webserver o scannedWiFi.json.
     ESP poté naskenuje sítě, které se nachazí v okolí.
     Tyto sítě se uloží do pole tak, v jakém pořadí byly nalezeny.
-    Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string viz\ Uryvek kódu 1, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv.
-    RSSI jsem před zabalením do JSON pole přepočítal na sílu signálu v procentech.
+    Pro zobrazení naskenovaných sítí na webových stránkách se vytvoří JSON string viz. Úryvek kódu 2, který obsahuje počet naskenovaných sítí, pole s SSID\footnote{Identifikátor bezdrátové sítě WiFi}, pole s RSSI\footnote{Ukazatel síly signálu}, a pole, kde jsem označil zda se síť zabezpečena či nikoliv.
+    RSSI jsem před zabalením do JSON pole přepočítal na sílu signálu v~procentech\footnote{100 \%, že síla signálu je -30 dBm a 0 \% -100 dBm}.
     Po dokončení sestavení JSONu, odpoví na HTTP žádost javascriptu.
-    Pomocí javascriptu a parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\\
+    Pomocí javascriptu a~parametrů uložených v JSON zprávě se sestaví formuláře s jedním submit tlačítkem, které má na pozici value nastavené SSID.\par
     Pokud uživatel klikne na tlačítko s názvem dané WiFi sítě, je přesunut do adresa/wifi, kam uživatel zadá heslo.
     Heslo se odešle webserveru metodou POST, kde se autentizuje.
     Pokud síť není zabezpečena, začne probíhat připojení.
 
+
     \begin{figure}
         \centering
-        \includegraphics[width= 11cm]{images/webscreen}
+        \includegraphics[width= 12cm]{images/webscreen}
         \caption{Webová stránka: výběr WiFi sítě}
         \label{fig:website}
     \end{figure}
     
 
     \subsection{Konfigurace reakce zásuvky}
-    Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat.\\ Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit.
-    ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť.
-    Ve skutečnosti tyto data ukládáme do FLASH paměti, což má řadu výhod.\\
+    Pro komunikaci se zásuvkou ESP potřebuje znát IP adresu zásuvky a JSON zprávu, kterou bude odesílat. Možnost konfigurace jsem uskutečnil pomocí HTML formulářů, který se metodou POST odesílá ESP. Aby ESP stále znalo uživatelskou konfiguraci i po restartu či spánku, musí si ji uložit.
+    ESP dokáže uložit data do paměti pomocí knihovny EEPROM. Ve skutečnosti se nejedná o EEPROM paměť, která má velmi omezený počet zápisů a~musí se vždy smazat celá paměť, ale ESP pouze emuluje EEPROM paměť, a~tyto data ukládáme do FLASH paměti, což má řadu výhod.\par
+    Pro zápis do paměti jsem vytvořil funkci, která string rozdělí na jednotlivé charaktery, a ty poté jednotlivě ukládá (viz. Úryvek kódu 3).
+    Jelikož velikost může být různá, tak za poslední charakter se zapíše -1, což nastaví byte na 255, neboli nastaví ho na prázdný.
+    Délky jsem nastavil pro IP adresy zásuvek na 15 charakterů a JSON zprávy na 100 charakterů.
+    Načítání probíhá opačně.
+    Načítá charaktery a složí je do stringu.
+    Pokud narazí na byte 255, ukončí sestavení předčastně.
+    Uživatel po dokončení nastavení ovladače ho může uspat.
+%
+
+
+    \chapter{Závěr}
+    Cílem této maturitní práce bylo porovnání dvou ESP platforem pro ovladač Netio zásuvek.
+    Nejprve jsem navrhl metody pro vhodné srovnání parametrů.
+    Poté jsem vytvořil jsem pro každou platformu měřící vzorek, který bylo možné adaptovat pro jednotlivé situace.
+    Pro ovladače jsem vybral celkem tři ustálené stavy, které jsem porovnal z hlediska spotřeby a reakční doby.
+    Zvolené scénáře byly kontinuální stav, kdy platforma zůstala zapnutá, deep sleep a enable button, kdy platforma byla vypnuta skrze enable pin.\par
+    Po měření jsem usoudil, že deep sleep stav je kompromisní řešení spotřeby a~reakčního času.
+    Kontinuální stav nabízel vysokou rychlost, nicméně spotřeba byla obrovská a enable button byl velice úsporný, ale pomalý.
+    V deep sleep ustáleném stavu je ESP8266 lehce rychlejší než ESP32.
+    Také jsem porovnal jednotlivé scénáře připojení na bezdrátovou síť.
+    Scénáře, které jsem porovnal byly připojení pomocí DHCP, připojení pomocí DHCP se zabezpečením a staticky bez zabezpečení.
+    Zabezpečení jsem zvolil WPA2.
+    ESP8266 má nejrychlejší připojení se statickou IP adresou, ale ESP32 měl všechny varianty přibližně stejné.
+    Můj závěr měření je takový, že ESP32 je vhodnější pro ovladač zásuvek.
+    Po zvolení této metody jsem navrhl tištěný spoj pro obě varianty zahrnující i možnost přepnutí do enable button režimu.
+    S tištěnými spoji jsem spolupracoval s NETIO Products~a.~s.\par
+    Bohužel v době odevzdání práce do souteže SOČ byly tištěné spoje stále ve výrobě, a~proto jsem vytvořil zjednodušenou variantu na nepájivém poli.\par
+    Na závěr jsem vytvořil program pro ovládání zásuvek, a pro možnost uživatelské konfigurace.
+    Konfiguraci jsem navrhl tak, aby uživatel mohl přistoupit k webové stránce díky defaultní IP adresy ESP přístupového bodu, nebo přes bezdrátovou síť na kterou uživatel připojil ovladač.\par
+    Na základě výsledků této práce usuzuji, že je možné vytvořit plnohodnotný uživatelský produkt pro ovládání Netio zásuvek založené na platformě ESP32 i ESP8266.
+
+    \renewcommand\listoflistingscaption{Seznam úryvků kódu}
+    \listoflistings
+    \listoftables
+
+    \listoffigures
+
+    \prilohy{
+        \chapter{Měření a tištěné spoje}
+        Všechny kódy a Eagle soubory jsou k dispozici v příloze dodané k dokumentaci.
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=12cm]{images/sonyvegaspostup}
+            \caption{Ukázka postupu pro měření reakčních časů}
+            \label{fig:sonyvegaspostup}
+        \end{figure}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=12cm]{images/esp8266_3,3uf}
+            \caption{ESP8266 reakce kondenzátoru graf}
+            \label{fig:3.3uf-esp8266}
+        \end{figure}
+        \begin{figure}
+            \centering
+            \includegraphics[width=12cm]{images/ESP8266_tisteny_spoj}
+            \caption{ESP8266 tištěný spoj finálního vzorku}
+            \label{fig:esp8266_tistak}
+        \end{figure}
+        \begin{figure}
+            \centering
+            \includegraphics[width=8cm]{images/ESP32_tisteny_spoj}
+            \caption{ESP32 tištěný spoj finálního vzorku}
+            \label{fig:esp32_tistak}
+        \end{figure}
+        \begin{figure}
+            \centering
+            \includegraphics[width=8cm]{images/esp8266_bread.jpeg}
+            \caption{ESP8266 finální vzorek na nepájivém poli}
+            \label{fig:esp8266_breadboard}
+        \end{figure}
+        \begin{figure}
+            \centering
+            \includegraphics[width=8cm]{images/esp32_bread.jpeg}
+            \caption{ESP32 finální vzorek na nepájivém poli}
+            \label{fig:esp32_breadboard}
+        \end{figure}
+    }
     \begin{listing}[]
-        \begin{minted}{cpp}
+        \begin{minted}[
+            frame=lines,
+            franesep=2mm,
+            baselinesstretch=1.2,
+            linenos
+        ]{cpp}
+void http_post() {
+    // Vytvoří řetězec pro připojení k zásuvce
+    String HTTP_CONNECTION = "http://";
+    // Na zakladě stisknutého tlačítka rozhodne kterou IP adresu načte z paměti
+    HTTP_CONNECTION += (pin_pressed(wakeup_reason))
+        ? readEEPROM(0, 15) : readEEPROM(15, 15);
+    HTTP_CONNECTION += "/netio.json";
+    if (http.begin(HTTP_CONNECTION)) {
+    // Na základě stiknutého tlačítka rozhodne, kterou JSON zprávu načte z paměti
+        int httpCode = http.POST((pin_pressed(wakeup_reason))
+            ? readEEPROM(30, 100) : readEEPROM(130, 100));
+        // Získání zpětné zprávy o průběhu
+        String payload = http.getString();
+        // Pokud payload je z
+        if (payload.indexOf("errors")>0 || payload == ""){
+            feedback_timer(200, 3);}
+    Serial.println(payload);
+    http.end();
+    } else {
+        //Pokud se nepovede, zabzuci bzucak 2x na 200 ms
+        feedback_timer(200, 2);
+    }
+}
+        \end{minted}
+        \caption{HTTP připojení}
+        \label{listing:http}
+    \end{listing}
+    \begin{listing}[]
+        \begin{minted}[
+            frame=lines,
+            franesep=2mm,
+            baselinesstretch=1.2,
+            linenos
+        ]{cpp}
 String jsonOfNetworks() {
     int numberOfNetworks = WiFi.scanNetworks();
     String networks = "{\"numOfNetworks\": \"";
@@ -740,26 +919,23 @@ String jsonOfNetworks() {
     return networks;
 }
         \end{minted}
-        \label{lst:json}
         \caption{Tvorba JSON zprávy}
+        \label{lst:json}
     \end{listing}
-    Pro zápis do paměti jsem vytvořil funkci, která string rozdělí na jednotlivé charaktery a ty poté jednotlivě ukládá viz. Úryvek kódu 2.
-    Jelikož velikost může být různá tak za poslední charakter se zapíše -1, což nastaví byte na 255 neboli nastaví ho na prázdný.
-    Délky jsem nastavil pro IP adresy zásuvek na 15 charakterů a JSON zprávy na 100 charakterů.
-    Načítání probíhá opačně.
-    Načítá charaktery a složí je do stringu.
-    Pokud narazí na byte 255, ukončí sestavení předčastně.\\
-    Uživatel po dokončení nastavení ovladače ho může uspat.\\
-
-
     \begin{listing}[]
-    \begin{minted}{cpp}
+        \begin{minted}[
+            frame=lines,
+            franesep=2mm,
+            baselinesstretch=1.2,
+            linenos
+        ]{cpp}
 void saveToEEPROM(String sToSave, int startPosition) {
-    char arr[sToSave.length() + 1];
-    strcpy(arr, sToSave.c_str());
+    char arr[sToSave.length() + 1]; // Vytvoří pole o velikosti stringu
+    strcpy(arr, sToSave.c_str()); // Převede string a pole charakterů
     for (int i = 0; i < sToSave.length(); i++) {
-        EEPROM.write(startPosition + i, arr[i]);
+        EEPROM.write(startPosition + i, arr[i]); // Zapíše charakter do paměti
     }
+    // Zapíše poslední ASCII 255
     EEPROM.write(startPosition + sToSave.length(), -1);
     EEPROM.commit();
     delay(500);
@@ -775,35 +951,11 @@ String readEEPROM(int numberOfStart, int len) {
     }
     return tempString;
 }
-    \end{minted}
-    \label{listing:eeprom}
-    \caption{Načítání a ukládání řetězců do/z paměti}
+        \end{minted}
+        \caption{Načítání a ukládání řetězců do/z paměti}
+        \label{listing:eeprom}
     \end{listing}
 
-
-
-    \chapter{Závěr}
-    \renewcommand\listoflistingscaption{Seznam úryvků kódu}
-    \listoflistings
-    \listoftables
-
-    \listoffigures
-
-    \prilohy{
-        \kapitola{Příloha}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=12cm]{images/sonyvegaspostup}
-            \caption{Ukázka postupu pro měření reakčních časů}
-            \label{fig:sonyvegaspostup}
-        \end{figure}
-        \begin{figure}[h]
-            \centering
-            \includegraphics[width=12cm]{images/esp8266_3,3uf}
-            \caption{ESP8266 reakce kondenzátoru graf}
-            \label{fig:3.3uf-esp8266}
-        \end{figure}
-    }
     \bibliographystyle{czechiso}
     \bibliography{reference}
 

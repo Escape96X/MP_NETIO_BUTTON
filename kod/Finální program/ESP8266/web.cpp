@@ -217,7 +217,11 @@ void handleSettings(){
 }
 
 void handleDisconnect() {
+    EEPROM.write(SSID_POS, -1);
+    EEPROM.write(PASSWORD_POS, -1);
+    EEPROM.commit();
     WiFi.disconnect();
+    
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 

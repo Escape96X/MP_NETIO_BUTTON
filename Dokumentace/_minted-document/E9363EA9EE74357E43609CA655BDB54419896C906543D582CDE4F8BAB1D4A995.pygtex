@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n+nf}{http\PYGZus{}post}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{c+c1}{// Vytvoří řetězec pro připojení k zásuvce}
+    \PYG{n}{String} \PYG{n}{HTTP\PYGZus{}CONNECTION} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}http://\PYGZdq{}}\PYG{p}{;}
+    \PYG{c+c1}{// Na zakladě stisknutého tlačítka rozhodne kterou IP adresu načte z paměti}
+    \PYG{n}{HTTP\PYGZus{}CONNECTION} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{pin\PYGZus{}pressed}\PYG{p}{(}\PYG{n}{wakeup\PYGZus{}reason}\PYG{p}{))}
+        \PYG{o}{?} \PYG{n}{readEEPROM}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{15}\PYG{p}{)} \PYG{o}{:} \PYG{n}{readEEPROM}\PYG{p}{(}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{l+m+mi}{15}\PYG{p}{);}
+    \PYG{n}{HTTP\PYGZus{}CONNECTION} \PYG{o}{+=} \PYG{l+s}{\PYGZdq{}/netio.json\PYGZdq{}}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{http}\PYG{p}{.}\PYG{n}{begin}\PYG{p}{(}\PYG{n}{HTTP\PYGZus{}CONNECTION}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+    \PYG{c+c1}{// Na základě stiknutého tlačítka rozhodne, kterou JSON zprávu načte z paměti}
+        \PYG{k+kt}{int} \PYG{n}{httpCode} \PYG{o}{=} \PYG{n}{http}\PYG{p}{.}\PYG{n}{POST}\PYG{p}{((}\PYG{n}{pin\PYGZus{}pressed}\PYG{p}{(}\PYG{n}{wakeup\PYGZus{}reason}\PYG{p}{))}
+            \PYG{o}{?} \PYG{n}{readEEPROM}\PYG{p}{(}\PYG{l+m+mi}{30}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{)} \PYG{o}{:} \PYG{n}{readEEPROM}\PYG{p}{(}\PYG{l+m+mi}{130}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{));}
+        \PYG{c+c1}{// Získání zpětné zprávy o průběhu}
+        \PYG{n}{String} \PYG{n}{payload} \PYG{o}{=} \PYG{n}{http}\PYG{p}{.}\PYG{n}{getString}\PYG{p}{();}
+        \PYG{c+c1}{// Pokud payload je z}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{payload}\PYG{p}{.}\PYG{n}{indexOf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}errors\PYGZdq{}}\PYG{p}{)}\PYG{o}{\PYGZgt{}}\PYG{l+m+mi}{0} \PYG{o}{||} \PYG{n}{payload} \PYG{o}{==} \PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)\PYGZob{}}
+            \PYG{n}{feedback\PYGZus{}timer}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{);\PYGZcb{}}
+    \PYG{n}{Serial}\PYG{p}{.}\PYG{n}{println}\PYG{p}{(}\PYG{n}{payload}\PYG{p}{);}
+    \PYG{n}{http}\PYG{p}{.}\PYG{n}{end}\PYG{p}{();}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{//Pokud se nepovede, zabzuci bzucak 2x na 200 ms}
+        \PYG{n}{feedback\PYGZus{}timer}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

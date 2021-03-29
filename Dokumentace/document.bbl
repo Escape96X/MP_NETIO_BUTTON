@@ -8,6 +8,11 @@
 \providecommand{\selectlanguage}[1]{\relax}
 \providecommand{\eprint}[2][]{\url{#2}}
 
+\bibitem{AD}
+DIGILENT INC.: \emph{Analog Discovery 2 datasheet[online]}. 2021, [cit.
+  2021-3-2].
+\newline\urlprefix\url{https://bit.ly/3cyn1qd}
+
 \bibitem{ESP32}
 Espressif Systems: \emph{ESP32 datasheet[online]}. 2020, [cit. 2021-2-18].
 \newline\urlprefix\url{https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf}
@@ -23,12 +28,17 @@ Maxim Integrated~Products, I.: PSRR. 2018, [cit. 2021-2-18].
 \bibitem{randomnerd}
 Santos, S.; Santos, R.: ESP8266 Deep Sleep with Arduino IDE (NodeMCU). Jul
   2019.
-\newline\urlprefix\url{https://randomnerdtutorials.com/esp8266-deep-sleep-with-arduino-ide/}
+\newline\urlprefix\url{https://bit.ly/39h8q0p}
 
 \bibitem{stabilizator}
 STMicroelectronics NV: \emph{LDLN030 datasheet[online]}. 2018, [cit.
   2021-2-18].
 \newline\urlprefix\url{https://www.st.com/resource/en/datasheet/ldln030.pdf}
+
+\bibitem{wiki:DHCP}
+Wikipedie: Dynamic Host Configuration Protocol --- Wikipedie: Otevřená
+  encyklopedie. 2021, [Online; navštíveno 25. 03. 2021].
+\newline\urlprefix\url{https://cs.wikipedia.org/w/index.php?title=Dynamic_Host_Configuration_Protocol&oldid=19481234}
 
 \bibitem{WT8266}
 Wireless-tag Technology Co.,Limited: \emph{WT8266 datasheet[online]}. 2021,

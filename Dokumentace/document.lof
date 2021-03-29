@@ -1,26 +1,31 @@
 \babel@toc {czech}{}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces ESP8266 pinout: literatura~\cite {WT8266}\relax }}{7}{figure.caption.3}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces WT8266-S1 pinout: literatura~\cite {WT8266}\relax }}{7}{figure.caption.3}%
 \contentsline {figure}{\numberline {2.2}{\ignorespaces ESP8266 blokový diagram funkcí: literatura~\cite {ESP8266}\relax }}{7}{figure.caption.5}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces ESP32 pinout a blokový diagram\relax }}{8}{figure.caption.6}%
 \contentsline {figure}{\numberline {2.4}{\ignorespaces podrobná tabulka sleep režimů: literatura~\cite {randomnerd}\relax }}{9}{figure.caption.7}%
 \contentsline {figure}{\numberline {2.5}{\ignorespaces ESP8266 probuzení z deep sleep po daném čase: literatura~\cite {randomnerd}\relax }}{9}{figure.caption.8}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces LDLN030 Pinout: literatura~\cite {stabilizator}\relax }}{10}{figure.caption.9}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces LDLN030 Pinout: literatura~\cite {stabilizator}\relax }}{11}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces LDLN030: literatura~\cite {stabilizator}\relax }}{10}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Diagram komunikace\relax }}{11}{figure.caption.10}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Vzorek pro měření na pajivém poli\relax }}{13}{figure.caption.11}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Vzorek pro měření na pajivém poli\relax }}{16}{figure.caption.11}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces ESP8266 grafy ustálených režimů\relax }}{18}{figure.caption.14}%
 \contentsline {figure}{\numberline {4.2}{\ignorespaces ESP8266 grafy WiFi situací\relax }}{20}{figure.caption.19}%
 \contentsline {figure}{\numberline {4.3}{\ignorespaces ESP8266 graf HTTP requestu\relax }}{21}{figure.caption.20}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces ESP32 grafy ustálených stavů\relax }}{22}{figure.caption.23}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces ESP83 graf HTTP requestu\relax }}{23}{figure.caption.28}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces ESP32 grafy WiFi situací\relax }}{24}{figure.caption.29}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces ESP32 grafy ustálených stavů\relax }}{22}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces ESP32 grafy WiFi situací\relax }}{24}{figure.caption.30}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces ESP32 graf HTTP requestu\relax }}{25}{figure.caption.31}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces ESP8266 schéma zapojení\relax }}{28}{figure.caption.33}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Webová stránka: výběr WiFi sítě\relax }}{30}{figure.caption.35}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces ESP8266 schéma zapojení\relax }}{29}{figure.caption.36}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces ESP32 schéma zapojení\relax }}{30}{figure.caption.38}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Webová stránka: výběr WiFi sítě\relax }}{32}{figure.caption.40}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {A.1}{\ignorespaces Ukázka postupu pro měření reakčních časů\relax }}{37}{figure.caption.39}%
-\contentsline {figure}{\numberline {A.2}{\ignorespaces ESP8266 reakce kondenzátoru graf\relax }}{37}{figure.caption.40}%
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Ukázka postupu pro měření reakčních časů\relax }}{38}{figure.caption.44}%
+\contentsline {figure}{\numberline {A.2}{\ignorespaces ESP8266 reakce kondenzátoru graf\relax }}{38}{figure.caption.45}%
+\contentsline {figure}{\numberline {A.3}{\ignorespaces ESP8266 tištěný spoj finálního vzorku\relax }}{39}{figure.caption.46}%
+\contentsline {figure}{\numberline {A.4}{\ignorespaces ESP32 tištěný spoj finálního vzorku\relax }}{39}{figure.caption.47}%
+\contentsline {figure}{\numberline {A.5}{\ignorespaces ESP8266 finální vzorek na nepájivém poli\relax }}{40}{figure.caption.48}%
+\contentsline {figure}{\numberline {A.6}{\ignorespaces ESP32 finální vzorek na nepájivém poli\relax }}{40}{figure.caption.49}%
