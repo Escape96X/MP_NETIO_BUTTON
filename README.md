@@ -3,7 +3,7 @@
  ┣ 📂code - - **Finální program**  
 ┃ ┣ 📂ESP8266   
  ┃ ┗ 📂ESP32     
- ┣ 📂dokumentace - **Dokumentace s latex soubory**
+ ┣ 📂dokumentace - **Dokumentace s latex soubory**  
  ┃ ┗ 📜document.pdf   
  ┣ 📂mereni - **Waveform a screenshoty**    
  ┃ ┣ 📂esp32  
