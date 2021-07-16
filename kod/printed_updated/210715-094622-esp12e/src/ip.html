@@ -1,0 +1,62 @@
+<html lang="cs">
+<head>
+    <style>
+        body {
+            font-family: "Helvetica",serif;
+
+        }
+
+        input[type=input] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #005F41; /* Green */
+            color: white;
+            width: 150px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d8b40;
+        }
+
+    </style>
+    <title>NETIO Button</title>
+</head>
+<body>
+<div style="text-align: center;">
+    <meta charset="UTF-8">
+    <h1>IP adresses of NETIO sockets</h1>
+    <form method="POST" action="/netioProduct/check">
+        <label for="ip1">Button #1</label><br>
+        <input type="input" name="ip1" id="ip1">
+        <button type="submit">submit</button>
+    </form>
+    <form method="POST" action="/netioProduct/check">
+        <label for="ip2">Button #2</label><br>
+        <input type="input" name="ip2" id="ip2">
+        <button type="submit">submit</button>
+    </form>
+    <button onClick="location.href = '/';">Return</button>
+    <h6>If you want to use one socket with multiple outputs, put same IP Address to both fields.</h6>
+</div>
+<script>
+
+</script>
+</body>
+</html>
