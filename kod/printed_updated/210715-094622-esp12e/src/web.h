@@ -10,12 +10,12 @@
 #define IP_LEN 187
 
 // PREDELAT
-#define HTTP_POS1 30
+#define HTTP_POS1 400
 #define HTTP_LEN 100
-#define HTTP_POS2 130
-#define SSID_POS 230
+#define HTTP_POS2 501
+#define SSID_POS 602
 #define SSID_LEN 33
-#define PASSWORD_POS 294
+#define PASSWORD_POS 636
 #define PASSWORD_LEN 100
 
 void setWiFiServer();
@@ -23,6 +23,11 @@ void setWiFiServer();
 void setWiFiServer2();
 
 String readEEPROM(int numberOfStart, int len);
+
+String readIP(int i, int offset);
+
+int countIP(int offset);
+
 
 void handleServer();
 

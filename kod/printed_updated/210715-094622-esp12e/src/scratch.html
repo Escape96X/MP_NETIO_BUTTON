@@ -1,0 +1,127 @@
+<html lang="cs">
+<head>
+    <style>
+        body {
+            font-family: "Helvetica", serif;
+
+        }
+
+        input[type=input] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #005F41; /* Green */
+            color: white;
+            width: 150px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d8b40;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    </style>
+    <title>NETIO Button</title>
+</head>
+<body style="text-align: center;">
+<h1>IP Adresses of NETIO sockets</h1>
+<button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
+
+
+<script>
+    var getJSON = function (url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);  // Otevre http request
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status; // zkontroluje se status http
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
+        };
+        xhr.send();
+    };
+    getJSON('ip_adress.json',
+        function (err, data) {
+            if (err !== null) { // kontrola zda se stal error
+                alert('Something went wrong: ' + err);
+            } else { // vezme data z jsonu a ulozi se do pole
+
+                var tableDespA = document.createElement("h3")
+                tableDespA.innerHTML = "Button #1";
+                document.body.appendChild(tableDespA);
+
+                tableCreation(data.numOfIPA, data.IP_adressA, "A");
+
+                var tableDespB = document.createElement("h3");
+                tableDespB.innerHTML = "Button #2";
+                document.body.appendChild(tableDespB);
+
+                tableCreation(data.numOfIPB, data.IP_addressB, "B");
+            }
+        });
+
+    function tableCreation(numbOfIp, IP_address, groupRecog) {
+        var table = document.createElement('table');
+        for (let i = 0; i < numbOfIp; i++) {
+
+            let row = table.insertRow(i);
+            let numberOfIp = row.insertCell(0);
+            var IP = row.insertCell(1);
+            IP.innerHTML = IP_address[i];
+
+            var deleteButtonCell = row.insertCell(2);
+            var deleteButton = document.createElement('button');
+            deleteButton.type = 'submit';
+            deleteButton.value = i;
+            deleteButton.innerHTML = "Delete";
+
+            var IPNumber = document.createElement("input");
+            IPNumber.type = "hidden";
+            IPNumber.name = "IPNumber";
+            IPNumber.value = i;
+
+            var group = document.createElement("input");
+            group.type = "hidden";
+            group.name = "group";
+            if (groupRecog === "A") {
+                group.value = "true";
+            } else {
+                group.value = "false";
+            }
+
+
+            var form = document.createElement('form');
+            form.method = 'GET'
+            form.action = '/netioProduct/delete'
+            document.body.appendChild(table);
+            deleteButtonCell.appendChild(form);
+            form.appendChild(deleteButton);
+            form.appendChild(group);
+            form.appendChild(IPNumber);
+        }
+    }
+</script>
+</body>
+</html>

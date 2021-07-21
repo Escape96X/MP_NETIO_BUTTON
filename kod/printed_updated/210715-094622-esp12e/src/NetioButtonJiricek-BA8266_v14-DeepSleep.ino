@@ -6,9 +6,9 @@
 
 const int WAKEUP_PIN1 = 5;
 const int WAKEUP_PIN2 = 13;
-const int BUZZER_PIN = 4;
+const int BUZZER_PIN = 14;
 const int LED_PIN = 12;
-const int ENPin =  2;      // the number of the Enable pin
+const int ENPin = 2;      // the number of the Enable pin
 bool BUTTONSTATE1 = false;
 bool BUTTONSTATE2 = false;
 WiFiClient wificlient;
@@ -39,7 +39,8 @@ bool pin_pressed() {
 void http_post(String HTTP_CONNECTION) {
     if (http.begin(wificlient, HTTP_CONNECTION)) {
         int httpCode = http.POST(
-                (pin_pressed()) ? readEEPROM(30, 100) : readEEPROM(130, 100));// nacte z pameti prislusnou JSON zpravu
+                (pin_pressed()) ? readEEPROM(HTTP_POS1, HTTP_LEN) : readEEPROM(HTTP_POS2,
+                                                                               HTTP_LEN));// nacte z pameti prislusnou JSON zpravu
         String payload = http.getString();
 
         if (payload.indexOf("errors") > 0 || payload == "") {
@@ -53,24 +54,22 @@ void http_post(String HTTP_CONNECTION) {
 
 }
 
-void parsingIP(){
-    int offset = (pin_pressed()) ? 0 : 188;
-    for(int i=0+offset; i<171+offset; i+=16){
-        char character = EEPROM.read(i);
-        if (character == 35) {
-            String HTTP_CONNECTION = "http://";
-            HTTP_CONNECTION += readEEPROM(i+1, 15);
-            HTTP_CONNECTION += "/netio.json";
-            http_post(HTTP_CONNECTION);
-            
-        }
-    }   
+void parsingIP() {
+    int offset = (pin_pressed()) ? IP_POSA : IP_POSB;
+    int count = countIP(offset);
+    for (int i = 0; i < count; i++) {
+        String HTTP_CONNECTION = "http://";
+        HTTP_CONNECTION += readIP(i, offset);
+        HTTP_CONNECTION += "/netio.json";
+        http_post(HTTP_CONNECTION);
+
+    }
 }
 
 void wifi_setup() {
     // precte z pameti ssid a password a pripoji se k wifi
-    String ssid = readEEPROM(230, 64);
-    String password = readEEPROM(294, 100);
+    String ssid = readEEPROM(SSID_POS, SSID_LEN);
+    String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
     char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
     char *p = const_cast<char *>(password.c_str());
     delay(400);
@@ -100,9 +99,9 @@ bool check_conf_mode() {
         return true;
     } else if (BUTTONSTATE1 && BUTTONSTATE2) {
         feedback_timer(400, 3);
-       // digitalWrite(ENPin, LOW);
-       ESP.deepSleep(0);
-       return false;
+        // digitalWrite(ENPin, LOW);
+        ESP.deepSleep(0);
+        return false;
     } else
         return false;
 }
@@ -134,8 +133,8 @@ void setup_boot() {
     pinMode(WAKEUP_PIN2, INPUT_PULLUP);
     BUTTONSTATE1 = digitalRead(WAKEUP_PIN1);
     BUTTONSTATE2 = digitalRead(WAKEUP_PIN2);
-    Serial.begin(74880);
-    EEPROM.begin(1024);
+    Serial.begin(115200);
+    EEPROM.begin(800);
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_PIN, OUTPUT);
     Serial.println("Načtení pinu");
@@ -164,16 +163,16 @@ void setup() {
         send_message();
         // digitalWrite(ENPin, LOW);
         ESP.deepSleep(0);
-       
+
     }
 }
 
 void loop() {
     delay(1);
     handleServer();
-    if (!digitalRead(WAKEUP_PIN1)&&!digitalRead(WAKEUP_PIN2)){
-      //digitalWrite(ENPin, LOW);
-      ESP.deepSleep(0);
-      }
-    
+    if (!digitalRead(WAKEUP_PIN1) && !digitalRead(WAKEUP_PIN2)) {
+        //digitalWrite(ENPin, LOW);
+        ESP.deepSleep(0);
+    }
+
 }

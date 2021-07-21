@@ -216,7 +216,7 @@ PROGMEM = R"rawliteral(
 <head>
     <style>
         body {
-            font-family: "Helvetica";
+            font-family: "Helvetica",serif;
 
         }
 
@@ -231,13 +231,12 @@ PROGMEM = R"rawliteral(
         }
 
         button {
-            background-color: #4CAF50; /* Green */
+            background-color: #005F41; /* Green */
             color: white;
             width: 150px;
             padding: 15px 32px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
             border-radius: 4px;
             font-size: 16px;
             display: block;
@@ -249,36 +248,150 @@ PROGMEM = R"rawliteral(
             background-color: #3d8b40;
         }
 
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     </style>
     <title>NETIO Button</title>
 </head>
-<body>
-<center>
-    <meta charset="UTF-8">
-    <h1>IP adresses of NETIO sockets</h1>
-    <form method="POST" action="/netioProduct/check">
-        <label for="ip1">Button #1</label><br>
-        <input type="input" name="ip1" id="ip1">
-        <button type="submit">submit</button>
-    </form>
-    <form method="POST" action="/netioProduct/check">
-        <label for="ip2">Button #2</label><br>
-        <input type="input" name="ip2" id="ip2">
-        <button type="submit">submit</button>
-    </form>
-    <button onClick="location.href = '/';">Return</button>
-    <h6>If you want to use one socket with multiple outputs, put same IP Address to both fields.</h6>
-</center>
-<script>
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
+<body style="text-align: center;">
+<h1>IP Adresses of NETIO sockets</h1>
+    <button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
 
-    var input1 = document.getElementsByTagName('input')[0];
-    wifiname.value = urlParams.get('ssid');
-    form.appendChild(wifiname);
-    form.appendChild(document.createTextNode(urlParams.get('ssid')));
+
+<script>
+    var getJSON = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);  // Otevre http request
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                var status = xhr.status; // zkontroluje se status http
+                if (status === 200) {
+                    callback(null, xhr.response);
+                } else {
+                    callback(status, xhr.response);
+                }
+            };
+            xhr.send();
+        };
+        getJSON('ip_adress.json',
+            function (err, data) {
+                if (err !== null) { // kontrola zda se stal error
+                    alert('Something went wrong: ' + err);
+                } else { // vezme data z jsonu a ulozi se do pole
+
+                    var tableDespA = document.createElement("h3")
+                    tableDespA.innerHTML = "Button #1";
+                    document.body.appendChild(tableDespA);
+
+                    tableCreation(data.numOfIPA, data.IP_adressA, "A");
+
+                    var tableDespB = document.createElement("h3");
+                    tableDespB.innerHTML = "Button #2";
+                    document.body.appendChild(tableDespB);
+
+                    tableCreation(data.numOfIPB, data.IP_addressB, "B");
+                }
+            });
+    function tableCreation(numbOfIp, IP_address, groupRecog){
+        var table = document.createElement('table');
+        for(let i = 0; i < numbOfIp; i++) {
+
+            let row = table.insertRow(i);
+            let numberOfIp = row.insertCell(0);
+            var IP = row.insertCell(1);
+            IP.innerHTML = IP_address[i];
+            
+            var deleteButtonCell = row.insertCell(2);
+            var deleteButton = document.createElement('button');
+            deleteButton.type = 'submit';
+            deleteButton.value = i;
+            deleteButton.innerHTML = "Delete";
+
+            var IPNumber = document.createElement("input");
+            IPNumber.type = "hidden";
+            IPNumber.name = "IPNumber";
+            IPNumber.value = i;
+
+            var group = document.createElement("input");
+            group.type = "hidden";
+            group.name = "group";
+            if (groupRecog === "A") {
+                group.value = "true";
+            } else {
+                group.value = "false";
+            }
+
+
+            var form = document.createElement('form');
+            form.method = 'GET'
+            form.action = '/netioProduct/delete'
+            document.body.appendChild(table);
+            deleteButtonCell.appendChild(form);
+            form.appendChild(deleteButton);
+            form.appendChild(group);
+            form.appendChild(IPNumber);
+        }
+    }
 </script>
 </body>
+</html>
+)rawliteral";
+
+const char NetioAddHTML[]
+PROGMEM = R"rawliteral(
+    <html>
+    <head>
+        <style>
+            button {
+                background-color: #005F41;
+                color: white;
+                margin: 10px;
+                padding: 15px 32px;
+                text-align: center;
+                font-size: 16px;
+                display: block;
+                border-radius: 4px;
+                width:150px;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+            button:hover{
+                background-color: #3d8b40;
+            }
+            input[type=text]{
+                width: 30%;
+                height: 40px;
+                margin: 10px;
+                font-size: large;
+            }
+            label{
+                font-size: 20px;
+            }
+            select{
+                margin: 20px;
+                font-size: 20px;
+            }
+        </style>
+
+    </head>
+    <body>
+        <center>
+            <h1>Add Netio device</h1>
+            <form method="GET" action="/netioProduct/check">
+                <label for="addIP">IP of Netio socket</label> <br>
+                <input type="text" maxlength="15" name="addIP" id="addIP"><br>
+                <label for="group">Button selection</label><br>
+                <select name="group", id="group">
+                    <option value=true>Button #1</option>
+                    <option value=false>Button #2</option>
+                </select><br>
+                <button type="submit">Submit</button>
+            </form>
+        </center>
+    </body>
 </html>
 )rawliteral";
 

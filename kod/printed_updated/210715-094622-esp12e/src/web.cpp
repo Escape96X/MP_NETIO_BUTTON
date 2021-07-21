@@ -6,7 +6,8 @@
 // Vytvorene headery
 #include "web.h"
 #include "HTML.h"
-const int ENPin =  2; //deklarovano take v hlavnim programu
+
+const int ENPin = 2; //deklarovano take v hlavnim programu
 const char *OWN_SSID = "NETIO_BUTTON";
 // Konstanty pro ulozeni do EEPROM
 
@@ -22,7 +23,7 @@ void saveToEEPROM(String sToSave, int startPosition, int len) {
     strcpy(arr, sToSave.c_str());
     for (int i = 0; i < sToSave.length(); i++) {
         EEPROM.write(startPosition + i, arr[i]);
-        if(i == len-1)
+        if (i == len - 1)
             break;
     }
     EEPROM.write(startPosition + sToSave.length(), -1);
@@ -43,11 +44,13 @@ String readEEPROM(int numberOfStart, int len) {
 
 
 //NOVE
-void saveToEEPROMIP(String sToSave, int startPosition){
-    for(int i = 0 + startPosition; i<=170 + startPosition; i+=16){
+void saveToEEPROMIP(String sToSave, int startPosition) {
+    for (int i = 0 + startPosition; i < 160 + startPosition; i += 16) {
         char isItIp = EEPROM.read(i);
-        if(isItIp == 255){
-            saveToEEPROM(sToSave, i, 16);
+        if (isItIp == 255) {
+            EEPROM.write(i, '#');
+            saveToEEPROM(sToSave, i + 1, 15);
+            break;
         }
     }
 }
@@ -70,40 +73,74 @@ String ipToString(IPAddress ip) {
     return s;
 }
 
-int countIP(int offset){
+int countIP(int offset) {
     int numberOfIP = 0;
-    for(int i = offset; i < 172 + offset; i += 16){
+    for (int i = offset; i < 159 + offset; i += 16) {
         char character = EEPROM.read(i);
-        if(character == 255)
+        if (character == '#')
             numberOfIP++;
     }
     return numberOfIP;
 }
 
 String readIP(int i, int offset) {
-    int position = (i * (IP_LEN + 1)) + offset;
-    if(EEPROM.read(position) == 35)
-        readEEPROM(position + 1, IP_LEN);
+    int position = (i * 16) + offset;
+    if (EEPROM.read(position) == '#')
+        return readEEPROM(position + 1, 15);
     else {
-        for(position, position < IP_POSB + offset; position +=16;) {
+        for (int j = position; position < IP_POSB + offset; position += 16) {
             char character = EEPROM.read(position);
-            if(character == 35)
-                readEEPROM(position +1, IP_LEN);
+            if (character == 35)
+                return readEEPROM(position + 1, 15);
         }
+        return "?";
     }
 }
 
+void deleteIP(int i, int offset) {
+    int position = (i * 16) + offset;
+    if (EEPROM.read(position) == '#') {
+        for (int j = 0; j < 16; j++)
+            EEPROM.write(j + position, 255);
+    } else {
+        for (int j = position; position < IP_POSB + offset; position += 16) {
+            char character = EEPROM.read(position);
+            if (character == 35) {
+                for (int k = 0; k < 16; k++)
+                    EEPROM.write(j + position, 255);
+            }
+        }
+    }
+    EEPROM.commit();
+}
+
 // Vytvoření JSON
-String jsonOfIP(bool group){
-    int offset = (group) ? IP_POSA : IP_POSB;
+String jsonOfIP() {
+    int offset = IP_POSA;
     int numberOfIP = countIP(offset);
-    String IPs = "{\"numOfIP\": \"";
+    String IPs = "{\"numOfIPA\": \"";
     IPs += numberOfIP;
+    IPs += "\", \"IP_adressA\": [";
     for (int i = 0; i < numberOfIP; i++) {
         IPs += "\"";
         IPs += readIP(i, offset);
-
+        IPs += "\"";
+        IPs += (i + 1 == numberOfIP) ? "" : ", ";
     }
+    offset = IP_POSB;
+    numberOfIP = countIP(offset);
+    IPs += "], \"numOfIPB\": \"";
+    IPs += numberOfIP;
+    IPs += "\", \"IP_addressB\": [";
+    for (int i = 0; i < numberOfIP; i++) {
+        IPs += "\"";
+        IPs += readIP(i, offset);
+        IPs += "\"";
+        IPs += (i + 1 == numberOfIP) ? "" : ", ";
+    }
+    IPs += "]}";
+    Serial.println(IPs);
+    return IPs;
 }
 
 String jsonOfNetworks() {
@@ -137,8 +174,8 @@ String jsonOfNetworks() {
 
 // Nastavení AP a přípojení k WiFi
 void connectToWiFi() {
-    String ssid = readEEPROM(230, 64);
-    String password = readEEPROM(294, 100);
+    String ssid = readEEPROM(SSID_POS, SSID_LEN);
+    String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
     char *s = const_cast<char *>(ssid.c_str());
     char *p = const_cast<char *>(password.c_str());
     Serial.println(s);
@@ -170,8 +207,16 @@ void handleScanWiFi() {
     server.send(200, "application/json", jsonOfNetworks());
 }
 
+void handleIPAddress() {
+    server.send(200, "application/json", jsonOfIP());
+}
+
 void handleNetioProduct() {
     server.send(200, "text/html", NetioHTML);
+}
+
+void handleNetioAdd() {
+    server.send(200, "text/html", NetioAddHTML);
 }
 
 void handleConfig() {
@@ -182,13 +227,22 @@ void handleConfig() {
 void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
-        if(server.arg("group") == 0)
+        if (server.arg("group") == "true")
             saveToEEPROMIP(server.arg("addIP"), IP_POSA);
         else
-            saveToEEPROMIP(server.arg("addIP"),IP_POSB);
+            saveToEEPROMIP(server.arg("addIP"), IP_POSB);
         //saveToEEPROM(server.arg("ip1"), IP_POSA, IP_LEN);
-        //server.send(200, "text/html", html);
+        server.send(200, "text/html", html);
     }
+}
+
+void handleNetioDelete() {
+    String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
+    if (server.hasArg("IPNumber")) {
+        int offset = (server.arg("group") == "true") ? IP_POSA : IP_POSB;
+        deleteIP(server.arg("IPNumber").toInt(), offset);
+    }
+    server.send(200, "text/html", html);
 }
 
 
@@ -270,21 +324,39 @@ void handleDisconnect() {
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
+void handledebug() {
+    String pes = "test: ";
+    for (int i = 0; i < 400; i++) {
+        if (i == 188)
+            pes += "---";
+        else if (EEPROM.read(i) == 255)
+            pes += "+";
+        else
+            pes += EEPROM.read(i);
+        pes += ";";
+    }
+    server.send(200, "text/html", pes);
+}
+
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
+    server.on("/ip_adress.json", handleIPAddress);
     server.on("/", handleRoot);
     server.on("/wifi", handleWiFiConnect);
     server.on("/netioProduct", handleNetioProduct);
+    server.on("/netioProduct/add", handleNetioAdd);
+    server.on("/netioProduct/delete", handleNetioDelete);
     server.on("/wifi/redirect", HTTP_POST, handleWiFiPasswordRedirect);
     server.on("/wifi/check", handleWiFiApprove);
-    server.on("/netioProduct/check", HTTP_POST, handleNetioDevice);
+    server.on("/netioProduct/check", HTTP_GET, handleNetioDevice);
     server.on("/buttonConfigure", handleConfig);
     server.on("/buttonConfigure/check", HTTP_POST, handleConfigCheck);
     server.on("/settings", handleSettings);
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleDisconnect);
+    server.on("/debug", handledebug);
     server.begin();
-    
+
 
 }
 
