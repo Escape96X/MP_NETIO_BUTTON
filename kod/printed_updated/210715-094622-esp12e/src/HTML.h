@@ -14,7 +14,7 @@ PROGMEM = R"rawliteral(
 
         }
         input[type="submit"] {
-            background-color: #4CAF50; /* Green */
+            background-color: #005F41; /* Green */
             color: white;
             width: 200px;
             padding: 15px 32px;
@@ -28,7 +28,7 @@ PROGMEM = R"rawliteral(
         }
 
         button {
-            background-color: #4CAF50; /* Green */
+            background-color: #005F41; /* Green */
             color: white;
             width: 150px;
             padding: 15px 32px;
@@ -55,6 +55,10 @@ PROGMEM = R"rawliteral(
             color: green;
             text-align: center;
         }
+
+        .center {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -63,11 +67,9 @@ PROGMEM = R"rawliteral(
     <button onclick="window.location.href=window.location.href">Scan</button>
     <button onclick="location.href = '/netioProduct';">NETIO IP</button>
     <button onclick="location.href = '/buttonConfigure';">Configure</button>
-    <button onclick="location.href = '/settings';">Settings</button>
     <button onclick="location.href = '/deepsleep';">Deep sleep</button>
     <button onclick="location.href = '/disconnect';">Disconnect</button>
     <p>Scan can takes a while</p>
-    <h1>WIFIs</h1>
 
     <script>
         var getJSON = function (url, callback) {
@@ -89,6 +91,7 @@ PROGMEM = R"rawliteral(
                 if (err !== null) { // kontrola zda se stal error
                     alert('Something went wrong: ' + err);
                 } else { // vezme data z jsonu a ulozi se do pole
+                    currentWiFi(data.ssid, data.ip);
                     for (i = 0; i < data.numOfNetworks; i++) {
                         buttons(i, data.networks, data.strengh, data.protection);
                     }
@@ -131,6 +134,34 @@ PROGMEM = R"rawliteral(
             form.appendChild(encrypt);
 
         }
+
+        function currentWiFi(ssid, ip) {
+          var desWiFi = document.createElement("h3");
+          desWiFi.innerHTML = "Current SSID:";
+          desWiFi.className = "center";
+          document.body.appendChild(desWiFi);
+
+          var ssidwifi = document.createElement("p");
+          ssidwifi.innerHTML = ssid;
+          ssidwifi.className = "center";
+          document.body.appendChild(ssidwifi);
+
+          var desIP = document.createElement("h3");
+          desIP.innerHTML = "Current IP: ";
+          desIP.className = "center";
+          document.body.appendChild(desIP);
+
+          var ipwifi = document.createElement("p");
+          ipwifi.innerHTML = ip;
+          ipwifi.className = "center";
+          document.body.appendChild(ipwifi);
+
+          var desWiFi1 = document.createElement("h1");
+          desWiFi1.innerHTML = "WIFIs:";
+          desWiFi1.className = "center";
+          document.body.appendChild(desWiFi1);
+            
+        }
     </script>
 </center>
 </body>
@@ -159,7 +190,7 @@ PROGMEM = R"rawliteral(
         }
 
         button {
-            background-color: #4CAF50; /* Green */
+            background-color: #005F41; /* Green */
             color: white;
             width: 150px;
             padding: 15px 32px;
@@ -259,8 +290,7 @@ PROGMEM = R"rawliteral(
 <body style="text-align: center;">
 <h1>IP Adresses of NETIO sockets</h1>
     <button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
-
-
+    <button onClick="location.href = '/';">Return</button>
 <script>
     var getJSON = function (url, callback) {
             var xhr = new XMLHttpRequest();
@@ -390,6 +420,7 @@ PROGMEM = R"rawliteral(
                 </select><br>
                 <button type="submit">Submit</button>
             </form>
+            <button onClick="location.href = '/';">Return</button>
         </center>
     </body>
 </html>
@@ -399,61 +430,55 @@ PROGMEM = R"rawliteral(
 const char configHTML[]
 PROGMEM = R"rawliteral(
 <html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: "Helvetica";
-
-    }
-
-    input[type=input] {
-      width: 50%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    button {
-      background-color: #4CAF50; /* Green */
-      color: white;
-      width: 150px;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      border-radius: 4px;
-      font-size: 16px;
-      display: block;
-      margin: 0 auto;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #3d8b40;
-    }
-  </style>
-</head>
-<body>
-<center>
-  <h1>Configuration for JSON API</h1>
-  <form method ="POST" action ="/buttonConfigure/check">
-    <label for = "button1">Button #1</label><br>
-    <input type="input" name="button1" id="button1">
-    <button type="submit">Submit</button>
-  </form>
-  <form method ="POST" action ="/buttonConfigure/check">
-    <label for = "button2">Button #2</label><br>
-    <input type="input" name="button2" id="button2">
-    <button type="submit">Submit</button>
-  </form>
-  <button onClick="location.href = '/';">Return</button>
-</center>
-</body>
-</html>
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body {
+          font-family: "Helvetica";
+    
+        }
+    
+        input[type=input] {
+          width: 50%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+        }
+    
+        button {
+          background-color: #005F41; /* Green */
+          color: white;
+          width: 150px;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          border-radius: 4px;
+          font-size: 16px;
+          display: block;
+          margin: 0 auto;
+          transition: 0.3s;
+        }
+    
+        button:hover {
+          background-color: #3d8b40;
+        }
+      </style>
+    </head>
+    <body>
+    <center>
+      <h1>Configuration for JSON API</h1>
+      <form method ="POST" action ="/buttonConfigure/check">
+        <label for = "button1">Button #1</label><br>
+        <input type="input" name="button1" maxlength="200" id="button1"><br>
+        <label for = "button2">Button #2</label><br>
+        <input type="input" name="button2" maxlength="200" id="button2">
+        <button type="submit">Submit</button>
+      </form>
+      <button onClick="location.href = '/';">Return</button>
 )rawliteral";
 
 #endif
