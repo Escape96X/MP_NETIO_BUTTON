@@ -26,15 +26,23 @@ If <b>red light</b> blinks 3x with buzzer signalization, HTTP communication fail
 Probably IP address of the socket is invalid. <br>
 If <b>red light</b> blinks 4x with buzzer signalization, device wasn't able to recognize input. Please hold the button little bit longer.
 </p>
-<h3>Control</h3>
+<h2>Conf-mode</h2>
 <p>
-With each button user can execute command for selected socket. For entering conf-mode, hold both buttons until light turn on for 400ms.
-
+For entering conf-mode, hold both buttons until light turn on for 400ms. After that connect to AP called <b>NETIO-BUTTON</b>. Open browser and search <b>192.168.4.1</b>.
+</p>
+<h3>WiFi selection</h3>
+<p>
+On main screen, user is able to connect device to any close-range network without security or with WES, WPA or WPA2-personal. For update WiFi list, click on <b>Scan</b> button. <br>
+By clicking on button with your wanted network, you will be transfer to security page (only if network is secured). If password is checked, page will show you IP address of device selected by DHCP server in network. And now you are able to connect to conf-mode via your network and appropriate IP address.
+</p>
+<h3>IP address of the socket</h3>
+<p>
+User is able to set 10 IP addresses for each button. So one HTTP request will be send a maximum of 10 devices at once. You can add IP address via form where you also select with button should use this IP address. It is possible to delete each address.
+</p>
+<h3>JSON message</h3>
+<p>
+Behind button configure you can find feature to write JSON message to JSON API of socket. Current JSON is below the form.
 </p>
 
-<h6>
-sviti zelene - komunikuje
-3x cervena selhala komunikace kratce
-3x dlouze 
 </body>
 </html>
