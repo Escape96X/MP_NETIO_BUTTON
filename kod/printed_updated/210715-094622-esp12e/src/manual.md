@@ -1,4 +1,13 @@
 <html>
+<head>
+<style>
+        body {
+            font-family: "Helvetica",serif;
+
+        }
+    )
+</style>
+</head>
 <body>
 <h1>NETIO button tutorial</h1>
 <h2>Basic info</h2>
@@ -43,6 +52,10 @@ User is able to set 10 IP addresses for each button. So one HTTP request will be
 <p>
 Behind button configure you can find feature to write JSON message to JSON API of socket. Current JSON is below the form.
 </p>
+<h3>Deep sleep button</h3>
+<p>This button will put device to sleep. Holding both buttons during conf-mode has same effect.</p>
+<h3>Disconnect button</h3>
+<p>This button will disconnect device from WiFi.</p>
 
 </body>
 </html>

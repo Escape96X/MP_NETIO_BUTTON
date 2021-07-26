@@ -80,6 +80,10 @@ void handleNetioAdd() {
     server.send(200, "text/html", NetioAddHTML);
 }
 
+void handleManual() {
+    server.send(200, "text/html", tutorialHTML);
+}
+
 void handleConfig() {
     String HTML = configHTML;
     HTML += "<br> <h3>Button #1:</h3><br>";
@@ -200,6 +204,7 @@ void serversOn() {
     server.on("/buttonConfigure/check", HTTP_POST, handleConfigCheck);
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleDisconnect);
+    server.on("/manual", handleManual);
     // server.on("/debug", handledebug);
     server.begin();
 }
