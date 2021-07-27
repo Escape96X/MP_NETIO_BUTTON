@@ -17,13 +17,15 @@ String readEEPROM(int numberOfStart, int len);
 
 void saveToEEPROM(String sTosave, int startPosition, int len);
 
-String readIP(int i, int offset);
+void saveToEEPROMContent(String sToSave, int startPosition, int jmp);
 
-void saveToEEPROMIP(String sToSave, int startPosition);
+int countContent(int offset, int posB, int jmp);
 
-void deleteIP(int i, int offset);
+String readContent(int i, int offset, int posB, int jmp);
 
-int countIP(int offset);
+void deleteContent(int i, int offset, int posB, int jmp);
+
+
 
 // json.cpp
 

@@ -40,12 +40,11 @@ bool pin_pressed() {
     }
 }
 
-void http_post(String HTTP_CONNECTION) {
+void http_post(String HTTP_CONNECTION, int position) {
     // posle http request zasuvce
+    int offset = (pin_pressed()) ? HTTP_POSA : HTTP_POSB;
     if (http.begin(wificlient, HTTP_CONNECTION)) {
-        int httpCode = http.POST(
-                (pin_pressed()) ? readEEPROM(HTTP_POS1, HTTP_LEN) : readEEPROM(HTTP_POS2,
-                                                                               HTTP_LEN));
+        int httpCode = http.POST(readContent(position, offset, HTTP_POSB, HTTP_JMP));
         String payload = http.getString();
 
         if (payload.indexOf("errors") > 0 || payload == "") {
@@ -62,16 +61,16 @@ void http_post(String HTTP_CONNECTION) {
 void parsingIP() {
     // najde prislusnou ip adresu
     int offset = (pin_pressed()) ? IP_POSA : IP_POSB;
-    int count = countIP(offset);
+    int count = countContent(offset, IP_POSB, IP_JMP);
     if(count == 0){
         feedback_timer(200, 3);
         ESPSleep();
     } else {
         for (int i = 0; i < count; i++) {
             String HTTP_CONNECTION = "http://";
-            HTTP_CONNECTION += readIP(i, offset);
+            HTTP_CONNECTION += readContent(i, offset, IP_POSB, IP_JMP);
             HTTP_CONNECTION += "/netio.json";
-            http_post(HTTP_CONNECTION);
+            http_post(HTTP_CONNECTION, i);
         }
     }
 }
@@ -82,7 +81,7 @@ void wifi_setup() {
     String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
     char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
     char *p = const_cast<char *>(password.c_str());
-    //delay(300);
+    delay(300);
     if (WiFi.status() != WL_CONNECTED) {
         WiFi.begin(s, p);
         for (int i = 0; i < 50; i++) { // kontroluje zda bylo pripojeno k wifi, po 5s se vypne esp
@@ -129,13 +128,13 @@ void setup_boot() {
     BUTTONSTATE1 = digitalRead(WAKEUP_PIN1);
     BUTTONSTATE2 = digitalRead(WAKEUP_PIN2);
     //Serial.begin(115200);
-    EEPROM.begin(1024);
+    EEPROM.begin(4096);
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_PIN, OUTPUT);
     Serial.println("Načtení pinu");
 }
 void ESPSleep() {
-    // digitalWrite(ENPin, LOW);
+    //digitalWrite(ENPin, LOW);
     ESP.deepSleep(0);
 
 }

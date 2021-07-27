@@ -87,9 +87,9 @@ void handleManual() {
 void handleConfig() {
     String HTML = configHTML;
     HTML += "<br> <h3>Button #1:</h3><br>";
-    HTML += readEEPROM(HTTP_POS1, HTTP_LEN);
+   // HTML += readEEPROM(HTTP_POSA, HTTP_LEN);
     HTML += "<br> <h3>Button #2:</h3><br>";
-    HTML += readEEPROM(HTTP_POS2, HTTP_LEN);
+   // HTML += readEEPROM(HTTP_POSB, HTTP_LEN);
     HTML += "</center></body></html>";
 
     server.send(200, "text/html", HTML);
@@ -99,11 +99,13 @@ void handleConfig() {
 void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
-        if (server.arg("group") == "true")
-            saveToEEPROMIP(server.arg("addIP"), IP_POSA);
-        else
-            saveToEEPROMIP(server.arg("addIP"), IP_POSB);
-        //saveToEEPROM(server.arg("ip1"), IP_POSA, IP_LEN);
+        if (server.arg("group") == "true"){
+            saveToEEPROMContent(server.arg("addIP"), IP_POSA, IP_JMP);
+            saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
+        }else {
+            saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
+            saveToEEPROMContent(server.arg("http"), HTTP_POSB, HTTP_JMP);
+        }
         server.send(200, "text/html", html);
     }
 }
@@ -112,7 +114,8 @@ void handleNetioDelete() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("IPNumber")) {
         int offset = (server.arg("group") == "true") ? IP_POSA : IP_POSB;
-        deleteIP(server.arg("IPNumber").toInt(), offset);
+        deleteContent(server.arg("IPNumber").toInt(), offset, IP_POSB, IP_JMP);
+        //deleteContent(server.arg("IPNumber").toInt(), offset, IP_POSB, IP_JMP);
     }
     server.send(200, "text/html", html);
 }
@@ -121,7 +124,7 @@ void handleNetioDelete() {
 void handleWiFiPasswordRedirect() {
 
     if (server.hasArg("ssid")) {
-        saveToEEPROM(server.arg("ssid"), SSID_POS, HTTP_LEN);
+        saveToEEPROM(server.arg("ssid"), SSID_POS, PASSWORD_LEN);
         if (server.hasArg("password"))
             saveToEEPROM(server.arg("password"), PASSWORD_POS, PASSWORD_LEN);
         else
@@ -152,11 +155,11 @@ void handleWiFiApprove() {
 void handleConfigCheck() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /buttonConfigure\" />";
     if (server.arg("button1")!= NULL) {
-        saveToEEPROM(server.arg("button1"), HTTP_POS1, HTTP_LEN);
+        //saveToEEPROM(server.arg("button1"), HTTP_POS1, HTTP_LEN);
         server.send(200, "text/html", html);
     }
     if (server.arg("button2")!= NULL) {
-        saveToEEPROM(server.arg("button2"), HTTP_POS2, HTTP_LEN);
+       // saveToEEPROM(server.arg("button2"), HTTP_POS2, HTTP_LEN);
         server.send(200, "text/html", html);
     }
 }
@@ -175,19 +178,19 @@ void handleDisconnect() {
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
-// void handledebug() {
-//     String pes = "test: ";
-//     for (int i = 0; i < 400; i++) {
-//         if (i == 188)
-//             pes += "---";
-//         else if (EEPROM.read(i) == 255)
-//             pes += "+";
-//         else
-//             pes += EEPROM.read(i);
-//         pes += ";";
-//     }
-//     server.send(200, "text/html", pes);
-// }
+ void handledebug() {
+    String pes = "test: ";
+     for (int i = 535; i < 4022; i++) {
+        if (i == 2011)
+            pes += "---";
+        else if (EEPROM.read(i) == 255)
+            pes += "+";
+        else
+           pes += EEPROM.read(i);
+        pes += ";";
+  }
+    server.send(200, "text/html", pes);
+}
 
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
@@ -205,7 +208,7 @@ void serversOn() {
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleDisconnect);
     server.on("/manual", handleManual);
-    // server.on("/debug", handledebug);
+    server.on("/debug", handledebug);
     server.begin();
 }
 
@@ -213,6 +216,7 @@ void setWiFiServer2() {
     APSet();
     delay(500);
     serversOn();
+    connectToWiFi();
 }
 
 void handleServer() {

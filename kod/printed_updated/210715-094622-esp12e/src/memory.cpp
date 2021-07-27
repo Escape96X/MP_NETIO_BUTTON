@@ -33,52 +33,52 @@ String readEEPROM(int numberOfStart, int len) {
 
 // prace s IP
 
-void saveToEEPROMIP(String sToSave, int startPosition) {
+void saveToEEPROMContent(String sToSave, int startPosition, int jmp) {
     // nalezeni mista pro IP v bloku pameti
-    for (int i = 0 + startPosition; i < 160 + startPosition; i += IP_JMP) {
+    for (int i = startPosition; i < jmp*10 + startPosition; i += jmp) {
         char isItIp = EEPROM.read(i);
         if (isItIp == 255) {
             EEPROM.write(i, '#');
-            saveToEEPROM(sToSave, i + 1, 15);
+            saveToEEPROM(sToSave, i + 1, jmp-1);
             break;
         }
     }
 }
 
-int countIP(int offset) {
-    int numberOfIP = 0;
-    for (int i = offset; i < 159 + offset; i += IP_JMP) {
+int countContent(int offset, int posB, int jmp) {
+    int numberOfContent = 0;
+    for (int i = offset; i < posB-7 + offset; i += jmp) {
         char character = EEPROM.read(i);
         if (character == '#')
-            numberOfIP++;
+            numberOfContent++;
     }
-    return numberOfIP;
+    return numberOfContent;
 }
 
-String readIP(int i, int offset) {
-    int position = (i * IP_JMP) + offset;
+String readContent(int i, int offset, int posB, int jmp) {
+    int position = (i * jmp) + offset;
     if (EEPROM.read(position) == '#')
-        return readEEPROM(position + 1, 15);
+        return readEEPROM(position + 1, jmp-1);
     else {
-        for (int j = position; position < IP_POSB + offset; position += IP_JMP) {
+        for (int j = position; position < posB + offset; position += jmp) {
             char character = EEPROM.read(position);
             if (character == 35)
-                return readEEPROM(position + 1, 15);
+                return readEEPROM(position + 1, jmp-1);
         }
         return "?";
     }
 }
 
-void deleteIP(int i, int offset) {
-    int position = (i * IP_JMP) + offset;
+void deleteContent(int i, int offset, int posB, int jmp) {
+    int position = (i * jmp) + offset;
     if (EEPROM.read(position) == '#') {
-        for (int j = 0; j < IP_JMP; j++)
+        for (int j = 0; j < jmp; j++)
             EEPROM.write(j + position, 255);
     } else {
-        for (int j = position; position < IP_POSB + offset; position += IP_JMP) {
+        for (int j = position; position < posB + offset; position += jmp) {
             char character = EEPROM.read(position);
             if (character == 35) {
-                for (int k = 0; k < IP_JMP; k++)
+                for (int k = 0; k < jmp; k++)
                     EEPROM.write(j + position, 255);
             }
         }

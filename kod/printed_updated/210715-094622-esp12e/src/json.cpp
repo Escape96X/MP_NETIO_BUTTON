@@ -6,30 +6,59 @@
 String jsonOfIP() {
     // json pro IP adresy
     int offset = IP_POSA;
-    int numberOfIP = countIP(offset);
+    int numberOfIP = countContent(offset, IP_POSB, IP_JMP);
     String IPs = "{\"numOfIPA\": \"";
     IPs += numberOfIP;
     IPs += "\", \"IP_adressA\": [";
     for (int i = 0; i < numberOfIP; i++) {
         IPs += "\"";
-        IPs += readIP(i, offset);
+        IPs += readContent(i, offset, IP_POSB, IP_JMP);
         IPs += "\"";
         IPs += (i + 1 == numberOfIP) ? "" : ", ";
     }
     offset = IP_POSB;
-    numberOfIP = countIP(offset);
+    numberOfIP = countContent(offset, IP_POSB, IP_JMP);
     IPs += "], \"numOfIPB\": \"";
     IPs += numberOfIP;
     IPs += "\", \"IP_addressB\": [";
     for (int i = 0; i < numberOfIP; i++) {
         IPs += "\"";
-        IPs += readIP(i, offset);
+        IPs += readContent(i, offset, IP_POSB, IP_JMP);
         IPs += "\"";
         IPs += (i + 1 == numberOfIP) ? "" : ", ";
     }
     IPs += "]}";
-    Serial.println(IPs);
+    //Serial.println(IPs);
     return IPs;
+}
+
+String jsonOfHTTP() {
+    // json pro HTTP adresy
+    int offset = HTTP_POSA;
+    int numberOfHTTP = countContent(offset, HTTP_POSB, HTTP_JMP);
+    String HTTPs = "{\"numOfHTTPA\": \"";
+    HTTPs += numberOfHTTP;
+    HTTPs += "\", \"HTTPA\": [";
+    for (int i = 0; i < numberOfHTTP; i++) {
+        HTTPs += "\"";
+        HTTPs += readContent(i, offset, HTTP_POSB, HTTP_JMP);
+        HTTPs += "\"";
+        HTTPs += (i + 1 == numberOfHTTP) ? "" : ", ";
+    }
+    offset = HTTP_POSB;
+    numberOfHTTP = countContent(offset, HTTP_POSB, HTTP_JMP);
+    HTTPs += "], \"numOfHTTPB\": \"";
+    HTTPs += numberOfHTTP;
+    HTTPs += "\", \"HTTPB\": [";
+    for (int i = 0; i < numberOfHTTP; i++) {
+        HTTPs += "\"";
+        HTTPs += readContent(i, offset, HTTP_POSB, HTTP_JMP);
+        HTTPs += "\"";
+        HTTPs += (i + 1 == numberOfHTTP) ? "" : ", ";
+    }
+    HTTPs += "]}";
+    //Serial.println(HTTPs);
+    return HTTPs;
 }
 
 String jsonOfNetworks() {

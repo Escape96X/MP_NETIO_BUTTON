@@ -65,6 +65,7 @@ PROGMEM = R"rawliteral(
 <center>
     <h1>NETIO BUTTON</h1>
     <button onclick="window.location.href=window.location.href">Scan</button>
+    <button onclick="window.location.href='/addWiFi'">Add WiFI</button>
     <button onclick="location.href = '/netioProduct';">NETIO IP</button>
     <button onclick="location.href = '/buttonConfigure';">Configure</button>
     <button onclick="location.href = '/deepsleep';">Deep sleep</button>
@@ -168,6 +169,7 @@ PROGMEM = R"rawliteral(
 </body>
 </html>
 )rawliteral";
+
 
 const char passwordHTML[]
 PROGMEM = R"rawliteral(
