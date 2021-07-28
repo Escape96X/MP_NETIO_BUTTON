@@ -33,6 +33,7 @@ String jsonOfNetworks();
 
 String jsonOfIP();
 
+String planeOfHTTP(bool group);
 // web.cpp
 
 void handleServer();

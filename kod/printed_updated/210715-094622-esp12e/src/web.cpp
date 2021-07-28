@@ -39,7 +39,7 @@ void connectToWiFi() {
     String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
     char *s = const_cast<char *>(ssid.c_str());
     char *p = const_cast<char *>(password.c_str());
-    // Serial.println(s);
+    Serial.println(s);
     WiFi.begin(s, p);
     delay(1000);
 }
@@ -68,6 +68,14 @@ void handleScanWiFi() {
     server.send(200, "application/json", jsonOfNetworks());
 }
 
+void handleHTTPA() {
+    server.send(200, "text/plane", planeOfHTTP(true));
+}
+
+void handleHTTPB() {
+    server.send(200, "text/plane", planeOfHTTP(false));
+}
+
 void handleIPAddress() {
     server.send(200, "application/json", jsonOfIP());
 }
@@ -82,17 +90,6 @@ void handleNetioAdd() {
 
 void handleManual() {
     server.send(200, "text/html", tutorialHTML);
-}
-
-void handleConfig() {
-    String HTML = configHTML;
-    HTML += "<br> <h3>Button #1:</h3><br>";
-   // HTML += readEEPROM(HTTP_POSA, HTTP_LEN);
-    HTML += "<br> <h3>Button #2:</h3><br>";
-   // HTML += readEEPROM(HTTP_POSB, HTTP_LEN);
-    HTML += "</center></body></html>";
-
-    server.send(200, "text/html", HTML);
 }
 
 // Server - dynamické stránky
@@ -115,7 +112,8 @@ void handleNetioDelete() {
     if (server.hasArg("IPNumber")) {
         int offset = (server.arg("group") == "true") ? IP_POSA : IP_POSB;
         deleteContent(server.arg("IPNumber").toInt(), offset, IP_POSB, IP_JMP);
-        //deleteContent(server.arg("IPNumber").toInt(), offset, IP_POSB, IP_JMP);
+        offset = (server.arg("group") == "true") ? HTTP_POSA : HTTP_POSB;
+        deleteContent(server.arg("IPNumber").toInt(), offset, HTTP_POSB, HTTP_JMP);
     }
     server.send(200, "text/html", html);
 }
@@ -124,7 +122,7 @@ void handleNetioDelete() {
 void handleWiFiPasswordRedirect() {
 
     if (server.hasArg("ssid")) {
-        saveToEEPROM(server.arg("ssid"), SSID_POS, PASSWORD_LEN);
+        saveToEEPROM(server.arg("ssid"), SSID_POS, SSID_LEN);
         if (server.hasArg("password"))
             saveToEEPROM(server.arg("password"), PASSWORD_POS, PASSWORD_LEN);
         else
@@ -195,6 +193,8 @@ void handleDisconnect() {
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
     server.on("/ip_adress.json", handleIPAddress);
+    server.on("/http_planeA", handleHTTPA);
+    server.on("/http_planeB", handleHTTPB);
     server.on("/", handleRoot);
     server.on("/wifi", handleWiFiConnect);
     server.on("/netioProduct", handleNetioProduct);
@@ -203,7 +203,6 @@ void serversOn() {
     server.on("/wifi/redirect", HTTP_POST, handleWiFiPasswordRedirect);
     server.on("/wifi/check", handleWiFiApprove);
     server.on("/netioProduct/check", HTTP_GET, handleNetioDevice);
-    server.on("/buttonConfigure", handleConfig);
     server.on("/buttonConfigure/check", HTTP_POST, handleConfigCheck);
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleDisconnect);

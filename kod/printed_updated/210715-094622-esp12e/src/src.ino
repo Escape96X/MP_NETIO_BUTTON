@@ -40,20 +40,22 @@ bool pin_pressed() {
     }
 }
 
-void http_post(String HTTP_CONNECTION, int position) {
+void http_post(String HTTP_CONNECTION, int position, bool error) {
     // posle http request zasuvce
     int offset = (pin_pressed()) ? HTTP_POSA : HTTP_POSB;
     if (http.begin(wificlient, HTTP_CONNECTION)) {
         int httpCode = http.POST(readContent(position, offset, HTTP_POSB, HTTP_JMP));
+        Serial.print("pozice HTTP:");
+        Serial.println(position);
         String payload = http.getString();
 
-        if (payload.indexOf("errors") > 0 || payload == "") {
-            feedback_timer(200, 3);
+        if (payload.indexOf("Errors") > 0 || payload == "") {
+            error = true;
         }
-        Serial.println(payload);
+        //Serial.println(payload);
         http.end();
     } else {
-        feedback_timer(200, 3);
+        error = true;
     }
 
 }
@@ -62,6 +64,8 @@ void parsingIP() {
     // najde prislusnou ip adresu
     int offset = (pin_pressed()) ? IP_POSA : IP_POSB;
     int count = countContent(offset, IP_POSB, IP_JMP);
+    Serial.println(count);
+    bool errors = false;
     if(count == 0){
         feedback_timer(200, 3);
         ESPSleep();
@@ -70,8 +74,12 @@ void parsingIP() {
             String HTTP_CONNECTION = "http://";
             HTTP_CONNECTION += readContent(i, offset, IP_POSB, IP_JMP);
             HTTP_CONNECTION += "/netio.json";
-            http_post(HTTP_CONNECTION, i);
+            http_post(HTTP_CONNECTION, i, errors);
+            Serial.println(i);
+            delay(200);
         }
+        if(errors)
+            feedback_timer(200, 3);
     }
 }
 
@@ -79,8 +87,12 @@ void wifi_setup() {
     // precte z pameti ssid a password a pripoji se k wifi
     String ssid = readEEPROM(SSID_POS, SSID_LEN);
     String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
+    Serial.println(ssid);
     char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
+    Serial.println(s);
     char *p = const_cast<char *>(password.c_str());
+    Serial.println(ssid);
+    Serial.println(p);
     delay(300);
     if (WiFi.status() != WL_CONNECTED) {
         WiFi.begin(s, p);
@@ -127,30 +139,29 @@ void setup_boot() {
     pinMode(WAKEUP_PIN2, INPUT_PULLUP);
     BUTTONSTATE1 = digitalRead(WAKEUP_PIN1);
     BUTTONSTATE2 = digitalRead(WAKEUP_PIN2);
-    //Serial.begin(115200);
+    Serial.begin(115200);
     EEPROM.begin(4096);
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_PIN, OUTPUT);
     Serial.println("Načtení pinu");
 }
 void ESPSleep() {
-    //digitalWrite(ENPin, LOW);
-    ESP.deepSleep(0);
+    digitalWrite(ENPin, LOW);
+    //ESP.deepSleep(0);
 
 }
-// void debug() { 
-//     // debug zpravy z pameti
-//     Serial.println(readEEPROM(SSID_POS, 64));
-//     Serial.println(readEEPROM(PASSWORD_POS, 64));
-//     Serial.println(readEEPROM(HTTP_POS1, 100));
-//     Serial.println(readEEPROM(HTTP_POS2, 100));
-//     Serial.println(BUTTONSTATE1);
-//     Serial.println(BUTTONSTATE2);
-// }
+ void debug() { 
+     // debug zpravy z pameti
+     Serial.println(readEEPROM(PASSWORD_POS, 64));
+     Serial.println(readEEPROM(SSID_POS, SSID_LEN));
+     Serial.println(BUTTONSTATE1);
+     Serial.println(BUTTONSTATE2);
+     Serial.println("");
+ }
 
 void setup() {
     setup_boot();
-    // debug();
+     debug();
     if (!check_conf_mode()) {
         digitalWrite(LED_PIN, HIGH);
         Serial.println("nekonf");

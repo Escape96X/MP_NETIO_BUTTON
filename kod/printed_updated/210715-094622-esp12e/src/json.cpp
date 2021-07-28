@@ -32,32 +32,15 @@ String jsonOfIP() {
     return IPs;
 }
 
-String jsonOfHTTP() {
+String planeOfHTTP(bool group) {
     // json pro HTTP adresy
-    int offset = HTTP_POSA;
+    int offset = (group) ? HTTP_POSA : HTTP_POSB;
     int numberOfHTTP = countContent(offset, HTTP_POSB, HTTP_JMP);
-    String HTTPs = "{\"numOfHTTPA\": \"";
-    HTTPs += numberOfHTTP;
-    HTTPs += "\", \"HTTPA\": [";
+    String HTTPs = "";
     for (int i = 0; i < numberOfHTTP; i++) {
-        HTTPs += "\"";
         HTTPs += readContent(i, offset, HTTP_POSB, HTTP_JMP);
-        HTTPs += "\"";
-        HTTPs += (i + 1 == numberOfHTTP) ? "" : ", ";
+        HTTPs += (i + 1 == numberOfHTTP) ? "" : "!";
     }
-    offset = HTTP_POSB;
-    numberOfHTTP = countContent(offset, HTTP_POSB, HTTP_JMP);
-    HTTPs += "], \"numOfHTTPB\": \"";
-    HTTPs += numberOfHTTP;
-    HTTPs += "\", \"HTTPB\": [";
-    for (int i = 0; i < numberOfHTTP; i++) {
-        HTTPs += "\"";
-        HTTPs += readContent(i, offset, HTTP_POSB, HTTP_JMP);
-        HTTPs += "\"";
-        HTTPs += (i + 1 == numberOfHTTP) ? "" : ", ";
-    }
-    HTTPs += "]}";
-    //Serial.println(HTTPs);
     return HTTPs;
 }
 

@@ -65,9 +65,7 @@ PROGMEM = R"rawliteral(
 <center>
     <h1>NETIO BUTTON</h1>
     <button onclick="window.location.href=window.location.href">Scan</button>
-    <button onclick="window.location.href='/addWiFi'">Add WiFI</button>
     <button onclick="location.href = '/netioProduct';">NETIO IP</button>
-    <button onclick="location.href = '/buttonConfigure';">Configure</button>
     <button onclick="location.href = '/deepsleep';">Deep sleep</button>
     <button onclick="location.href = '/disconnect';">Disconnect</button>
     <button onclick="location.href = '/manual';">Manual</button>
@@ -251,7 +249,6 @@ PROGMEM = R"rawliteral(
     <style>
         body {
             font-family: "Helvetica";
-
         }
 
         input[type=input] {
@@ -282,73 +279,108 @@ PROGMEM = R"rawliteral(
             background-color: #3d8b40;
         }
 
-        table {
-            margin-left: auto;
-            margin-right: auto;
-        }
+       table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
 
     </style>
     <title>NETIO Button</title>
 </head>
 <body style="text-align: center;">
 <h1>IP Adresses of NETIO sockets</h1>
-    <button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
-    <button onClick="location.href = '/';">Return</button>
+<button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
+<button onClick="location.href = '/';">Return</button>
 <script>
     var getJSON = function (url, callback) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);  // Otevre http request
-            xhr.responseType = 'json';
-            xhr.onload = function () {
-                var status = xhr.status; // zkontroluje se status http
-                if (status === 200) {
-                    callback(null, xhr.response);
-                } else {
-                    callback(status, xhr.response);
-                }
-            };
-            xhr.send();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);  // Otevre http request
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status; // zkontroluje se status http
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
         };
-        getJSON('ip_adress.json',
-            function (err, data) {
-                if (err !== null) { // kontrola zda se stal error
-                    alert('Something went wrong: ' + err);
-                } else { // vezme data z jsonu a ulozi se do pole
+        xhr.send();
+    };
+    getJSON('ip_adress.json',
+        function (err, data) {
+            if (err !== null) { // kontrola zda se stal error
+                alert('Something went wrong: ' + err);
+            } else { // vezme data z jsonu a ulozi se do pole
 
-                    var tableDespA = document.createElement("h3")
-                    tableDespA.innerHTML = "Button #1";
-                    document.body.appendChild(tableDespA);
+                var tableDespA = document.createElement("h3")
+                tableDespA.innerHTML = "Button #1";
+                document.body.appendChild(tableDespA);
 
-                    tableCreation(data.numOfIPA, data.IP_adressA, "A");
+                tableCreation(data.numOfIPA, data.IP_adressA, "A");
 
-                    var tableDespB = document.createElement("h3");
-                    tableDespB.innerHTML = "Button #2";
-                    document.body.appendChild(tableDespB);
+                var tableDespB = document.createElement("h3");
+                tableDespB.innerHTML = "Button #2";
+                document.body.appendChild(tableDespB);
 
-                    tableCreation(data.numOfIPB, data.IP_addressB, "B");
-                }
-            });
-    function tableCreation(numbOfIp, IP_address, groupRecog){
-        var table = document.createElement('table');
-        for(let i = 0; i < numbOfIp; i++) {
+                tableCreation(data.numOfIPB, data.IP_addressB, "B");
+            }
+        });
 
-            let row = table.insertRow(i);
+    function tableCreation(numbOfIp, IP_address, groupRecog) {
+        let table = document.createElement('table');
+        if (groupRecog === "A") {
+            table.id = "tableA";
+        } else {
+            table.id = "tableB";
+        }
+        table.border = "1";
+        let headerRow = table.insertRow(0)
+        let headerCell1 = document.createElement("th");
+        headerCell1.innerHTML = "#";
+        let headerCell2 = document.createElement("th");
+        headerCell2.innerHTML = "JSON";
+        let headerCell3 = document.createElement("th");
+        headerCell3.innerHTML = "IP Address";
+        let headerCell4 = document.createElement("th");
+        headerCell4.innerHTML = "Action";
+
+        headerRow.appendChild(headerCell1);
+        headerRow.appendChild(headerCell2);
+        headerRow.appendChild(headerCell3);
+        headerRow.appendChild(headerCell4);
+
+        for (let i = 0; i < numbOfIp; i++) {
+
+            let row = table.insertRow(i+1);
+            if(groupRecog === "A"){
+                row.id = "rowA" + i;
+            } else {
+                row.id = "rowB" + i;
+            }
             let numberOfIp = row.insertCell(0);
-            var IP = row.insertCell(1);
+            getHTTP(i, groupRecog);
+            numberOfIp.innerHTML = i;
+            let IP = row.insertCell(1);
             IP.innerHTML = IP_address[i];
-            
-            var deleteButtonCell = row.insertCell(2);
-            var deleteButton = document.createElement('button');
+
+            let deleteButtonCell = row.insertCell(2);
+            let deleteButton = document.createElement('button');
             deleteButton.type = 'submit';
             deleteButton.value = i;
             deleteButton.innerHTML = "Delete";
 
-            var IPNumber = document.createElement("input");
+            let IPNumber = document.createElement("input");
             IPNumber.type = "hidden";
             IPNumber.name = "IPNumber";
             IPNumber.value = i;
 
-            var group = document.createElement("input");
+            let group = document.createElement("input");
             group.type = "hidden";
             group.name = "group";
             if (groupRecog === "A") {
@@ -358,7 +390,7 @@ PROGMEM = R"rawliteral(
             }
 
 
-            var form = document.createElement('form');
+            let form = document.createElement('form');
             form.method = 'GET'
             form.action = '/netioProduct/delete'
             document.body.appendChild(table);
@@ -368,6 +400,32 @@ PROGMEM = R"rawliteral(
             form.appendChild(IPNumber);
         }
     }
+
+    function getHTTP(i, groupRecog) {
+        let httpRequest = new XMLHttpRequest();
+        let urlHTTP = "0";
+        if(groupRecog === "A"){
+            urlHTTP = "http_planeA";
+        } else {
+            urlHTTP = "http_planeB";
+        }
+        httpRequest.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let httpstring = this.responseText.split("!");
+                let nameRow = "";
+                if(groupRecog === "A"){
+                    nameRow = "rowA";
+                } else {
+                    nameRow = "rowB";
+                }       
+                let row1 = document.getElementById(nameRow + i);
+                let HTTP = row1.insertCell(1);
+                HTTP.innerHTML = httpstring[i];
+            }
+        };
+        httpRequest.open("GET", urlHTTP, true);
+        httpRequest.send();
+    }
 </script>
 </body>
 </html>
@@ -375,67 +433,75 @@ PROGMEM = R"rawliteral(
 
 const char NetioAddHTML[]
 PROGMEM = R"rawliteral(
-    <html>
-    <head>
-        <style>
-            body {
-                font-family: "Helvetica";
-            }
-            button {
-                background-color: #005F41;
-                color: white;
-                margin: 10px;
-                padding: 15px 32px;
-                text-align: center;
-                font-size: 16px;
-                display: block;
-                border-radius: 4px;
-                width:150px;
-                text-decoration: none;
-                transition: 0.3s;
-            }
-            button:hover{
-                background-color: #3d8b40;
-            }
-            input[type=text]{
-                width: 30%;
-                height: 40px;
-                margin: 10px;
-                font-size: large;
-                border: 2px solid black;
-                border-radius: 4px;
-            }
-            input:invalid{
-                border: 2px solid red;
-                border-radius: 4px;
-            }
-            label{
-                font-size: 20px;
-            }
-            select{
-                margin: 20px;
-                font-size: 20px;
-            }
-        </style>
+<html>
+<head>
+    <style>
+        body {
+            font-family: "Helvetica";
+        }
 
-    </head>
-    <body>
-        <center>
-            <h1>Add Netio device</h1>
-            <form method="GET" action="/netioProduct/check">
-                <label for="addIP">IP of Netio socket</label> <br>
-                <input type="text" pattern="[0-9.]{7,15}" required="required" name="addIP"
-                title="Invalid IP address" id="addIP"><br>
-                <label for="group">Button selection</label><br>
-                <select name="group", id="group">
-                    <option value=true>Button #1</option>
-                    <option value=false>Button #2</option>
-                </select><br>
-                <button type="submit">Submit</button>
-            </form>
-            <button onClick="location.href = '/';">Return</button>
-        </center>
-    </body>
+        button {
+            background-color: #005F41;
+            color: white;
+            margin: 10px;
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            display: block;
+            border-radius: 4px;
+            width: 150px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d8b40;
+        }
+
+        input[type=text] {
+            width: 30%;
+            height: 40px;
+            margin: 10px;
+            font-size: large;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+
+        input:invalid {
+            border: 2px solid red;
+            border-radius: 4px;
+        }
+
+        label {
+            font-size: 20px;
+        }
+
+        select {
+            margin: 20px;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<center>
+    <h1>Add Netio device</h1>
+    <form method="GET" action="/netioProduct/check">
+        <label htmlFor="addIP">IP of Netio socket</label> <br>
+        <input type="text" pattern="[0-9.]{7,15}" required="required" name="addIP"
+               title="Invalid IP address" id="addIP"><br>
+        <label htmlFor="http">JSON String</label><br>
+        <input type="text" required="required" maxlength="150" name="http"><br>
+        <label htmlFor="group">Button selection</label><br>
+        <select name="group" , id="group">
+            <option value=true>Button #1</option>
+            <option value=false>Button #2</option>
+        </select><br>
+        <button type="submit">Submit</button>
+    </form>
+    <button onClick="location.href = '/';">Return</button>
+</center>
+</body>
 </html>
 )rawliteral";
 
@@ -518,61 +584,6 @@ Behind button configure you can find feature to write JSON message to JSON API o
 
 </body>
 </html>
-)rawliteral";
-
-
-const char configHTML[]
-PROGMEM = R"rawliteral(
-<html>
-    <head>
-      <meta charset="UTF-8">
-      <style>
-        body {
-          font-family: "Helvetica";
-    
-        }
-    
-        input[type=input] {
-          width: 50%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          box-sizing: border-box;
-        }
-    
-        button {
-          background-color: #005F41; /* Green */
-          color: white;
-          width: 150px;
-          padding: 15px 32px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          border-radius: 4px;
-          font-size: 16px;
-          display: block;
-          margin: 0 auto;
-          transition: 0.3s;
-        }
-    
-        button:hover {
-          background-color: #3d8b40;
-        }
-      </style>
-    </head>
-    <body>
-    <center>
-      <h1>Configuration for JSON API</h1>
-      <form method ="POST" action ="/buttonConfigure/check">
-        <label for = "button1">Button #1</label><br>
-        <input type="input" name="button1" maxlength="200" id="button1"><br>
-        <label for = "button2">Button #2</label><br>
-        <input type="input" name="button2" maxlength="200" id="button2">
-        <button type="submit">Submit</button>
-      </form>
-      <button onClick="location.href = '/';">Return</button>
 )rawliteral";
 
 #endif

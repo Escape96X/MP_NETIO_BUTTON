@@ -1,0 +1,70 @@
+<html>
+<head>
+    <style>
+        body {
+            font-family: "Helvetica";
+        }
+
+        button {
+            background-color: #005F41;
+            color: white;
+            margin: 10px;
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            display: block;
+            border-radius: 4px;
+            width: 150px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d8b40;
+        }
+
+        input[type=text] {
+            width: 30%;
+            height: 40px;
+            margin: 10px;
+            font-size: large;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+
+        input:invalid {
+            border: 2px solid red;
+            border-radius: 4px;
+        }
+
+        label {
+            font-size: 20px;
+        }
+
+        select {
+            margin: 20px;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+<center>
+    <h1>Add Netio device</h1>
+    <form method="GET" action="/netioProduct/check">
+        <label htmlFor="addIP">IP of Netio socket</label> <br>
+        <input type="text" pattern="[0-9.]{7,15}" required="required" name="addIP"
+               title="Invalid IP address" id="addIP"><br>
+        <label htmlFor="http">JSON String</label>
+        <input type="text" required="required" name="http">
+        <label htmlFor="group">Button selection</label><br>
+        <select name="group" , id="group">
+            <option value=true>Button #1</option>
+            <option value=false>Button #2</option>
+        </select><br>
+        <button type="submit">Submit</button>
+    </form>
+    <button onClick="location.href = '/';">Return</button>
+</center>
+</body>
+</html>

@@ -9,14 +9,19 @@ void saveToEEPROM(String sToSave, int startPosition, int len) {
     // globalni ukladani do pameti
     char arr[sToSave.length() + 1];
     strcpy(arr, sToSave.c_str());
-    for (int i = 0; i < sToSave.length(); i++) {
+    int lenght = sToSave.length();
+    for (int i = 0; i < lenght; i++) {
         EEPROM.write(startPosition + i, arr[i]);
         if (i == len - 1)
             break;
     }
     EEPROM.write(startPosition + sToSave.length(), -1);
-    EEPROM.commit();
-    delay(500);
+    if (EEPROM.commit()) {
+      Serial.println("EEPROM successfully committed");
+    } else {
+      Serial.println("ERROR! EEPROM commit failed");
+    }
+    delay(1000);
 }
 
 String readEEPROM(int numberOfStart, int len) {
@@ -24,8 +29,8 @@ String readEEPROM(int numberOfStart, int len) {
     String tempNetio = "";
     for (int i = 0; i < len; i++) {
         char netio = EEPROM.read(numberOfStart + i);
-        if (netio == 255)
-            break;
+        if (netio == 255){
+            break;}
         tempNetio += netio;
     }
     return tempNetio;
@@ -37,7 +42,10 @@ void saveToEEPROMContent(String sToSave, int startPosition, int jmp) {
     // nalezeni mista pro IP v bloku pameti
     for (int i = startPosition; i < jmp*10 + startPosition; i += jmp) {
         char isItIp = EEPROM.read(i);
+        Serial.println(isItIp);
         if (isItIp == 255) {
+            Serial.print("Nalezeno místo na adrese");
+            Serial.println(i);
             EEPROM.write(i, '#');
             saveToEEPROM(sToSave, i + 1, jmp-1);
             break;
@@ -57,9 +65,14 @@ int countContent(int offset, int posB, int jmp) {
 
 String readContent(int i, int offset, int posB, int jmp) {
     int position = (i * jmp) + offset;
-    if (EEPROM.read(position) == '#')
+    Serial.print("READ: Pozice:");
+    Serial.println(position);
+    if (EEPROM.read(position) == '#'){
+        Serial.println("pozice potvrzena");
         return readEEPROM(position + 1, jmp-1);
+    }
     else {
+        Serial.println("Pozice Nenalezena, hledam dalsi: skacu");
         for (int j = position; position < posB + offset; position += jmp) {
             char character = EEPROM.read(position);
             if (character == 35)
@@ -71,15 +84,21 @@ String readContent(int i, int offset, int posB, int jmp) {
 
 void deleteContent(int i, int offset, int posB, int jmp) {
     int position = (i * jmp) + offset;
+    Serial.print("DELETE: Pozice:");
+    Serial.println(position);
     if (EEPROM.read(position) == '#') {
+        Serial.println("pozice potvrzena");
         for (int j = 0; j < jmp; j++)
             EEPROM.write(j + position, 255);
     } else {
+        Serial.println("Pozice Nenalezena, hledam dalsi: skacu");
         for (int j = position; position < posB + offset; position += jmp) {
+            Serial.println(position);
             char character = EEPROM.read(position);
             if (character == 35) {
                 for (int k = 0; k < jmp; k++)
                     EEPROM.write(j + position, 255);
+                break;
             }
         }
     }
