@@ -71,7 +71,7 @@ String jsonOfNetworks() {
         networks += (i + 1 == numberOfNetworks) ? " " : ", ";
     }
     networks += "], \"ssid\": \"";
-    if(WiFi.status() == WL_CONNECTED)
+    if (WiFi.status() == WL_CONNECTED)
         networks += readEEPROM(SSID_POS, SSID_LEN);
     else
         networks += "DISCONNECTED";

@@ -66,7 +66,7 @@ void parsingIP() {
     int count = countContent(offset, IP_POSB, IP_JMP);
     Serial.println(count);
     bool errors = false;
-    if(count == 0){
+    if (count == 0) {
         feedback_timer(200, 3);
         ESPSleep();
     } else {
@@ -78,7 +78,7 @@ void parsingIP() {
             Serial.println(i);
             delay(200);
         }
-        if(errors)
+        if (errors)
             feedback_timer(200, 3);
     }
 }
@@ -145,23 +145,25 @@ void setup_boot() {
     pinMode(LED_PIN, OUTPUT);
     Serial.println("Načtení pinu");
 }
+
 void ESPSleep() {
     digitalWrite(ENPin, LOW);
     //ESP.deepSleep(0);
 
 }
- void debug() { 
-     // debug zpravy z pameti
-     Serial.println(readEEPROM(PASSWORD_POS, 64));
-     Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-     Serial.println(BUTTONSTATE1);
-     Serial.println(BUTTONSTATE2);
-     Serial.println("");
- }
+
+void debug() {
+    // debug zpravy z pameti
+    Serial.println(readEEPROM(PASSWORD_POS, 64));
+    Serial.println(readEEPROM(SSID_POS, SSID_LEN));
+    Serial.println(BUTTONSTATE1);
+    Serial.println(BUTTONSTATE2);
+    Serial.println("");
+}
 
 void setup() {
     setup_boot();
-     debug();
+    debug();
     if (!check_conf_mode()) {
         digitalWrite(LED_PIN, HIGH);
         Serial.println("nekonf");

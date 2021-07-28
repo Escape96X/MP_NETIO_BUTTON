@@ -96,10 +96,10 @@ void handleManual() {
 void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
-        if (server.arg("group") == "true"){
+        if (server.arg("group") == "true") {
             saveToEEPROMContent(server.arg("addIP"), IP_POSA, IP_JMP);
             saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
-        }else {
+        } else {
             saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
             saveToEEPROMContent(server.arg("http"), HTTP_POSB, HTTP_JMP);
         }
@@ -152,12 +152,12 @@ void handleWiFiApprove() {
 
 void handleConfigCheck() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /buttonConfigure\" />";
-    if (server.arg("button1")!= NULL) {
+    if (server.arg("button1") != NULL) {
         //saveToEEPROM(server.arg("button1"), HTTP_POS1, HTTP_LEN);
         server.send(200, "text/html", html);
     }
-    if (server.arg("button2")!= NULL) {
-       // saveToEEPROM(server.arg("button2"), HTTP_POS2, HTTP_LEN);
+    if (server.arg("button2") != NULL) {
+        // saveToEEPROM(server.arg("button2"), HTTP_POS2, HTTP_LEN);
         server.send(200, "text/html", html);
     }
 }
@@ -176,19 +176,19 @@ void handleDisconnect() {
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
- void handledebug() {
-    String pes = "test: ";
-     for (int i = 535; i < 4022; i++) {
-        if (i == 2011)
-            pes += "---";
-        else if (EEPROM.read(i) == 255)
-            pes += "+";
-        else
-           pes += EEPROM.read(i);
-        pes += ";";
-  }
-    server.send(200, "text/html", pes);
-}
+// void handledebug() {
+//     String pes = "test: ";
+//     for (int i = 535; i < 4022; i++) {
+//         if (i == 2011)
+//             pes += "---";
+//         else if (EEPROM.read(i) == 255)
+//             pes += "+";
+//         else
+//             pes += EEPROM.read(i);
+//         pes += ";";
+//     }
+//     server.send(200, "text/html", pes);
+// }
 
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
@@ -207,7 +207,7 @@ void serversOn() {
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleDisconnect);
     server.on("/manual", handleManual);
-    server.on("/debug", handledebug);
+    // server.on("/debug", handledebug);
     server.begin();
 }
 

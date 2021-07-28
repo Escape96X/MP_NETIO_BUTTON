@@ -20,7 +20,7 @@
 </ol>
 <h2>Connect to Netio socket</h2>
 <ol>
-<li>Select Netio table on main screen</li>
+<li>Select <b>Devices</b> on main screen</li>
 <li>Click on button <b>add</b></li>
 <li>Enter IP adress of Netio socket (only IP without http:// or /netio.json)
 <li>Enter JSON string</li>

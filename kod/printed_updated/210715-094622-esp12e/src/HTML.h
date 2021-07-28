@@ -65,7 +65,7 @@ PROGMEM = R"rawliteral(
 <center>
     <h1>NETIO BUTTON</h1>
     <button onclick="window.location.href=window.location.href">Scan</button>
-    <button onclick="location.href = '/netioProduct';">NETIO IP</button>
+    <button onclick="location.href = '/netioProduct';">Devices</button>
     <button onclick="location.href = '/deepsleep';">Deep sleep</button>
     <button onclick="location.href = '/disconnect';">Disconnect</button>
     <button onclick="location.href = '/manual';">Manual</button>
@@ -511,30 +511,33 @@ PROGMEM = R"rawliteral(
 <head>
 <style>
         body {
-                font-family: "Helvetica";
+            font-family: "Helvetica",serif;
+
         }
-        button {
-                background-color: #005F41;
-                color: white;
-                margin: 10px;
-                padding: 15px 32px;
-                text-align: center;
-                font-size: 16px;
-                display: block;
-                border-radius: 4px;
-                width:150px;
-                text-decoration: none;
-                transition: 0.3s;
-            }
-            button:hover{
-                background-color: #3d8b40;
-            }
     )
 </style>
 </head>
 <body>
-<h1>NETIO button manual</h1>
-<button onClick="location.href = '/';">Return</button>
+<h1>NETIO button tutorial</h1>
+<h2>How to set it up</h2>
+<ol>
+<li>Turn it on with ON/OFF switch</li>
+<li>Hold both buttons until red light blinks once.</li>
+<li>Open WiFi manager and find <b>NETIO-BUTTON</b> network and search <b>192.168.4.1</b> in internet browser</li>
+<li>Under WiFis find your WiFi and click on it after that enter your password</li>
+<li>After connecting, copy IP address of the device, reconnect to your network and enter new IP to your browser</li>
+</ol>
+<h2>Connect to Netio socket</h2>
+<ol>
+<li>Select <b>Devices</b> on main screen</li>
+<li>Click on button <b>add</b></li>
+<li>Enter IP adress of Netio socket (only IP without http:// or /netio.json)
+<li>Enter JSON string</li>
+<li>Choose which button should use this command and submit</li>
+<li> You can delete each record in table by clicking on button <b>Delete</b>
+<li> On main screen click on button <b>Deep sleep</b> to end <b>conf-mode</b>
+</ol>
+
 <h2>Basic info</h2>
 <p>
 This is prototype of NETIO button that allow you to control the NETIO socket.
@@ -543,11 +546,8 @@ On the other side, this communication is handled by the socket via JSON API. But
 </p>
 <h3>Device structure</h3>
 <p>
-Device has 4 buttons.<br>
-First button next to 5 programming pins is used for <b>programming.</b> <br>
-Two buttons with S1 and S2 marks are used for <b>JSON configure</b>.
+Device has 2 buttons with S1 and S2 marks. They are used for <b>JSON configure</b>.
 User can program those buttons via conf-mode. <br>
-Last button is <b>RESET</b>. It is used for restart the device.<br>
 </p>
 <h3>LED and buzzer signaling</h3>
 <p>
