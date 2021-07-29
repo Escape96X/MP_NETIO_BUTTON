@@ -158,11 +158,12 @@ void ESPSleep() {
 
 void debug() {
     // debug zpravy z pameti
-    Serial.println(readEEPROM(PASSWORD_POS, 64));
-    Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-    Serial.println(BUTTONSTATE1);
-    Serial.println(BUTTONSTATE2);
-    Serial.println("");
+    // Serial.println(readEEPROM(PASSWORD_POS, 64));
+    // Serial.println(readEEPROM(SSID_POS, SSID_LEN));
+    // Serial.println(BUTTONSTATE1);
+    // Serial.println(BUTTONSTATE2);
+    // Serial.println("");
+    debugPair();
 }
 
 void setup() {

@@ -102,5 +102,36 @@ void deleteContent(int i, int offset, int posB, int jmp) {
             }
         }
     }
-    EEPROM.commit();
+        EEPROM.commit();
 }
+
+
+    // void debugPair() {
+    //     Serial.println("tabulka A");
+    //     for(int i = 0; i <10; i++){
+    //         //String ip = readEEPROM((i*IP_JMP) + IP_POSA, IP_JMP);
+    //         String ip ="";
+    //         for(int j = 0; j < IP_JMP; j++){
+    //             char ips = EEPROM.read((i*IP_JMP)+IP_POSA+j);
+    //             ip += ips;
+    //         }
+    //         Serial.print("pozice: ");
+    //         Serial.print(i);
+    //         Serial.print(" IP: ");
+    //         Serial.print(ip);
+    //         String http = readEEPROM((i*HTTP_JMP)+ HTTP_POSA, HTTP_JMP);
+    //         Serial.print(" HTTP: ");
+    //         Serial.println(http);
+    //     }
+    //     Serial.println("tabulka B");
+    //      for(int i = 0; i <10; i++){
+    //         String ip = readEEPROM((i*IP_JMP) + IP_POSB, IP_JMP);
+    //         Serial.print("pozice: ");
+    //         Serial.print(i);
+    //         Serial.print(" IP: ");
+    //         Serial.print(ip);
+    //         String http = readEEPROM((i*HTTP_JMP)+ HTTP_POSB, HTTP_JMP);
+    //         Serial.print(" HTTP: ");
+    //         Serial.println(http);
+    //     }
+    // }
