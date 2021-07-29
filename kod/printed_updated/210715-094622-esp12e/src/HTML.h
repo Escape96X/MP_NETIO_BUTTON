@@ -158,7 +158,7 @@ PROGMEM = R"rawliteral(
           document.body.appendChild(ipwifi);
 
           var desWiFi1 = document.createElement("h1");
-          desWiFi1.innerHTML = "WIFIs:";
+          desWiFi1.innerHTML = "Select your new Network:";
           desWiFi1.className = "center";
           document.body.appendChild(desWiFi1);
             

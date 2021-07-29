@@ -163,7 +163,7 @@ void debug() {
     // Serial.println(BUTTONSTATE1);
     // Serial.println(BUTTONSTATE2);
     // Serial.println("");
-    debugPair();
+    //debugPair();
 }
 
 void setup() {
