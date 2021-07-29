@@ -10,9 +10,9 @@
 </ol>
 <h2>Connect to Netio socket</h2>
 <ol>
-<li>Select <b>Devices</b> on main screen</li>
+<li>Select <b>Action list</b> on main screen</li>
 <li>Click on button <b>add</b></li>
-<li>Enter IP adress of Netio socket (only IP without http:// or /netio.json)
+<li>Enter IP adress of Netio socket (only IP without http:// or /netio.json)</li>
 <li>Enter JSON string</li>
 <li>Choose which button should use this command and submit</li>
 <li> You can delete each record in table by clicking on button <b>Delete</b>
@@ -58,10 +58,10 @@ User is able to set 10 IP addresses for each button. So one HTTP request will be
 <p>
 Behind button configure you can find feature to write JSON message to JSON API of socket. Current JSON is below the form.
 </p>
-<h3>Deep sleep button</h3>
+<h3>Disable conf-mode button</h3>
 <p>This button will put device to sleep. Holding both buttons during conf-mode has same effect.</p>
-<h3>Disconnect button</h3>
-<p>This button will disconnect device from WiFi.</p>
+<h3>Factory reset button</h3>
+<p>Deletes whole EEPROM.</p>
 
 # Obsah
 📦MP_NETIO_BUTTON  
