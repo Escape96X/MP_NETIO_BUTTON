@@ -45,7 +45,7 @@ PROGMEM = R"rawliteral(
             background-color: #3d8b40;
             color: white;
         }
-        
+
 
         .rssi {
             color: green;
@@ -65,110 +65,247 @@ PROGMEM = R"rawliteral(
 <body>
 <center>
     <h1>NETIO BUTTON</h1>
-    <button onclick="window.location.href=window.location.href">Scan networks</button>
+    <button onclick="location.href = '/networks';">List of Networks</button>
     <button onclick="location.href = '/netioProduct';">Actions</button>
     <button onclick="location.href = '/deepsleep';">Disable conf-mode</button>
     <button id ="FR" onclick="location.href = '/disconnect';">Factory reset</button>
     <button onclick="location.href = '/manual';">Manual</button>
-    <p>Scan can takes a while</p>
-
-    <script>
-        var getJSON = function (url, callback) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);  // Otevre http request
-            xhr.responseType = 'json';
-            xhr.onload = function () {
-                var status = xhr.status; // zkontroluje se status http
-                if (status === 200) {
-                    callback(null, xhr.response);
-                } else {
-                    callback(status, xhr.response);
-                }
-            };
-            xhr.send();
-        };
-        getJSON('scannedWiFi.json', // pracuje s ipAdresa/scannedWiFi.json
-            function (err, data) {
-                if (err !== null) { // kontrola zda se stal error
-                    alert('Something went wrong: ' + err);
-                } else { // vezme data z jsonu a ulozi se do pole
-                    currentWiFi(data.ssid, data.ip);
-                    for (i = 0; i < data.numOfNetworks; i++) {
-                        buttons(i, data.networks, data.strengh, data.protection);
-                    }
-                }
-            });
-
-        function buttons(i, networks, rssi, protection) {
-            // vytvori tlacitka na zaklade json zpravy
-            var button = document.createElement('input');
-            button.class = 'button';
-            button.type = 'submit';
-            button.value = networks[i]; // hodnota se nastavi na SSID site
-
-            var form = document.createElement('form'); // vytvori se formular do ktereho se tlacitko vlozi
-            // pokud sit je zabezpecena, odkaze na overeni s heslem
-            if (protection[i] == "None") {
-                form.method = 'POST';
-                form.action = '/wifi/redirect'
-            } else {
-                form.method = 'GET'
-                form.action = '/wifi';
-            }
-
-
-            var inputs = document.createElement('input');
-            inputs.type = 'hidden';
-            inputs.name = 'ssid';
-            inputs.value = networks[i]; // skryty input s ssid
-            var rssi1 = document.createElement("p");
-            rssi1.innerHTML = rssi[i]; // text s rrsi konkretni site
-            rssi1.className = 'rssi';
-            var encrypt = document.createElement("p");
-            encrypt.innerHTML = protection[i];
-            encrypt.className = 'encrypt1';
-            // sestaveni html stromu
-            document.body.appendChild(form);
-            form.appendChild(inputs);
-            form.appendChild(button);
-            form.appendChild(rssi1);
-            form.appendChild(encrypt);
-
-        }
-
-        function currentWiFi(ssid, ip) {
-          var desWiFi = document.createElement("h3");
-          desWiFi.innerHTML = "Current SSID:";
-          desWiFi.className = "center";
-          document.body.appendChild(desWiFi);
-
-          var ssidwifi = document.createElement("p");
-          ssidwifi.innerHTML = ssid;
-          ssidwifi.className = "center";
-          document.body.appendChild(ssidwifi);
-
-          var desIP = document.createElement("h3");
-          desIP.innerHTML = "Current IP: ";
-          desIP.className = "center";
-          document.body.appendChild(desIP);
-
-          var ipwifi = document.createElement("p");
-          ipwifi.innerHTML = ip;
-          ipwifi.className = "center";
-          document.body.appendChild(ipwifi);
-
-          var desWiFi1 = document.createElement("h1");
-          desWiFi1.innerHTML = "Select your new Network:";
-          desWiFi1.className = "center";
-          document.body.appendChild(desWiFi1);
-            
-        }
-    </script>
 </center>
 </body>
 </html>
 )rawliteral";
 
+const char WiFiHTML[]
+PROGMEM = R"rawliteral(
+    <html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body{
+      font-family: "Helvetica";
+
+    }
+    input[type="submit"] {
+      background-color: #005F41; /* Green */
+      color: white;
+      width: 200px;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      display: block;
+
+      margin: 0 auto;
+    }
+
+    button {
+      background-color: #005F41; /* Green */
+      color: white;
+      width: 150px;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 4px;
+      font-size: 16px;
+      display: block;
+      margin: 0 auto;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #3d8b40;
+      color: white;
+    }
+
+
+    .rssi {
+      color: green;
+      text-align: center;
+    }
+
+    .encrypt1 {
+      color: green;
+      text-align: center;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<center>
+  <h1>Networks</h1>
+  <button onclick="window.location.href=window.location.href">Scan networks</button>
+  <p>Scan can takes a while</p>
+  <button onclick="location.href='/networks/addWiFi'">Add hidden network</button>
+
+  <script>
+    var getJSON = function (url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);  // Otevre http request
+      xhr.responseType = 'json';
+      xhr.onload = function () {
+        var status = xhr.status; // zkontroluje se status http
+        if (status === 200) {
+          callback(null, xhr.response);
+        } else {
+          callback(status, xhr.response);
+        }
+      };
+      xhr.send();
+    };
+    getJSON('scannedWiFi.json', // pracuje s ipAdresa/scannedWiFi.json
+            function (err, data) {
+              if (err !== null) { // kontrola zda se stal error
+                alert('Something went wrong: ' + err);
+              } else { // vezme data z jsonu a ulozi se do pole
+                currentWiFi(data.ssid, data.ip);
+                for (i = 0; i < data.numOfNetworks; i++) {
+                  buttons(i, data.networks, data.strengh, data.protection);
+                }
+              }
+            });
+
+    function buttons(i, networks, rssi, protection) {
+      // vytvori tlacitka na zaklade json zpravy
+      var button = document.createElement('input');
+      button.class = 'button';
+      button.type = 'submit';
+      button.value = networks[i]; // hodnota se nastavi na SSID site
+
+      var form = document.createElement('form'); // vytvori se formular do ktereho se tlacitko vlozi
+      // pokud sit je zabezpecena, odkaze na overeni s heslem
+      if (protection[i] == "None") {
+        form.method = 'POST';
+        form.action = '/wifi/redirect'
+      } else {
+        form.method = 'GET'
+        form.action = '/wifi';
+      }
+
+
+      var inputs = document.createElement('input');
+      inputs.type = 'hidden';
+      inputs.name = 'ssid';
+      inputs.value = networks[i]; // skryty input s ssid
+      var rssi1 = document.createElement("p");
+      rssi1.innerHTML = rssi[i]; // text s rrsi konkretni site
+      rssi1.className = 'rssi';
+      var encrypt = document.createElement("p");
+      encrypt.innerHTML = protection[i];
+      encrypt.className = 'encrypt1';
+      // sestaveni html stromu
+      document.body.appendChild(form);
+      form.appendChild(inputs);
+      form.appendChild(button);
+      form.appendChild(rssi1);
+      form.appendChild(encrypt);
+
+    }
+
+    function currentWiFi(ssid, ip) {
+      var desWiFi = document.createElement("h3");
+      desWiFi.innerHTML = "Current SSID:";
+      desWiFi.className = "center";
+      document.body.appendChild(desWiFi);
+
+      var ssidwifi = document.createElement("p");
+      ssidwifi.innerHTML = ssid;
+      ssidwifi.className = "center";
+      document.body.appendChild(ssidwifi);
+
+      var desIP = document.createElement("h3");
+      desIP.innerHTML = "Current IP: ";
+      desIP.className = "center";
+      document.body.appendChild(desIP);
+
+      var ipwifi = document.createElement("p");
+      ipwifi.innerHTML = ip;
+      ipwifi.className = "center";
+      document.body.appendChild(ipwifi);
+
+      var desWiFi1 = document.createElement("h1");
+      desWiFi1.innerHTML = "Select your new Network:";
+      desWiFi1.className = "center";
+      document.body.appendChild(desWiFi1);
+
+    }
+  </script>
+</center>
+</body>
+</html>
+)rawliteral";
+
+const char addWiFiHTML[]
+PROGMEM = R"rawliteral(
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: "Helvetica";
+
+    }
+
+    input[type=password], select {
+      width: 50%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type=text], select {
+      width: 50%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #005F41; /* Green */
+      color: white;
+      width: 150px;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 4px;
+      font-size: 16px;
+      display: block;
+      margin: 0 auto;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #3d8b40;
+    }
+
+  </style>
+</head>
+<body>
+<center>
+  <h1>Secret network</h1>
+  <form method="post" action="/wifi/redirect">
+    <label for="ssid">SSID</label><br>
+    <input type="text" name="ssid" id="ssid"><br>
+    <label for="password">Password</label><br>
+    <input type="password" name="password" id="password">
+    <button type="submit">Submit</button>
+  </form>
+</center>
+</body>
+</html>
+)rawliteral"
 
 const char passwordHTML[]
 PROGMEM = R"rawliteral(
