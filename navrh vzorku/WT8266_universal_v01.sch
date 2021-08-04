@@ -8418,7 +8418,7 @@ Marquardt, Siemens, C&amp;K, ITT, and others&lt;p&gt;
 <parts>
 <part name="FRAME1" library="frames" deviceset="A4L-LOC" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
-<part name="C1" library="rcl" deviceset="C-EU" device="C0805" value="100nF"/>
+<part name="C1" library="rcl" deviceset="C-EU" device="C0805" value="330nF"/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R0805" value="3K3"/>
 <part name="D1" library="diode" deviceset="1N4148" device=""/>
 <part name="S1" library="switch-tact" deviceset="DTSM-6" device=""/>
@@ -8452,15 +8452,15 @@ Marquardt, Siemens, C&amp;K, ITT, and others&lt;p&gt;
 <part name="R10" library="rcl" deviceset="R-EU_" device="R0805" value="1K"/>
 <part name="D2" library="diode" deviceset="1N4148" device=""/>
 <part name="GND7" library="supply1" deviceset="GND" device=""/>
-<part name="C3" library="rcl" deviceset="C-EU" device="C0805" value="3.3u"/>
-<part name="C4" library="rcl" deviceset="C-EU" device="C0805" value="3.3u"/>
+<part name="C3" library="rcl" deviceset="C-EU" device="C0805" value="2.2uF"/>
+<part name="C4" library="rcl" deviceset="C-EU" device="C0805" value="2.2uF"/>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="RESET" library="switch-tact" deviceset="DTSM-6" device=""/>
 <part name="PROG" library="switch-tact" deviceset="DTSM-6" device=""/>
 <part name="GND10" library="supply1" deviceset="GND" device=""/>
-<part name="C5" library="rcl" deviceset="C-EU" device="C0805" value="3.3u"/>
-<part name="R13" library="rcl" deviceset="R-EU_" device="R0805" value="3K3"/>
+<part name="C5" library="rcl" deviceset="C-EU" device="C0805" value="330nF"/>
+<part name="R13" library="rcl" deviceset="R-EU_" device="R0805" value="33K"/>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="Q4" library="transistor-small-signal" deviceset="BSS123" device=""/>
 <part name="Q5" library="transistor-small-signal" deviceset="BSS123" device=""/>
@@ -8487,13 +8487,13 @@ Marquardt, Siemens, C&amp;K, ITT, and others&lt;p&gt;
 <part name="+3V9" library="supply1" deviceset="+3V3" device=""/>
 <part name="L1" library="rcl" deviceset="L-US" device="L2825P"/>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
-<part name="C10" library="rcl" deviceset="C-EU" device="C0805" value="3.3u"/>
+<part name="C10" library="rcl" deviceset="C-EU" device="C0805" value="2.2uF"/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="GND22" library="supply1" deviceset="GND" device=""/>
 <part name="R5" library="rcl" deviceset="R-EU_" device="R0805" value="3K3"/>
 <part name="GND23" library="supply1" deviceset="GND" device=""/>
-<part name="R11" library="rcl" deviceset="R-EU_" device="R0805" value="3K3"/>
-<part name="R12" library="rcl" deviceset="R-EU_" device="R0805" value="3K3"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="R0805" value="1K"/>
+<part name="R12" library="rcl" deviceset="R-EU_" device="R0805" value="1K"/>
 <part name="UART" library="con-lstb" deviceset="MAR05-1" device=""/>
 </parts>
 <sheets>

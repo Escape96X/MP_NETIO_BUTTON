@@ -61,7 +61,7 @@ void handleRoot() {
 }
 
 void handleNetwork() {
-    server.send(200, "text/html", WiFiHTML)
+    server.send(200, "text/html", WiFiHTML);
 }
 
 void handleAddWiFi() {
@@ -206,7 +206,7 @@ void serversOn() {
     server.on("/http_planeA", handleHTTPA);
     server.on("/http_planeB", handleHTTPB);
     server.on("/", handleRoot);
-    server.on("/network", handleNetwork);
+    server.on("/networks", handleNetwork);
     server.on("/networks/addWiFi", handleAddWiFi);
     server.on("/wifi", handleWiFiConnect);
     server.on("/netioProduct", handleNetioProduct);

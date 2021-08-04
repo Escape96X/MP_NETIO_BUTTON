@@ -65,8 +65,9 @@ PROGMEM = R"rawliteral(
 <body>
 <center>
     <h1>NETIO BUTTON</h1>
+    <h2>Conf-mode</h2>
     <button onclick="location.href = '/networks';">List of Networks</button>
-    <button onclick="location.href = '/netioProduct';">Actions</button>
+    <button onclick="location.href = '/netioProduct';">Button actions</button>
     <button onclick="location.href = '/deepsleep';">Disable conf-mode</button>
     <button id ="FR" onclick="location.href = '/disconnect';">Factory reset</button>
     <button onclick="location.href = '/manual';">Manual</button>
@@ -140,6 +141,7 @@ PROGMEM = R"rawliteral(
   <button onclick="window.location.href=window.location.href">Scan networks</button>
   <p>Scan can takes a while</p>
   <button onclick="location.href='/networks/addWiFi'">Add hidden network</button>
+  <button onClick="location.href = '/';">Return</button>
 
   <script>
     var getJSON = function (url, callback) {
@@ -302,10 +304,11 @@ PROGMEM = R"rawliteral(
     <input type="password" name="password" id="password">
     <button type="submit">Submit</button>
   </form>
+  <button onClick="location.href = '/';">Return</button>
 </center>
 </body>
 </html>
-)rawliteral"
+)rawliteral";
 
 const char passwordHTML[]
 PROGMEM = R"rawliteral(
