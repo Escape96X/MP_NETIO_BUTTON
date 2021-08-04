@@ -78,7 +78,7 @@ void parsingIP() {
             HTTP_CONNECTION += "/netio.json";
             http_post(HTTP_CONNECTION, i);
             Serial.println(i);
-            delay(200);
+           //delay(200);
         }
         Serial.print("error:");
         Serial.println(errors);
@@ -108,7 +108,7 @@ void wifi_setup() {
         }
         if (WiFi.status() != WL_CONNECTED) {// pokud neni pripojen ohlasi chybu
             feedback_timer(200, 2);
-            WiFi.disconnect();
+            //WiFi.disconnect();
             ESPSleep();
         }
     }
@@ -160,8 +160,8 @@ void debug() {
     // debug zpravy z pameti
     // Serial.println(readEEPROM(PASSWORD_POS, 64));
     // Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-    // Serial.println(BUTTONSTATE1);
-    // Serial.println(BUTTONSTATE2);
+    Serial.println(BUTTONSTATE1);
+    Serial.println(BUTTONSTATE2);
     // Serial.println("");
     //debugPair();
 }
