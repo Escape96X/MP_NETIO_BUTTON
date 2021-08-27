@@ -167,12 +167,11 @@ void handleDeepSleep() {
     ESPSleep();
 }
 
-void handleDisconnect() {
-    EEPROM.write(SSID_POS, -1);
-    EEPROM.write(PASSWORD_POS, -1);
+void handleFactoryReset() {
+    for(int i = 0; i <EEPROM.length(); i++)
+        EEPROM.write(i, 255);
     EEPROM.commit();
     WiFi.disconnect();
-
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
@@ -188,6 +187,9 @@ void handleDisconnect() {
 //         pes += ";";
 //     }
 //     server.send(200, "text/html", pes);
+// }
+// void handledebug(){
+// debugPair();
 // }
 
 void serversOn() {
@@ -205,9 +207,9 @@ void serversOn() {
     server.on("/netioProduct/check", HTTP_GET, handleNetioDevice);
     server.on("/buttonConfigure/check", HTTP_POST, handleConfigCheck);
     server.on("/deepsleep", handleDeepSleep);
-    server.on("/disconnect", handleDisconnect);
+    server.on("/disconnect", handleFactoryReset);
     server.on("/manual", handleManual);
-    // server.on("/debug", handledebug);
+    //server.on("/debug", handledebug);
     server.begin();
 }
 

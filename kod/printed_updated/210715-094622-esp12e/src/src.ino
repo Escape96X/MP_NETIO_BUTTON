@@ -16,6 +16,7 @@ const int ENPin = 2;
 // globalni promnene
 bool BUTTONSTATE1 = false;
 bool BUTTONSTATE2 = false;
+bool errors = false;
 
 
 WiFiClient wificlient;
@@ -40,7 +41,7 @@ bool pin_pressed() {
     }
 }
 
-void http_post(String HTTP_CONNECTION, int position, bool error) {
+void http_post(String HTTP_CONNECTION, int position) {
     // posle http request zasuvce
     int offset = (pin_pressed()) ? HTTP_POSA : HTTP_POSB;
     if (http.begin(wificlient, HTTP_CONNECTION)) {
@@ -49,13 +50,15 @@ void http_post(String HTTP_CONNECTION, int position, bool error) {
         Serial.println(position);
         String payload = http.getString();
 
-        if (payload.indexOf("Errors") > 0 || payload == "") {
-            error = true;
+        if (payload.indexOf("Errors") > 0 || payload.length() == 0) {
+            Serial.print("jsem v erroru");
+            
+            errors = true;
         }
-        //Serial.println(payload);
+        Serial.println(payload);
         http.end();
     } else {
-        error = true;
+        errors = true;
     }
 
 }
@@ -65,7 +68,6 @@ void parsingIP() {
     int offset = (pin_pressed()) ? IP_POSA : IP_POSB;
     int count = countContent(offset, IP_POSB, IP_JMP);
     Serial.println(count);
-    bool errors = false;
     if (count == 0) {
         feedback_timer(200, 3);
         ESPSleep();
@@ -74,10 +76,12 @@ void parsingIP() {
             String HTTP_CONNECTION = "http://";
             HTTP_CONNECTION += readContent(i, offset, IP_POSB, IP_JMP);
             HTTP_CONNECTION += "/netio.json";
-            http_post(HTTP_CONNECTION, i, errors);
+            http_post(HTTP_CONNECTION, i);
             Serial.println(i);
             delay(200);
         }
+        Serial.print("error:");
+        Serial.println(errors);
         if (errors)
             feedback_timer(200, 3);
     }
@@ -154,11 +158,12 @@ void ESPSleep() {
 
 void debug() {
     // debug zpravy z pameti
-    Serial.println(readEEPROM(PASSWORD_POS, 64));
-    Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-    Serial.println(BUTTONSTATE1);
-    Serial.println(BUTTONSTATE2);
-    Serial.println("");
+    // Serial.println(readEEPROM(PASSWORD_POS, 64));
+    // Serial.println(readEEPROM(SSID_POS, SSID_LEN));
+    // Serial.println(BUTTONSTATE1);
+    // Serial.println(BUTTONSTATE2);
+    // Serial.println("");
+    debugPair();
 }
 
 void setup() {
