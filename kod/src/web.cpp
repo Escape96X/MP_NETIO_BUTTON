@@ -97,7 +97,18 @@ void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
         if (server.arg("group") == "true") {
-            saveToEEPROMContent(server.arg("addIP"), IP_POSA, IP_JMP);
+            String IP_AD = server.arg("addIP");
+            if (IP_AD.indexOf('http://') > 0) {
+                IP_AD.remove(0,7);
+            }
+            if (IP_AD.indexOf('/netio.json') > 0) {
+                // dodelat
+            }
+            saveToEEPROMContent(IP_AD, IP_POSA, IP_JMP);
+            // Vlozit kontrolu Ip
+
+
+
             saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
         } else {
             saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
