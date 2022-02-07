@@ -91,12 +91,11 @@ void wifi_setup() {
     // precte z pameti ssid a password a pripoji se k wifi
     String ssid = readEEPROM(SSID_POS, SSID_LEN);
     String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
+    Serial.print("SSID and Password:");
     Serial.println(ssid);
+    Serial.println(password);
     char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
-    Serial.println(s);
     char *p = const_cast<char *>(password.c_str());
-    Serial.println(ssid);
-    Serial.println(p);
     delay(300);
     if (WiFi.status() != WL_CONNECTED) {
         WiFi.begin(s, p);
@@ -108,6 +107,8 @@ void wifi_setup() {
         }
         if (WiFi.status() != WL_CONNECTED) {// pokud neni pripojen ohlasi chybu
             feedback_timer(200, 2);
+            Serial.print("WiFi status: ");
+            Serial.println(WiFi.status());
             WiFi.disconnect();
             ESPSleep();
         }
@@ -118,7 +119,7 @@ bool check_conf_mode() {
     // overi zda jsou oba piny zmackle pro konfiguracni mod
     if (!BUTTONSTATE1 && !BUTTONSTATE2) {
         feedback_timer(400, 1);
-        Serial.println("Konf");
+        Serial.println("Config mode enabled");
         setWiFiServer2();
         return true;
     } else if (BUTTONSTATE1 && BUTTONSTATE2) {
@@ -152,18 +153,20 @@ void setup_boot() {
 
 void ESPSleep() {
     digitalWrite(ENPin, LOW);
-    //ESP.deepSleep(0);
-
 }
 
 void debug() {
-    // debug zpravy z pameti
-    // Serial.println(readEEPROM(PASSWORD_POS, 64));
-    // Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-    // Serial.println(BUTTONSTATE1);
-    // Serial.println(BUTTONSTATE2);
-    // Serial.println("");
-    debugPair();
+    //debug zpravy z pameti
+    Serial.println("WiFi login");
+    Serial.println(readEEPROM(SSID_POS, SSID_LEN));
+    Serial.println(readEEPROM(PASSWORD_POS, 64));
+    Serial.println("Button state detection:");
+    Serial.print("Button S1:");
+    Serial.println(BUTTONSTATE1);
+    Serial.print("Button S2:");
+    Serial.println(BUTTONSTATE2);
+    Serial.println("");
+    //debugPair();
 }
 
 void setup() {
@@ -171,7 +174,7 @@ void setup() {
     debug();
     if (!check_conf_mode()) {
         digitalWrite(LED_PIN, HIGH);
-        Serial.println("nekonf");
+        Serial.println("Standard mode enabled");
         send_message();
         ESPSleep();
 
