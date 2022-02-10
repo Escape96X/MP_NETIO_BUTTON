@@ -1,0 +1,173 @@
+<html lang="EN">
+<head>
+    <style>
+        body {
+            font-family: "Helvetica", serif;
+        }
+
+        input[type=input] {
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #005F41; /* Green */
+            color: white;
+            width: 150px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d8b40;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+    <title>NETIO Button</title>
+</head>
+<body style="text-align: center;">
+<h1>IP Adresses of NETIO sockets</h1>
+<button type="button" onclick="location.href = '/netioProduct/add';">ADD</button>
+<button onClick="location.href = '/';">Return</button>
+<button onClick="location.href = 'netioProduct/testConnection';">Test</button>
+<script>
+    let getJSON = function (url, callback) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);  // Otevre http request
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            let status = xhr.status; // zkontroluje se status http
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
+        };
+        xhr.send();
+    };
+    getJSON('ip_adress.json',
+        function (err, data) {
+            if (err !== null) { // kontrola zda se stal error
+                alert('Something went wrong: ' + err);
+            } else { // vezme data z jsonu a ulozi se do pole
+                let tableDespA = document.createElement("h3")
+                tableDespA.innerHTML = "Button #1";
+                document.body.appendChild(tableDespA);
+                tableCreation(data.numOfIPA, data.IP_adressA, "A");
+                let tableDespB = document.createElement("h3");
+                tableDespB.innerHTML = "Button #2";
+                document.body.appendChild(tableDespB);
+                tableCreation(data.numOfIPB, data.IP_addressB, "B");
+            }
+        });
+
+    function tableCreation(numbOfIp, IP_address, groupRecog) {
+        let table = document.createElement('table');
+        if (groupRecog === "A") {
+            table.id = "tableA";
+        } else {
+            table.id = "tableB";
+        }
+        table.border = "1";
+        let headerRow = table.insertRow(0)
+        let headerCell1 = document.createElement("th");
+        headerCell1.innerHTML = "#";
+        let headerCell2 = document.createElement("th");
+        headerCell2.innerHTML = "JSON";
+        let headerCell3 = document.createElement("th");
+        headerCell3.innerHTML = "IP Address";
+        let headerCell4 = document.createElement("th");
+        headerCell4.innerHTML = "Action";
+        headerRow.appendChild(headerCell1);
+        headerRow.appendChild(headerCell2);
+        headerRow.appendChild(headerCell3);
+        headerRow.appendChild(headerCell4);
+        for (let i = 0; i < numbOfIp; i++) {
+            let row = table.insertRow(i + 1);
+            if (groupRecog === "A") {
+                row.id = "rowA" + i;
+            } else {
+                row.id = "rowB" + i;
+            }
+            let numberOfIp = row.insertCell(0);
+            getHTTP(i, groupRecog);
+            numberOfIp.innerHTML = i;
+            let IP = row.insertCell(1);
+            IP.innerHTML = IP_address[i];
+            let deleteButtonCell = row.insertCell(2);
+            let deleteButton = document.createElement('button');
+            deleteButton.type = 'submit';
+            deleteButton.value = i;
+            deleteButton.innerHTML = "Delete";
+            let IPNumber = document.createElement("input");
+            IPNumber.type = "hidden";
+            IPNumber.name = "IPNumber";
+            IPNumber.value = i;
+            let group = document.createElement("input");
+            group.type = "hidden";
+            group.name = "group";
+            if (groupRecog === "A") {
+                group.value = "true";
+            } else {
+                group.value = "false";
+            }
+            let form = document.createElement('form');
+            form.method = 'GET'
+            form.action = '/netioProduct/delete'
+            document.body.appendChild(table);
+            deleteButtonCell.appendChild(form);
+            form.appendChild(deleteButton);
+            form.appendChild(group);
+            form.appendChild(IPNumber);
+        }
+    }
+
+    function getHTTP(i, groupRecog) {
+        let httpRequest = new XMLHttpRequest();
+        let urlHTTP;
+        if (groupRecog === "A") {
+            urlHTTP = "http_planeA";
+        } else {
+            urlHTTP = "http_planeB";
+        }
+        httpRequest.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let httpstring = this.responseText.split("!");
+                let nameRow;
+                if (groupRecog === "A") {
+                    nameRow = "rowA";
+                } else {
+                    nameRow = "rowB";
+                }
+                let row1 = document.getElementById(nameRow + i);
+                let HTTP = row1.insertCell(1);
+                HTTP.innerHTML = httpstring[i];
+            }
+        };
+        httpRequest.open("GET", urlHTTP, true);
+        httpRequest.send();
+    }
+</script>
+</body>
+</html>

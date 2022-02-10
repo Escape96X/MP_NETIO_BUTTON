@@ -1,6 +1,9 @@
 #include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <fs.h>
+
+// vlastni headers
 #include "header.h"
 #include "define.h"
 
@@ -21,6 +24,8 @@ bool errors = false;
 
 WiFiClient wificlient;
 HTTPClient http;
+
+
 
 void feedback_timer(int duration, int quantity) {
     // feedback platformy
@@ -185,12 +190,14 @@ void debug() {
     Serial.print("Button S2:");
     Serial.println(BUTTONSTATE2);
     Serial.println("");
-    //debugPair();
 }
 
 void setup() {
     setup_boot();
     debug();
+      if (!SPIFFS.begin()) {
+        Serial.println("An Error has occurred while mounting SPIFFS");
+    }
     if (!check_conf_mode()) {
         digitalWrite(LED_PIN, HIGH);
         Serial.println("Standard mode enabled");

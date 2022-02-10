@@ -1,15 +1,10 @@
-#ifndef _HTML_h
-#define _HTML_h_
-
-#include <Arduino.h>
-
-const char css_head[] PROGMEM = R"rawliteral(
-<html>
+<html lang="en">
 <head>
     <style>
         body {
-            font-family: "Helvetica";
+            font-family: "Helvetica", serif;
         }
+
         button {
             background-color: #005F41;
             color: white;
@@ -23,9 +18,11 @@ const char css_head[] PROGMEM = R"rawliteral(
             text-decoration: none;
             transition: 0.3s;
         }
+
         button:hover {
             background-color: #3d8b40;
         }
+
         input[type=text] {
             width: 30%;
             height: 40px;
@@ -34,30 +31,40 @@ const char css_head[] PROGMEM = R"rawliteral(
             border: 2px solid black;
             border-radius: 4px;
         }
+
         input:invalid {
             border: 2px solid red;
             border-radius: 4px;
         }
+
         label {
             font-size: 20px;
         }
+
         select {
             margin: 20px;
             font-size: 20px;
         }
-        table {
-            border-collapse: collapse;
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border: 1px solid black;
-}
     </style>
+    <title>add</title>
 </head>
 <body>
-<center>
-)rawliteral";
-
-#endif
+<div style="text-align: center;">
+    <h1>Add Netio device</h1>
+    <form method="GET" action="/netioProduct/check">
+        <label htmlFor="addIP">IP of Netio socket</label> <br>
+        <input type="text" pattern="[0-9.]{7,15}" required="required" name="addIP"
+               title="Invalid IP address. Don't use http:// or /netio.json" id="addIP"><br>
+        <label htmlFor="http">JSON String</label><br>
+        <input type="text" required="required" maxlength="149" name="http"><br>
+        <label htmlFor="group">Button selection</label><br>
+        <select name="group", id="group">
+            <option value=true>Button #1</option>
+            <option value=false>Button #2</option>
+        </select><br>
+        <button type="submit">Submit</button>
+    </form>
+    <button onClick="location.href = '/';">Return</button>
+</div>
+</body>
+</html>

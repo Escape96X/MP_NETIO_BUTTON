@@ -2,6 +2,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <EEPROM.h>
+#include <fs.h>
 
 // Vytvorene headery
 #include "header.h"
@@ -57,11 +58,13 @@ void disconnectAP() {
 
 // Server - staticke stranky
 void handleRoot() {
-    server.send(200, "text/html", indexHTML);
+    File file = SPIFFS.open("/website/index.html", "r");
+    server.streamFile(file, "text/html");
 }
 
 void handleWiFiConnect() {
-    server.send(200, "text/html", passwordHTML);
+    File file = SPIFFS.open("/website/password.html", "r");
+    server.streamFile(file, "text/html");
 }
 
 void handleScanWiFi() {
@@ -81,15 +84,18 @@ void handleIPAddress() {
 }
 
 void handleNetioProduct() {
-    server.send(200, "text/html", NetioHTML);
+    File file = SPIFFS.open("/website/netio.html", "r");
+    server.streamFile(file, "text/html");
 }
 
 void handleNetioAdd() {
-    server.send(200, "text/html", NetioAddHTML);
+    File file = SPIFFS.open("/website/netio_add.html", "r");
+    server.streamFile(file, "text/html");
 }
 
 void handleManual() {
-    server.send(200, "text/html", tutorialHTML);
+    File file = SPIFFS.open("/website/tutorial.html", "r");
+    server.streamFile(file, "text/html");
 }
 
 // Server - dynamické stránky
