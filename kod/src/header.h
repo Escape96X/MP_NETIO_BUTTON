@@ -5,6 +5,13 @@
 #include <ESP8266WiFi.h>
 
 
+
+
+
+// src.cpp
+String parsingIP(bool button_pressed);
+
+
 void setWiFiServer();
 
 void setWiFiServer2();

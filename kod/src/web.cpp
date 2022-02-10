@@ -98,16 +98,7 @@ void handleNetioDevice() {
     if (server.hasArg("addIP")) {
         if (server.arg("group") == "true") {
             String IP_AD = server.arg("addIP");
-            if (IP_AD.indexOf('http://') > 0) {
-                IP_AD.remove(0,7);
-            }
-            if (IP_AD.indexOf('/netio.json') > 0) {
-                // dodelat
-            }
             saveToEEPROMContent(IP_AD, IP_POSA, IP_JMP);
-            // Vlozit kontrolu Ip
-
-
 
             saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
         } else {
@@ -173,6 +164,20 @@ void handleConfigCheck() {
     }
 }
 
+
+void handleTestConnection() {
+    Serial.println("Testing JSON in progress");
+    String html = css_head;
+    html += "<h1>Table of tests</h1>";
+    html += R"rawliteral(<button onClick="location.href = '/';">Return</button>)rawliteral";
+    html += "<h2>S1</h2>";
+    html += parsingIP(true);
+    html += "<h2>S2<h2>";
+    html += parsingIP(false);
+    Serial.println(html);
+    server.send(200, "text/html", html);
+}
+
 void handleDeepSleep() {
     feedback_timer(400, 1);
     ESPSleep();
@@ -186,23 +191,6 @@ void handleFactoryReset() {
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
-// void handledebug() {
-//     String pes = "test: ";
-//     for (int i = 535; i < 4022; i++) {
-//         if (i == 2011)
-//             pes += "---";
-//         else if (EEPROM.read(i) == 255)
-//             pes += "+";
-//         else
-//             pes += EEPROM.read(i);
-//         pes += ";";
-//     }
-//     server.send(200, "text/html", pes);
-// }
-// void handledebug(){
-// debugPair();
-// }
-
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
     server.on("/ip_adress.json", handleIPAddress);
@@ -213,6 +201,7 @@ void serversOn() {
     server.on("/netioProduct", handleNetioProduct);
     server.on("/netioProduct/add", handleNetioAdd);
     server.on("/netioProduct/delete", handleNetioDelete);
+    server.on("/netioProduct/testConnection", handleTestConnection);
     server.on("/wifi/redirect", HTTP_POST, handleWiFiPasswordRedirect);
     server.on("/wifi/check", handleWiFiApprove);
     server.on("/netioProduct/check", HTTP_GET, handleNetioDevice);
@@ -220,7 +209,6 @@ void serversOn() {
     server.on("/deepsleep", handleDeepSleep);
     server.on("/disconnect", handleFactoryReset);
     server.on("/manual", handleManual);
-    //server.on("/debug", handledebug);
     server.begin();
 }
 

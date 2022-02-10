@@ -1,6 +1,20 @@
 # Manual
-<h1>NETIO button tutorial</h1>
-<h2>How to set it up</h2>
+## How to install on esp8266 with Netio ESP flasher
+Best method is to use Visual studio code with plugin Platformio.  
+1. Download 'Kód' folder of this repository
+2. After installation of VS code and Platformio override esptool.py in platformio
+	- Windows path: C:\Users\\**username**\\.platformio\packages\tool-esptoolpy\esptool.py
+3. Connect
+	- Rx to Tx
+	- Tx to Rx
+	- GND to GND
+	- PROG to PIO0
+	- <a href = 'https://github.com/jiricmi/MP_NETIO_BUTTON/issues/14#issuecomment-888953459'>3,3 V to 3,3 V (You have to solder that to R2)</a>
+	- <a href = 'https://github.com/jiricmi/MP_NETIO_BUTTON/issues/14#issuecomment-888953459'>RST to ESPEN (solder to RST button)</a>
+4. Upload with platformio
+
+<h2>NETIO button tutorial</h2>
+<h3>How to set it up</h3>
 <ol>
 <li>Turn it on with ON/OFF switch</li>
 <li>Hold both buttons until red light blinks once.</li>
@@ -8,7 +22,7 @@
 <li>Under WiFis find your WiFi and click on it after that enter your password</li>
 <li>After connecting, copy IP address of the device, reconnect to your network and enter new IP to your browser</li>
 </ol>
-<h2>Connect to Netio socket</h2>
+<h3>Connect to Netio socket</h3>
 <ol>
 <li>Select <b>Action list</b> on main screen</li>
 <li>Click on button <b>add</b></li>
@@ -65,9 +79,7 @@ Behind button configure you can find feature to write JSON message to JSON API o
 
 # Obsah
 📦MP_NETIO_BUTTON  
- ┣ 📂code - - **Finální program**  
-┃ ┣ 📂ESP8266   
- ┃ ┗ 📂ESP32     
+ ┣ 📂kod - - **Finální program**  
  ┣ 📂dokumentace - **Dokumentace s latex soubory**  
  ┃ ┗ 📜document.pdf   
  ┣ 📂mereni - **Waveform a screenshoty**    
@@ -117,7 +129,7 @@ připojení do WiFi sítě
 	- Celou dokumentaci včetně výpisů zdrojového programu s komentářem veďte ve verzovacím systému Git a elektronicky doložte k tištěné podobě dokumentace
 ## Kritéria funkčnosti
 - vyrobené vzorky ovladače (ESP8266 a ESP32) jsou funkční
-- je vytvořeno uživatelské rozhraní pro konfiguraci ovladač**
+- je vytvořeno uživatelské rozhraní pro konfiguraci ovladač
 - bylo provedeno měření spotřeby a doby odezvy pro oba typy ovladače
 
 ## Výstupy

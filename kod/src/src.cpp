@@ -41,49 +41,67 @@ bool pin_pressed() {
     }
 }
 
-void http_post(String HTTP_CONNECTION, int position) {
+String http_post(String HTTP_CONNECTION, int position, bool button_pressed) {
     // posle http request zasuvce
-    int offset = (pin_pressed()) ? HTTP_POSA : HTTP_POSB;
+    int offset = (button_pressed) ? HTTP_POSA : HTTP_POSB;
     if (http.begin(wificlient, HTTP_CONNECTION)) {
+        Serial.println("zacal jsem http");
         int httpCode = http.POST(readContent(position, offset, HTTP_POSB, HTTP_JMP));
-        Serial.print("pozice HTTP:");
-        Serial.println(position);
-        String payload = http.getString();
+        if(httpCode > 0) {
+            Serial.print("HTTP CODE: ");
+            Serial.println(httpCode);
+            Serial.print("pozice HTTP:");
+            Serial.println(position);
+            String payload = http.getString();
+            Serial.println('payload');
+            Serial.println(payload);
 
-        if (payload.indexOf("Errors") > 0 || payload.length() == 0) {
-            Serial.print("jsem v erroru");
+            if (payload.indexOf("Errors") > 0 || payload.length() == 0) {
+                Serial.print("jsem v erroru");
 
-            errors = true;
+                errors = true;
+            }
+            Serial.println(payload);
+            http.end();
+            return payload;
+        } else {
+            String payload = "HTTP failed with code: ";
+            payload += httpCode;
+            return payload;
         }
-        Serial.println(payload);
-        http.end();
-    } else {
-        errors = true;
     }
-
+    Serial.println("Kod je konec");
+    return "Protocol failed";
 }
 
-void parsingIP() {
+String parsingIP(bool button_pressed) {
     // najde prislusnou ip adresu
-    int offset = (pin_pressed()) ? IP_POSA : IP_POSB;
+    int offset = (button_pressed) ? IP_POSA : IP_POSB;
     int count = countContent(offset, IP_POSB, IP_JMP);
-    Serial.println(count);
+    // Serial.println(count);
     if (count == 0) {
         feedback_timer(200, 3);
-        ESPSleep();
+        return "Table of actions is empty.";
     } else {
+        String end_payload = "<table>";
         for (int i = 0; i < count; i++) {
             String HTTP_CONNECTION = "http://";
-            HTTP_CONNECTION += readContent(i, offset, IP_POSB, IP_JMP);
+            String ip_address = readContent(i, offset, IP_POSB, IP_JMP);
+            end_payload += "<th><td>"+ip_address + "</td><td>";
+
+            HTTP_CONNECTION += ip_address;
             HTTP_CONNECTION += "/netio.json";
-            http_post(HTTP_CONNECTION, i);
+            end_payload += http_post(HTTP_CONNECTION, i, button_pressed);
+            end_payload += "</td></th>";
             Serial.println(i);
             delay(200);
         }
+        end_payload += "</table>";
         Serial.print("error:");
         Serial.println(errors);
         if (errors)
             feedback_timer(200, 3);
+        return end_payload;
     }
 }
 
@@ -105,6 +123,7 @@ void wifi_setup() {
             delay(100);
             Serial.print(".");
         }
+        Serial.println(' ');
         if (WiFi.status() != WL_CONNECTED) {// pokud neni pripojen ohlasi chybu
             feedback_timer(200, 2);
             Serial.print("WiFi status: ");
@@ -133,7 +152,7 @@ bool check_conf_mode() {
 
 void send_message() {
     wifi_setup();
-    parsingIP();
+    parsingIP(pin_pressed());
 }
 
 void setup_boot() {
