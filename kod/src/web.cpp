@@ -2,7 +2,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <EEPROM.h>
-#include <fs.h>
+#include <LittleFS.h>
 
 // Vytvorene headery
 #include "header.h"
@@ -58,12 +58,12 @@ void disconnectAP() {
 
 // Server - staticke stranky
 void handleRoot() {
-    File file = SPIFFS.open("/website/index.html", "r");
+    File file = LittleFS.open("/website/index.html", "r");
     server.streamFile(file, "text/html");
 }
 
 void handleWiFiConnect() {
-    File file = SPIFFS.open("/website/password.html", "r");
+    File file = LittleFS.open("/website/password.html", "r");
     server.streamFile(file, "text/html");
 }
 
@@ -84,17 +84,17 @@ void handleIPAddress() {
 }
 
 void handleNetioProduct() {
-    File file = SPIFFS.open("/website/netio.html", "r");
+    File file = LittleFS.open("/website/netio.html", "r");
     server.streamFile(file, "text/html");
 }
 
 void handleNetioAdd() {
-    File file = SPIFFS.open("/website/netio_add.html", "r");
+    File file = LittleFS.open("/website/netio_add.html", "r");
     server.streamFile(file, "text/html");
 }
 
 void handleManual() {
-    File file = SPIFFS.open("/website/tutorial.html", "r");
+    File file = LittleFS.open("/website/tutorial.html", "r");
     server.streamFile(file, "text/html");
 }
 
@@ -190,7 +190,7 @@ void handleDeepSleep() {
 }
 
 void handleFactoryReset() {
-    for(int i = 0; i <EEPROM.length(); i++)
+    for(int i = 0; i < EEPROM.length(); i++)
         EEPROM.write(i, 255);
     EEPROM.commit();
     WiFi.disconnect();

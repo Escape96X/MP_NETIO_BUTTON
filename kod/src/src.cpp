@@ -1,7 +1,7 @@
 #include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
-#include <fs.h>
+#include <LittleFS.h>
 
 // vlastni headers
 #include "header.h"
@@ -58,7 +58,7 @@ String http_post(String HTTP_CONNECTION, int position, bool button_pressed) {
             Serial.print("pozice HTTP:");
             Serial.println(position);
             String payload = http.getString();
-            Serial.println('payload');
+            Serial.println("payload");
             Serial.println(payload);
 
             if (payload.indexOf("Errors") > 0 || payload.length() == 0) {
@@ -195,7 +195,7 @@ void debug() {
 void setup() {
     setup_boot();
     debug();
-      if (!SPIFFS.begin()) {
+      if (!LittleFS.begin()) {
         Serial.println("An Error has occurred while mounting SPIFFS");
     }
     if (!check_conf_mode()) {
