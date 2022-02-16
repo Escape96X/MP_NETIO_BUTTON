@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <EEPROM.h>
 #include <LittleFS.h>
+#include <FS.h>
 
 // Vytvorene headery
 #include "header.h"
@@ -190,7 +191,7 @@ void handleDeepSleep() {
 }
 
 void handleFactoryReset() {
-    for(int i = 0; i < EEPROM.length(); i++)
+    for(int i = 0; i <EEPROM.length(); i++)
         EEPROM.write(i, 255);
     EEPROM.commit();
     WiFi.disconnect();
