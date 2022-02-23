@@ -4,17 +4,10 @@
 #include <LittleFS.h>
 
 // vlastni headers
-#include "header.h"
+#include "web.h"
 #include "define.h"
-
-
-// konstanty-piny
-const int WAKEUP_PIN1 = 5;
-const int WAKEUP_PIN2 = 13;
-// buzzer 14
-const int BUZZER_PIN = 14;
-const int LED_PIN = 12;
-const int ENPin = 2;
+#include "memory.h"
+#include "basic_functions.h"
 
 // globalni promnene
 bool BUTTONSTATE1 = false;
@@ -25,17 +18,6 @@ bool errors = false;
 WiFiClient wificlient;
 HTTPClient http;
 
-
-
-void feedback_timer(int duration, int quantity) {
-    // feedback platformy
-    for (int i = 0; i < quantity; i++) {
-        digitalWrite(BUZZER_PIN, HIGH);
-        delay(duration);
-        digitalWrite(BUZZER_PIN, LOW);
-        delay(100);
-    }
-}
 
 bool pin_pressed() {
     // kontrola jake tlacitko bylo zmacknuto
@@ -144,7 +126,7 @@ bool check_conf_mode() {
     if (!BUTTONSTATE1 && !BUTTONSTATE2) {
         feedback_timer(400, 1);
         Serial.println("Config mode enabled");
-        setWiFiServer2();
+        setWiFiServer();
         return true;
     } else if (BUTTONSTATE1 && BUTTONSTATE2) {
         feedback_timer(200, 4);
@@ -173,10 +155,6 @@ void setup_boot() {
     pinMode(BUZZER_PIN, OUTPUT);
     pinMode(LED_PIN, OUTPUT);
     Serial.println("Načtení pinu");
-}
-
-void ESPSleep() {
-    digitalWrite(ENPin, LOW);
 }
 
 void debug() {

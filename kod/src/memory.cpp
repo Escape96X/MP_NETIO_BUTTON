@@ -1,6 +1,7 @@
 #include <EEPROM.h>
-#include "header.h"
+#include "memory.h"
 #include "define.h"
+#include "src.h"
 
 
 // Prace s pameti

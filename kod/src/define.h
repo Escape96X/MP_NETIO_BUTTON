@@ -22,4 +22,11 @@
 #define HTTP_JMP 151
 
 
+// Used pins
+#define WAKEUP_PIN1 5
+#define WAKEUP_PIN2 13
+#define BUZZER_PIN 14
+#define LED_PIN 12
+#define ENPin 2
+
 #endif

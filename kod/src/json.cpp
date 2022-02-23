@@ -1,7 +1,12 @@
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <LittleFS.h>
+#include <ArduinoJson.h>
 
-#include "header.h"
+#include "basic_functions.h"
 #include "define.h"
+#include "memory.h"
+
 
 String jsonOfIP() {
     // json pro IP adresy
@@ -82,4 +87,17 @@ String jsonOfNetworks() {
         networks += "EMPTY";
     networks += "\"}";
     return networks;
+}
+
+void json_upload(String ip_address) {
+    Serial.println("Pracuji s jsonem");
+    File table_file = LittleFS.open("tableA.json", "r");
+    DynamicJsonDocument doc(2048);
+    deserializeJson(doc, table_file);
+    serializeJsonPretty(doc, Serial);
+    doc.add("hello");
+    serializeJsonPretty(doc, Serial);
+    table_file.close();
+
+
 }

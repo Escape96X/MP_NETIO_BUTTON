@@ -6,11 +6,14 @@
 #include <FS.h>
 
 // Vytvorene headery
-#include "header.h"
+#include "basic_functions.h"
 #include "HTML.h"
 #include "define.h"
+#include "json.h"
+#include "memory.h"
+#include "src.h"
 
-const int ENPin = 2; //deklarovano take v hlavnim programu
+
 const char *OWN_SSID = "NETIO_BUTTON";
 
 bool APWork = true;
@@ -18,22 +21,6 @@ bool APWork = true;
 ESP8266WebServer server(80);
 IPAddress OWN_IP(192, 168, 4, 1);
 
-// Funkce pro prevod
-
-int dBmtoPercentage(int dBm) {
-    int quality = 2 * (dBm + 100);
-    if (quality > 100)
-        quality = 100;
-    return quality;
-}
-
-String ipToString(IPAddress ip) {
-    // prevod ip adresy na string
-    String s = "";
-    for (int i = 0; i < 4; i++)
-        s += i ? "." + String(ip[i]) : String(ip[i]);
-    return s;
-}
 
 // Nastavení AP a přípojení k WiFi
 void connectToWiFi() {
@@ -100,21 +87,33 @@ void handleManual() {
 }
 
 // Server - dynamické stránky
+// void handleNetioDevice() {
+//     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
+//     if (server.hasArg("addIP")) {
+//         if (server.arg("group") == "true") {
+//             String IP_AD = server.arg("addIP");
+//             saveToEEPROMContent(IP_AD, IP_POSA, IP_JMP);
+
+//             saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
+//         } else {
+//             saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
+//             saveToEEPROMContent(server.arg("http"), HTTP_POSB, HTTP_JMP);
+//         }
+//         server.send(200, "text/html", html);
+//     }
+// }
+
 void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
-        if (server.arg("group") == "true") {
-            String IP_AD = server.arg("addIP");
-            saveToEEPROMContent(IP_AD, IP_POSA, IP_JMP);
-
-            saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
-        } else {
-            saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
-            saveToEEPROMContent(server.arg("http"), HTTP_POSB, HTTP_JMP);
+        if (server.arg("group" == "true")) {
+            json_upload(server.arg("addIP"));
         }
-        server.send(200, "text/html", html);
     }
 }
+
+
+
 
 void handleNetioDelete() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
@@ -219,7 +218,7 @@ void serversOn() {
     server.begin();
 }
 
-void setWiFiServer2() {
+void setWiFiServer() {
     APSet();
     delay(500);
     serversOn();
