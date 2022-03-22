@@ -19,6 +19,8 @@ void feedback_timer(int duration, int quantity) {
 
 
 void ESPSleep() {
+    Serial.println("sleepuji");
+    delay(100);
     digitalWrite(ENPin, LOW);
 }
 

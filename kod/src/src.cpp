@@ -23,31 +23,31 @@ HTTPClient http;
 
  /*Send request to netio socket*/
 String http_post(String http_ip, String post_json, String http_uname, String http_pass) {
-    char *u = const_cast<char *>(http_uname.c_str()); // prevede string na char*
-    char* p = const_cast<char *>(http_uname.c_str());
+    //char *u = const_cast<char *>(http_uname.c_str()); // prevede string na char*
+    //char* p = const_cast<char *>(http_uname.c_str());
     Serial.println("predelal jsem na chary");
-    if(http.begin(wificlient, http_ip)) {
-        Serial.println("jsem pred autorizaci");
-        http.setAuthorization(u, p);
-        Serial.println("zacal jsem http");
-        int http_code = http.POST(post_json);
-        if(http_code > 0) {
-            Serial.print("HTTP CODE: ");
-            Serial.println(http_code);
-            String payload = http.getString();
-            Serial.print("Feedback: ");
-            Serial.println(payload);
-            if(payload.indexOf("Errors") > 0 || payload.length() == 0) {
-                error_http = true;
-            }
-            http.end();
-            return payload;
-        } else {
-            String payload = "HTTP failed with code:";
-            payload += http_code;
-            return payload;
-        }
-    }
+    // if(http.begin(wificlient, http_ip)) {
+    //     Serial.println("jsem pred autorizaci");
+    //     http.setAuthorization(u, p);
+    //     Serial.println("zacal jsem http");
+    //     int http_code = http.POST(post_json);
+    //     if(http_code > 0) {
+    //         Serial.print("HTTP CODE: ");
+    //         Serial.println(http_code);
+    //         String payload = http.getString();
+    //         Serial.print("Feedback: ");
+    //         Serial.println(payload);
+    //         if(payload.indexOf("Errors") > 0 || payload.length() == 0) {
+    //             error_http = true;
+    //         }
+    //         http.end();
+    //         return payload;
+    //     } else {
+    //         String payload = "HTTP failed with code:";
+    //         payload += http_code;
+    //         return payload;
+    //     }
+    // }
     Serial.println("HTTP begin failed");
     return "HTTP begin failed";
 }
@@ -63,20 +63,20 @@ String parse_content() {
         return "TAble of actions is empty.";
     } else {
         String html_http = "<table>";
-        Serial.println("jsem pred loopem");
         for(int i = 0; i < count; i++) {
             // TODO: ziskat vsechno z jsonu
-            std::vector<String> data;
-            data = json_read(file_name, i);
-            //String& ip = data[0];
-            //Serial.println("precteno");
+            std::vector<String> data = {"pes", "les", "pes", "les"};
+            Serial.println(file_name);
+            String pes = json_read(file_name, i);
+            Serial.println(pes);
+            String& ip = data[0];
+            Serial.println("precteno");
             html_http += "<th><td>" + data[0] + "</td><td>";
             String http_ip = "http://";
             http_ip += data[0] + "/netio.json";
-            //Serial.println(http_ip);
             http_post(data[1], data[0], data[2], data[3]);
-            //html_http += "</td></th>";
-            //Serial.println(i);
+            html_http += "</td></th>";
+            Serial.println(i);
 
         }
         html_http = "</table>";
@@ -108,13 +108,13 @@ void wifi_setup() {
             Serial.print(".");
         }
         Serial.println(' ');
-        if (WiFi.status() != WL_CONNECTED) {// pokud neni pripojen ohlasi chybu
-            feedback_timer(200, 2);
-            Serial.print("WiFi status: ");
-            Serial.println(WiFi.status());
-            WiFi.disconnect();
-            ESPSleep();
-        }
+        // if (WiFi.status() != WL_CONNECTED) {// pokud neni pripojen ohlasi chybu
+        //     feedback_timer(200, 2);
+        //     Serial.print("WiFi status: ");
+        //     Serial.println(WiFi.status());
+        //     WiFi.disconnect();
+        //     ESPSleep();
+        // }
     }
 }
 

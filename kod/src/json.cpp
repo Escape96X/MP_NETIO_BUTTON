@@ -102,18 +102,19 @@ File open_file(String file_name, char* action) {
 }
 
 
-std::vector<String> json_read(String table_name, int index) {
+String json_read(String table_name, int index) {
     File file = LittleFS.open(table_name, "r");
     Serial.println("soubor otevren");
-    DynamicJsonDocument doc(8192);
+    StaticJsonDocument <512> docu;
     Serial.println("doc vytvoren");
-    deserializeJson(doc, file);
+    deserializeJson(docu, file);
     Serial.println("deserializovano");
-    JsonObject object = doc[index];
-    std::vector<String> data = {object["ip"], object["json"], object["username"], object["password"]};
+    JsonObject object = docu[index];
+    String result = object["ip"];
     file.close();
-    Serial.println(data[0]);
-    return data;
+    docu.garbageCollect();
+    //Serial.println(data[0]);
+    return result;
 
 }
 
