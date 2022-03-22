@@ -8,102 +8,99 @@
 #include "define.h"
 #include "memory.h"
 #include "basic_functions.h"
+#include "json.h"
+
+
 
 // globalni promnene
-bool BUTTONSTATE1 = false;
-bool BUTTONSTATE2 = false;
-bool errors = false;
+bool button_state1 = false;
+bool button_state2 = false;
+bool error_http = false;
 
 
 WiFiClient wificlient;
 HTTPClient http;
 
-
-bool pin_pressed() {
-    // kontrola jake tlacitko bylo zmacknuto
-    if (BUTTONSTATE1 == false) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-String http_post(String HTTP_CONNECTION, int position, bool button_pressed) {
-    // posle http request zasuvce
-    int offset = (button_pressed) ? HTTP_POSA : HTTP_POSB;
-    if (http.begin(wificlient, HTTP_CONNECTION)) {
+ /*Send request to netio socket*/
+String http_post(String http_ip, String post_json, String http_uname, String http_pass) {
+    char *u = const_cast<char *>(http_uname.c_str()); // prevede string na char*
+    char* p = const_cast<char *>(http_uname.c_str());
+    Serial.println("predelal jsem na chary");
+    if(http.begin(wificlient, http_ip)) {
+        Serial.println("jsem pred autorizaci");
+        http.setAuthorization(u, p);
         Serial.println("zacal jsem http");
-        int httpCode = http.POST(readContent(position, offset, HTTP_POSB, HTTP_JMP));
-        if(httpCode > 0) {
+        int http_code = http.POST(post_json);
+        if(http_code > 0) {
             Serial.print("HTTP CODE: ");
-            Serial.println(httpCode);
-            Serial.print("pozice HTTP:");
-            Serial.println(position);
+            Serial.println(http_code);
             String payload = http.getString();
-            Serial.println("payload");
+            Serial.print("Feedback: ");
             Serial.println(payload);
-
-            if (payload.indexOf("Errors") > 0 || payload.length() == 0) {
-                Serial.print("jsem v erroru");
-
-                errors = true;
+            if(payload.indexOf("Errors") > 0 || payload.length() == 0) {
+                error_http = true;
             }
-            Serial.println(payload);
             http.end();
             return payload;
         } else {
-            String payload = "HTTP failed with code: ";
-            payload += httpCode;
+            String payload = "HTTP failed with code:";
+            payload += http_code;
             return payload;
         }
     }
-    Serial.println("Kod je konec");
-    return "Protocol failed";
+    Serial.println("HTTP begin failed");
+    return "HTTP begin failed";
 }
 
-String parsingIP(bool button_pressed) {
-    // najde prislusnou ip adresu
-    int offset = (button_pressed) ? IP_POSA : IP_POSB;
-    int count = countContent(offset, IP_POSB, IP_JMP);
-    // Serial.println(count);
-    if (count == 0) {
+String parse_content() {
+    Serial.println("jsem v parse");
+    String file_name = (button_state1) ? "tableA.json" : "tableB.json";
+    int count =(int)json_count(file_name);
+    Serial.print("count je");
+    Serial.println(count);
+    if(count == 0) {
         feedback_timer(200, 3);
-        return "Table of actions is empty.";
+        return "TAble of actions is empty.";
     } else {
-        String end_payload = "<table>";
-        for (int i = 0; i < count; i++) {
-            String HTTP_CONNECTION = "http://";
-            String ip_address = readContent(i, offset, IP_POSB, IP_JMP);
-            end_payload += "<th><td>"+ip_address + "</td><td>";
+        String html_http = "<table>";
+        Serial.println("jsem pred loopem");
+        for(int i = 0; i < count; i++) {
+            // TODO: ziskat vsechno z jsonu
+            std::vector<String> data;
+            data = json_read(file_name, i);
+            //String& ip = data[0];
+            //Serial.println("precteno");
+            html_http += "<th><td>" + data[0] + "</td><td>";
+            String http_ip = "http://";
+            http_ip += data[0] + "/netio.json";
+            //Serial.println(http_ip);
+            http_post(data[1], data[0], data[2], data[3]);
+            //html_http += "</td></th>";
+            //Serial.println(i);
 
-            HTTP_CONNECTION += ip_address;
-            HTTP_CONNECTION += "/netio.json";
-            end_payload += http_post(HTTP_CONNECTION, i, button_pressed);
-            end_payload += "</td></th>";
-            Serial.println(i);
-            delay(200);
         }
-        end_payload += "</table>";
-        Serial.print("error:");
-        Serial.println(errors);
-        if (errors)
+        html_http = "</table>";
+        if (error_http) 
             feedback_timer(200, 3);
-        return end_payload;
+        return html_http;
     }
 }
 
 void wifi_setup() {
     // precte z pameti ssid a password a pripoji se k wifi
-    String ssid = readEEPROM(SSID_POS, SSID_LEN);
-    String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
-    Serial.print("SSID and Password:");
-    Serial.println(ssid);
-    Serial.println(password);
-    char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
-    char *p = const_cast<char *>(password.c_str());
+    // String ssid = readEEPROM(SSID_POS, SSID_LEN);
+    // String password = readEEPROM(PASSWORD_POS, PASSWORD_LEN);
+    //String ssid = read_json_string("ssid", "/wifi.json");
+    //String password = read_json_string("password", "/wifi.json");
+    //Serial.print("SSID and Password:");
+    //Serial.println(ssid);
+    //erial.println(password);
+    //char *s = const_cast<char *>(ssid.c_str()); // prevede string na char*
+    //char *p = const_cast<char *>(password.c_str());
+
     delay(300);
     if (WiFi.status() != WL_CONNECTED) {
-        WiFi.begin(s, p);
+        WiFi.begin("iot-test", "ahoj123456");
         for (int i = 0; i < 50; i++) { // kontroluje zda bylo pripojeno k wifi, po 5s se vypne esp
             if (WiFi.status() == WL_CONNECTED)
                 break;
@@ -123,12 +120,12 @@ void wifi_setup() {
 
 bool check_conf_mode() {
     // overi zda jsou oba piny zmackle pro konfiguracni mod
-    if (!BUTTONSTATE1 && !BUTTONSTATE2) {
+    if (!button_state1 && !button_state2) {
         feedback_timer(400, 1);
         Serial.println("Config mode enabled");
         setWiFiServer();
         return true;
-    } else if (BUTTONSTATE1 && BUTTONSTATE2) {
+    } else if (button_state1 && button_state2) {
         feedback_timer(200, 4);
         ESPSleep();
         return false;
@@ -139,7 +136,7 @@ bool check_conf_mode() {
 
 void send_message() {
     wifi_setup();
-    parsingIP(pin_pressed());
+    parse_content();
 }
 
 void setup_boot() {
@@ -148,8 +145,8 @@ void setup_boot() {
     digitalWrite(ENPin, HIGH);
     pinMode(WAKEUP_PIN1, INPUT_PULLUP);
     pinMode(WAKEUP_PIN2, INPUT_PULLUP);
-    BUTTONSTATE1 = digitalRead(WAKEUP_PIN1);
-    BUTTONSTATE2 = digitalRead(WAKEUP_PIN2);
+    button_state1 = digitalRead(WAKEUP_PIN1);
+    button_state2 = digitalRead(WAKEUP_PIN2);
     Serial.begin(115200);
     EEPROM.begin(4096);
     pinMode(BUZZER_PIN, OUTPUT);
@@ -160,13 +157,11 @@ void setup_boot() {
 void debug() {
     //debug zpravy z pameti
     Serial.println("WiFi login");
-    Serial.println(readEEPROM(SSID_POS, SSID_LEN));
-    Serial.println(readEEPROM(PASSWORD_POS, 64));
     Serial.println("Button state detection:");
     Serial.print("Button S1:");
-    Serial.println(BUTTONSTATE1);
+    Serial.println(button_state1);
     Serial.print("Button S2:");
-    Serial.println(BUTTONSTATE2);
+    Serial.println(button_state2);
     Serial.println("");
 }
 
@@ -175,6 +170,7 @@ void setup() {
     debug();
       if (!LittleFS.begin()) {
         Serial.println("An Error has occurred while mounting SPIFFS");
+        feedback_timer(300, 2);
     }
     if (!check_conf_mode()) {
         digitalWrite(LED_PIN, HIGH);
@@ -186,7 +182,6 @@ void setup() {
 }
 
 void loop() {
-    delay(1);
     handleServer();
     if (!digitalRead(WAKEUP_PIN1) && !digitalRead(WAKEUP_PIN2)) {
         feedback_timer(400, 1);

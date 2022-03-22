@@ -9,7 +9,7 @@
 
 
 // src.cpp
-String parsingIP(bool button_pressed);
+String parse_content();
 
 
 #endif

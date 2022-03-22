@@ -89,15 +89,102 @@ String jsonOfNetworks() {
     return networks;
 }
 
-void json_upload(String ip_address) {
-    Serial.println("Pracuji s jsonem");
-    File table_file = LittleFS.open("tableA.json", "r");
-    DynamicJsonDocument doc(2048);
+
+File open_file(String file_name, char* action) {
+    Serial.println("Oteviram soubor");
+    File file = LittleFS.open(file_name, action);
+    if(!file) {
+        Serial.println("File cannot be opened");
+        feedback_timer(300, 5);
+        //ESPSleep();
+    }
+    return file;
+}
+
+
+std::vector<String> json_read(String table_name, int index) {
+    File file = LittleFS.open(table_name, "r");
+    Serial.println("soubor otevren");
+    DynamicJsonDocument doc(8192);
+    Serial.println("doc vytvoren");
+    deserializeJson(doc, file);
+    Serial.println("deserializovano");
+    JsonObject object = doc[index];
+    std::vector<String> data = {object["ip"], object["json"], object["username"], object["password"]};
+    file.close();
+    Serial.println(data[0]);
+    return data;
+
+}
+
+size_t json_count(String table_name) {
+    File table_file = open_file(table_name, "r");
+    DynamicJsonDocument doc(8192);
     deserializeJson(doc, table_file);
+    return doc.size();
+}
+
+void json_upload(String table_name, String ip_address, String json, String username, String password) {
+    Serial.println("Uploading Json");
+    File table_file = LittleFS.open(table_name, "r");
+    
+    DynamicJsonDocument doc(8192);
+    deserializeJson(doc, table_file);
+    JsonObject object = doc.createNestedObject();
+    object["ip"] = ip_address;
+    object["json"] = json;
+    object["username"] = username;
+    object["password"] = password;
+    table_file.close();
+    table_file = LittleFS.open(table_name, "w");
+    Serial.printf(" ");
     serializeJsonPretty(doc, Serial);
-    doc.add("hello");
-    serializeJsonPretty(doc, Serial);
+    serializeJson(doc, table_file);
+    Serial.println(doc.size());
     table_file.close();
 
+    
+}
 
+
+void json_delete(String table_name, int position){
+    Serial.println("Deleting Json");
+    File table_file = LittleFS.open(table_name, "r");
+    DynamicJsonDocument doc(8192);
+    deserializeJson(doc, table_file);
+    doc.remove(position);
+    table_file.close();
+    table_file = LittleFS.open(table_name, "w");
+    Serial.printf(" ");
+    serializeJsonPretty(doc, Serial);
+    serializeJson(doc, table_file);
+    Serial.println(doc.size());
+    table_file.close();
+
+}
+
+// zapracovat na erroru
+String read_json_string(String element, String file_name) {
+    Serial.println("Reading json");
+    File file = LittleFS.open(file_name, "r");
+    DynamicJsonDocument doc(8192);
+    DeserializationError error = deserializeJson(doc, file);
+    if (error)
+        Serial.println("DEserialization failed");
+    file.close();
+    return doc[element];
+}
+
+void write_json_string(String element, String value, String file_name) {
+    Serial.println("Write json");
+    File file = LittleFS.open(file_name, "r");
+    DynamicJsonDocument doc(8192);
+    DeserializationError error = deserializeJson(doc, file);
+    if(error) 
+        Serial.println("Deserialization failed");
+    doc[element] = value;
+    file.close();
+    file = LittleFS.open(file_name, "w");
+    serializeJson(doc, file);
+    file.close();
 }

@@ -59,12 +59,15 @@ void handleScanWiFi() {
     server.send(200, "application/json", jsonOfNetworks());
 }
 
-void handleHTTPA() {
-    server.send(200, "text/plane", planeOfHTTP(true));
+void handleJSONA() {
+    File file = LittleFS.open("/tableA.json", "r");
+    server.streamFile(file, "application/json");
+
 }
 
-void handleHTTPB() {
-    server.send(200, "text/plane", planeOfHTTP(false));
+void handleJSONB() {
+    File file = LittleFS.open("/tableB.json", "r");
+    server.streamFile(file, "application/json");
 }
 
 void handleIPAddress() {
@@ -86,42 +89,28 @@ void handleManual() {
     server.streamFile(file, "text/html");
 }
 
-// Server - dynamické stránky
-// void handleNetioDevice() {
-//     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
-//     if (server.hasArg("addIP")) {
-//         if (server.arg("group") == "true") {
-//             String IP_AD = server.arg("addIP");
-//             saveToEEPROMContent(IP_AD, IP_POSA, IP_JMP);
 
-//             saveToEEPROMContent(server.arg("http"), HTTP_POSA, HTTP_JMP);
-//         } else {
-//             saveToEEPROMContent(server.arg("addIP"), IP_POSB, IP_JMP);
-//             saveToEEPROMContent(server.arg("http"), HTTP_POSB, HTTP_JMP);
-//         }
-//         server.send(200, "text/html", html);
-//     }
-// }
 
 void handleNetioDevice() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("addIP")) {
-        if (server.arg("group" == "true")) {
-            json_upload(server.arg("addIP"));
-        }
+        // rozdelit na skupiny
+        String json_table = (server.arg("group") == "true") ? "tableA.json" : "tableB.json";
+        Serial.println(json_table);
+        Serial.println(server.arg("group"));
+        json_upload(json_table, server.arg("addIP"), server.arg("http"), server.arg("json_username"), server.arg("json_password"));
     }
+    server.send(200, "text/html", html);
 }
-
 
 
 
 void handleNetioDelete() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /netioProduct\" />";
     if (server.hasArg("IPNumber")) {
-        int offset = (server.arg("group") == "true") ? IP_POSA : IP_POSB;
-        deleteContent(server.arg("IPNumber").toInt(), offset, IP_POSB, IP_JMP);
-        offset = (server.arg("group") == "true") ? HTTP_POSA : HTTP_POSB;
-        deleteContent(server.arg("IPNumber").toInt(), offset, HTTP_POSB, HTTP_JMP);
+        String table_json = (server.arg("group") == "true")? "tableA.json" : "tableB.json";
+        int position = server.arg("IPNumber").toInt();
+        json_delete(table_json, position);
     }
     server.send(200, "text/html", html);
 }
@@ -161,11 +150,9 @@ void handleWiFiApprove() {
 void handleConfigCheck() {
     String html = "<meta http-equiv = \"refresh\" content = \"2; url = /buttonConfigure\" />";
     if (server.arg("button1") != NULL) {
-        //saveToEEPROM(server.arg("button1"), HTTP_POS1, HTTP_LEN);
         server.send(200, "text/html", html);
     }
     if (server.arg("button2") != NULL) {
-        // saveToEEPROM(server.arg("button2"), HTTP_POS2, HTTP_LEN);
         server.send(200, "text/html", html);
     }
 }
@@ -177,9 +164,9 @@ void handleTestConnection() {
     html += "<h1>Table of tests</h1>";
     html += R"rawliteral(<button onClick="location.href = '/';">Return</button>)rawliteral";
     html += "<h2>S1</h2>";
-    html += parsingIP(true);
+    html += parse_content();
     html += "<h2>S2<h2>";
-    html += parsingIP(false);
+    html += parse_content();
     Serial.println(html);
     server.send(200, "text/html", html);
 }
@@ -190,18 +177,19 @@ void handleDeepSleep() {
 }
 
 void handleFactoryReset() {
-    for(int i = 0; i <EEPROM.length(); i++)
+    for(int i = 0; i < (int)EEPROM.length(); i++)
         EEPROM.write(i, 255);
     EEPROM.commit();
     WiFi.disconnect();
     server.send(200, "text/html", "<meta http-equiv = \"refresh\" content = \"2; url = /\" />");
 }
 
+
 void serversOn() {
     server.on("/scannedWiFi.json", handleScanWiFi);
     server.on("/ip_adress.json", handleIPAddress);
-    server.on("/http_planeA", handleHTTPA);
-    server.on("/http_planeB", handleHTTPB);
+    server.on("/jsonA.json", handleJSONA);
+    server.on("/jsonB.json", handleJSONB);
     server.on("/", handleRoot);
     server.on("/wifi", handleWiFiConnect);
     server.on("/netioProduct", handleNetioProduct);
